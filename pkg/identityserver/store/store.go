@@ -199,6 +199,8 @@ func modelForEntityType(entityType string) modelInterface {
 		return &Application{}
 	case "client":
 		return &Client{}
+	case "cluster":
+		return &Cluster{}
 	case "end_device":
 		return &EndDevice{}
 	case "gateway":
@@ -219,6 +221,7 @@ func modelForID(id ttnpb.Identifiers) modelInterface {
 var (
 	errApplicationNotFound  = errors.DefineNotFound("application_not_found", "application `{application_id}` not found")
 	errClientNotFound       = errors.DefineNotFound("client_not_found", "client `{client_id}` not found")
+	errClusterNotFound      = errors.DefineNotFound("cluster_not_found", "cluster `{cluster_id}` not found")
 	errGatewayNotFound      = errors.DefineNotFound("gateway_not_found", "gateway `{gateway_id}` not found")
 	errEndDeviceNotFound    = errors.DefineNotFound("end_device_not_found", "end device `{application_id}:{device_id}` not found")
 	errOrganizationNotFound = errors.DefineNotFound("organization_not_found", "organization `{organization_id}` not found")
@@ -238,6 +241,8 @@ func errNotFoundForID(id ttnpb.Identifiers) error {
 		return errApplicationNotFound.WithAttributes("application_id", id.IDString())
 	case "client":
 		return errClientNotFound.WithAttributes("client_id", id.IDString())
+	case "cluster":
+		return errClusterNotFound.WithAttributes("cluster_id", id.IDString())
 	case "end_device":
 		appID, devID := splitEndDeviceIDString(id.IDString())
 		return errEndDeviceNotFound.WithAttributes("application_id", appID, "device_id", devID)

@@ -78,6 +78,8 @@ func (s *entitySearch) FindEntities(ctx context.Context, req *ttnpb.SearchEntiti
 			identifiers[i] = ttnpb.ApplicationIdentifiers{ApplicationID: entity.ID}
 		case "client":
 			identifiers[i] = ttnpb.ClientIdentifiers{ClientID: entity.ID}
+		case "cluster":
+			identifiers[i] = ttnpb.ClusterIdentifiers{ClusterID: entity.ID}
 		case "gateway":
 			identifiers[i] = ttnpb.GatewayIdentifiers{GatewayID: entity.ID}
 		case "organization":

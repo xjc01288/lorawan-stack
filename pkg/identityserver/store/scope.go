@@ -63,6 +63,19 @@ func withClientID(id ...string) func(*gorm.DB) *gorm.DB {
 	}
 }
 
+func withClusterID(id ...string) func(*gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		switch len(id) {
+		case 0:
+			return db
+		case 1:
+			return db.Where("cluster_id = ?", id[0])
+		default:
+			return db.Where("cluster_id IN (?)", id).Order("cluster_id")
+		}
+	}
+}
+
 func withDeviceID(id ...string) func(*gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		switch len(id) {
@@ -188,6 +201,8 @@ func withID(id ttnpb.Identifiers) func(*gorm.DB) *gorm.DB {
 		return withApplicationID(id.IDString())
 	case "client":
 		return withClientID(id.IDString())
+	case "cluster":
+		return withClusterID(id.IDString())
 	case "end_device":
 		return withApplicationAndDeviceID(splitEndDeviceIDString(id.IDString()))
 	case "gateway":

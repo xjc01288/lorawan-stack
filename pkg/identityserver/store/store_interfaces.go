@@ -45,6 +45,18 @@ type ClientStore interface {
 	DeleteClient(ctx context.Context, id *ttnpb.ClientIdentifiers) error
 }
 
+// ClusterStore interface for storing Clusters.
+//
+// All functions assume the input and fieldMask to be validated, and assume
+// sufficient rights to perform the action.
+type ClusterStore interface {
+	CreateCluster(ctx context.Context, cls *ttnpb.Cluster) (*ttnpb.Cluster, error)
+	FindClusters(ctx context.Context, ids []*ttnpb.ClusterIdentifiers, fieldMask *types.FieldMask) ([]*ttnpb.Cluster, error)
+	GetCluster(ctx context.Context, id *ttnpb.ClusterIdentifiers, fieldMask *types.FieldMask) (*ttnpb.Cluster, error)
+	UpdateCluster(ctx context.Context, cls *ttnpb.Cluster, fieldMask *types.FieldMask) (*ttnpb.Cluster, error)
+	DeleteCluster(ctx context.Context, id *ttnpb.ClusterIdentifiers) error
+}
+
 // EndDeviceStore interface for storing EndDevices.
 //
 // All functions assume the input and fieldMask to be validated, and assume

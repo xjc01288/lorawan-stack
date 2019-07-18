@@ -54,6 +54,15 @@ func TestEntitySearch(t *testing.T) {
 				},
 			})
 
+			store.createEntity(ctx, &Cluster{
+				ClusterID:   fmt.Sprintf("the-%s-cls", name),
+				Name:        fmt.Sprintf("The %s cluster", name),
+				Description: fmt.Sprintf("This cluster does %s stuff", name),
+				Attributes: []Attribute{
+					{Key: "test", Value: name},
+				},
+			})
+
 			store.createEntity(ctx, &Gateway{
 				GatewayID:   fmt.Sprintf("the-%s-gtw", name),
 				Name:        fmt.Sprintf("The %s gateway", name),
@@ -87,7 +96,7 @@ func TestEntitySearch(t *testing.T) {
 			})
 		}
 
-		for _, entityType := range []string{"application", "client", "gateway", "user", "organization"} {
+		for _, entityType := range []string{"application", "client", "cluster", "gateway", "user", "organization"} {
 			t.Run(entityType, func(t *testing.T) {
 				ids, err := s.FindEntities(ctx, &ttnpb.SearchEntitiesRequest{
 					IDContains:          "foo",

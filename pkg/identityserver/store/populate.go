@@ -46,6 +46,8 @@ func NewPopulator(size int, seed int64) *Populator {
 		)
 		client := ttnpb.NewPopulatedClient(randy, false)
 		p.Clients = append(p.Clients, client)
+		cluster := ttnpb.NewPopulatedCluster(randy, false)
+		p.Clusters = append(p.Clusters, cluster)
 		gateway := ttnpb.NewPopulatedGateway(randy, false)
 		gatewayID := gateway.EntityIdentifiers()
 		p.Gateways = append(p.Gateways, gateway)
@@ -63,7 +65,7 @@ func NewPopulator(size int, seed int64) *Populator {
 			p.APIKeys[organizationID],
 			&ttnpb.APIKey{
 				Name:   "default key",
-				Rights: []ttnpb.Right{ttnpb.RIGHT_APPLICATION_ALL, ttnpb.RIGHT_CLIENT_ALL, ttnpb.RIGHT_GATEWAY_ALL, ttnpb.RIGHT_ORGANIZATION_ALL},
+				Rights: []ttnpb.Right{ttnpb.RIGHT_APPLICATION_ALL, ttnpb.RIGHT_CLIENT_ALL, ttnpb.RIGHT_CLUSTER_ALL, ttnpb.RIGHT_GATEWAY_ALL, ttnpb.RIGHT_ORGANIZATION_ALL},
 			},
 		)
 		user := ttnpb.NewPopulatedUser(randy, false)
@@ -120,6 +122,27 @@ func NewPopulator(size int, seed int64) *Populator {
 			organizationIndex++
 		}
 	}
+	for _, cluster := range p.Clusters {
+		clusterID := cluster.EntityIdentifiers()
+		userCollaborators := randy.Intn((len(p.Users)/10)+1) + 1
+		for i := 0; i < userCollaborators; i++ {
+			ouID := p.Users[userIndex%len(p.Users)].OrganizationOrUserIdentifiers()
+			p.Memberships[clusterID] = append(p.Memberships[clusterID], &ttnpb.Collaborator{
+				OrganizationOrUserIdentifiers: *ouID,
+				Rights:                        []ttnpb.Right{ttnpb.RIGHT_CLUSTER_ALL},
+			})
+			userIndex++
+		}
+		organizationCollaborators := randy.Intn((len(p.Organizations)/10)+1) + 1
+		for i := 0; i < organizationCollaborators; i++ {
+			ouID := p.Organizations[organizationIndex%len(p.Organizations)].OrganizationOrUserIdentifiers()
+			p.Memberships[clusterID] = append(p.Memberships[clusterID], &ttnpb.Collaborator{
+				OrganizationOrUserIdentifiers: *ouID,
+				Rights:                        []ttnpb.Right{ttnpb.RIGHT_CLUSTER_ALL},
+			})
+			organizationIndex++
+		}
+	}
 	for _, gateway := range p.Gateways {
 		gatewayID := gateway.EntityIdentifiers()
 		userCollaborators := randy.Intn((len(p.Users)/10)+1) + 1
@@ -148,7 +171,7 @@ func NewPopulator(size int, seed int64) *Populator {
 			ouID := p.Users[userIndex%len(p.Users)].OrganizationOrUserIdentifiers()
 			p.Memberships[organizationID] = append(p.Memberships[organizationID], &ttnpb.Collaborator{
 				OrganizationOrUserIdentifiers: *ouID,
-				Rights:                        []ttnpb.Right{ttnpb.RIGHT_APPLICATION_ALL, ttnpb.RIGHT_CLIENT_ALL, ttnpb.RIGHT_GATEWAY_ALL, ttnpb.RIGHT_ORGANIZATION_ALL},
+				Rights:                        []ttnpb.Right{ttnpb.RIGHT_APPLICATION_ALL, ttnpb.RIGHT_CLIENT_ALL, ttnpb.RIGHT_CLUSTER_ALL, ttnpb.RIGHT_GATEWAY_ALL, ttnpb.RIGHT_ORGANIZATION_ALL},
 			})
 			userIndex++
 		}
@@ -160,6 +183,7 @@ func NewPopulator(size int, seed int64) *Populator {
 type Populator struct {
 	Applications  []*ttnpb.Application
 	Clients       []*ttnpb.Client
+	Clusters      []*ttnpb.Cluster
 	Gateways      []*ttnpb.Gateway
 	Organizations []*ttnpb.Organization
 	Users         []*ttnpb.User
@@ -177,6 +201,9 @@ func (p *Populator) Populate(ctx context.Context, db *gorm.DB) (err error) {
 		return err
 	}
 	if err = p.populateClients(ctx, db); err != nil {
+		return err
+	}
+	if err = p.populateClusters(ctx, db); err != nil {
 		return err
 	}
 	if err = p.populateGateways(ctx, db); err != nil {
@@ -222,6 +249,24 @@ func (p *Populator) populateClients(ctx context.Context, db *gorm.DB) (err error
 		}
 		client.Secret = secret
 		p.Clients[i].ContactInfo, err = GetContactInfoStore(db).SetContactInfo(ctx, client.EntityIdentifiers(), client.ContactInfo)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (p *Populator) populateClusters(ctx context.Context, db *gorm.DB) (err error) {
+	for i, cluster := range p.Clusters {
+		secret := cluster.Secret
+		hashedSecret, _ := auth.Hash(cluster.Secret)
+		cluster.Secret = string(hashedSecret)
+		p.Clusters[i], err = GetClusterStore(db).CreateCluster(ctx, cluster)
+		if err != nil {
+			return err
+		}
+		cluster.Secret = secret
+		p.Clusters[i].ContactInfo, err = GetContactInfoStore(db).SetContactInfo(ctx, cluster.EntityIdentifiers(), cluster.ContactInfo)
 		if err != nil {
 			return err
 		}
