@@ -3590,6 +3590,15 @@
       "file": "organization_registry.go"
     }
   },
+  "error:pkg/identityserver:no_cluster_admin_rights": {
+    "translations": {
+      "en": "no cluster admin rights"
+    },
+    "description": {
+      "package": "pkg/identityserver",
+      "file": "cluster_registry.go"
+    }
+  },
   "error:pkg/identityserver:no_invite_rights": {
     "translations": {
       "en": "no rights for inviting users"

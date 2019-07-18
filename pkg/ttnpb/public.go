@@ -75,6 +75,29 @@ func (c *Client) PublicSafe() *Client {
 	return &safe
 }
 
+// PublicClusterFields are the Cluster's fields that are public.
+var PublicClusterFields = append(PublicEntityFields,
+	"name",
+	"description",
+	"addresses",
+	"location",
+	"location_description",
+	"roles",
+	"endpoints",
+)
+
+// PublicSafe returns a copy of the cluster with only the fields that are safe to
+// return to any audience.
+func (c *Cluster) PublicSafe() *Cluster {
+	if c == nil {
+		return nil
+	}
+	var safe Cluster
+	safe.SetFields(c, PublicClusterFields...)
+	safe.ContactInfo = onlyPublicContactInfo(safe.ContactInfo)
+	return &safe
+}
+
 // PublicGatewayFields are the Gateway's fields that are public.
 var PublicGatewayFields = append(PublicEntityFields,
 	"name",

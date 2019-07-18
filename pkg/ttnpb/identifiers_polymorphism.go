@@ -119,6 +119,8 @@ func (ids EntityIdentifiers) Identifiers() Identifiers {
 		return oneof.ApplicationIDs
 	case *EntityIdentifiers_ClientIDs:
 		return oneof.ClientIDs
+	case *EntityIdentifiers_ClusterIDs:
+		return oneof.ClusterIDs
 	case *EntityIdentifiers_DeviceIDs:
 		return oneof.DeviceIDs
 	case *EntityIdentifiers_GatewayIDs:
@@ -174,6 +176,8 @@ func (ids EntityIdentifiers) IDString() string {
 		return oneof.ApplicationIDs.IDString()
 	case *EntityIdentifiers_ClientIDs:
 		return oneof.ClientIDs.IDString()
+	case *EntityIdentifiers_ClusterIDs:
+		return oneof.ClusterIDs.IDString()
 	case *EntityIdentifiers_DeviceIDs:
 		return oneof.DeviceIDs.IDString()
 	case *EntityIdentifiers_GatewayIDs:
@@ -227,6 +231,8 @@ func (ids EntityIdentifiers) EntityType() string {
 		return oneof.ApplicationIDs.EntityType()
 	case *EntityIdentifiers_ClientIDs:
 		return oneof.ClientIDs.EntityType()
+	case *EntityIdentifiers_ClusterIDs:
+		return oneof.ClusterIDs.EntityType()
 	case *EntityIdentifiers_DeviceIDs:
 		return oneof.DeviceIDs.EntityType()
 	case *EntityIdentifiers_GatewayIDs:

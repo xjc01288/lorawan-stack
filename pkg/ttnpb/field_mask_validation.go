@@ -89,6 +89,11 @@ var AllowedFieldMaskPathsForRPC = map[string][]string{
 	"/ttn.lorawan.v3.ClientRegistry/Update":              ClientFieldPathsNested,
 	"/ttn.lorawan.v3.EntityRegistrySearch/SearchClients": omitFields(ClientFieldPathsNested, "secret"),
 
+	// Clusters:
+	"/ttn.lorawan.v3.ClusterRegistry/Get":    omitFields(ClusterFieldPathsNested, "secret"),
+	"/ttn.lorawan.v3.ClusterRegistry/List":   omitFields(ClusterFieldPathsNested, "secret"),
+	"/ttn.lorawan.v3.ClusterRegistry/Update": ClusterFieldPathsNested,
+
 	// End Devices:
 	"/ttn.lorawan.v3.AsEndDeviceRegistry/Get": {
 		"formatters",
