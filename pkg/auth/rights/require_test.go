@@ -32,18 +32,23 @@ import (
 func requireRights(ctx context.Context, id string) (res struct {
 	AppErr error
 	CliErr error
+	ClsErr error
 	GtwErr error
 	OrgErr error
 	UsrErr error
 }) {
 	var wg sync.WaitGroup
-	wg.Add(5)
+	wg.Add(6)
 	go func() {
 		res.AppErr = RequireApplication(ctx, ttnpb.ApplicationIdentifiers{ApplicationID: id}, ttnpb.RIGHT_APPLICATION_INFO)
 		wg.Done()
 	}()
 	go func() {
 		res.CliErr = RequireClient(ctx, ttnpb.ClientIdentifiers{ClientID: id}, ttnpb.RIGHT_CLIENT_ALL)
+		wg.Done()
+	}()
+	go func() {
+		res.ClsErr = RequireCluster(ctx, ttnpb.ClusterIdentifiers{ClusterID: id}, ttnpb.RIGHT_CLUSTER_ALL)
 		wg.Done()
 	}()
 	go func() {
@@ -72,6 +77,9 @@ func TestRequire(t *testing.T) {
 		RequireClient(test.Context(), ttnpb.ClientIdentifiers{}, ttnpb.RIGHT_CLIENT_ALL)
 	}, should.Panic)
 	a.So(func() {
+		RequireCluster(test.Context(), ttnpb.ClusterIdentifiers{}, ttnpb.RIGHT_CLUSTER_ALL)
+	}, should.Panic)
+	a.So(func() {
 		RequireGateway(test.Context(), ttnpb.GatewayIdentifiers{}, ttnpb.RIGHT_GATEWAY_INFO)
 	}, should.Panic)
 	a.So(func() {
@@ -89,6 +97,9 @@ func TestRequire(t *testing.T) {
 		ClientRights: map[string]*ttnpb.Rights{
 			unique.ID(fooCtx, ttnpb.ClientIdentifiers{ClientID: "foo"}): ttnpb.RightsFrom(ttnpb.RIGHT_CLIENT_ALL),
 		},
+		ClusterRights: map[string]*ttnpb.Rights{
+			unique.ID(fooCtx, ttnpb.ClusterIdentifiers{ClusterID: "foo"}): ttnpb.RightsFrom(ttnpb.RIGHT_CLUSTER_ALL),
+		},
 		GatewayRights: map[string]*ttnpb.Rights{
 			unique.ID(fooCtx, ttnpb.GatewayIdentifiers{GatewayID: "foo"}): ttnpb.RightsFrom(ttnpb.RIGHT_GATEWAY_INFO),
 		},
@@ -103,6 +114,7 @@ func TestRequire(t *testing.T) {
 	fooRes := requireRights(fooCtx, "foo")
 	a.So(fooRes.AppErr, should.BeNil)
 	a.So(fooRes.CliErr, should.BeNil)
+	a.So(fooRes.ClsErr, should.BeNil)
 	a.So(fooRes.GtwErr, should.BeNil)
 	a.So(fooRes.OrgErr, should.BeNil)
 	a.So(fooRes.UsrErr, should.BeNil)
@@ -111,6 +123,7 @@ func TestRequire(t *testing.T) {
 	errFetchCtx := NewContextWithFetcher(test.Context(), &mockFetcher{
 		applicationError:  mockErr,
 		clientError:       mockErr,
+		clusterError:      mockErr,
 		gatewayError:      mockErr,
 		organizationError: mockErr,
 		userError:         mockErr,
@@ -118,6 +131,7 @@ func TestRequire(t *testing.T) {
 	errFetchRes := requireRights(errFetchCtx, "foo")
 	a.So(errFetchRes.AppErr, should.Resemble, mockErr)
 	a.So(errFetchRes.CliErr, should.Resemble, mockErr)
+	a.So(errFetchRes.ClsErr, should.Resemble, mockErr)
 	a.So(errFetchRes.GtwErr, should.Resemble, mockErr)
 	a.So(errFetchRes.OrgErr, should.Resemble, mockErr)
 	a.So(errFetchRes.UsrErr, should.Resemble, mockErr)
@@ -126,6 +140,7 @@ func TestRequire(t *testing.T) {
 	permissionDeniedFetchCtx := NewContextWithFetcher(test.Context(), &mockFetcher{
 		applicationError:  errPermissionDenied,
 		clientError:       errPermissionDenied,
+		clusterError:      errPermissionDenied,
 		gatewayError:      errPermissionDenied,
 		organizationError: errPermissionDenied,
 		userError:         errPermissionDenied,
@@ -133,6 +148,7 @@ func TestRequire(t *testing.T) {
 	permissionDeniedRes := requireRights(permissionDeniedFetchCtx, "foo")
 	a.So(errors.IsPermissionDenied(permissionDeniedRes.AppErr), should.BeTrue)
 	a.So(errors.IsPermissionDenied(permissionDeniedRes.CliErr), should.BeTrue)
+	a.So(errors.IsPermissionDenied(permissionDeniedRes.ClsErr), should.BeTrue)
 	a.So(errors.IsPermissionDenied(permissionDeniedRes.GtwErr), should.BeTrue)
 	a.So(errors.IsPermissionDenied(permissionDeniedRes.OrgErr), should.BeTrue)
 	a.So(errors.IsPermissionDenied(permissionDeniedRes.UsrErr), should.BeTrue)

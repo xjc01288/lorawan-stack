@@ -34,6 +34,8 @@ func fetchRights(ctx context.Context, id string, f Fetcher) (res struct {
 	AppErr    error
 	CliRights *ttnpb.Rights
 	CliErr    error
+	ClsRights *ttnpb.Rights
+	ClsErr    error
 	GtwRights *ttnpb.Rights
 	GtwErr    error
 	OrgRights *ttnpb.Rights
@@ -42,13 +44,17 @@ func fetchRights(ctx context.Context, id string, f Fetcher) (res struct {
 	UsrErr    error
 }) {
 	var wg sync.WaitGroup
-	wg.Add(5)
+	wg.Add(6)
 	go func() {
 		res.AppRights, res.AppErr = f.ApplicationRights(ctx, ttnpb.ApplicationIdentifiers{ApplicationID: id})
 		wg.Done()
 	}()
 	go func() {
 		res.CliRights, res.CliErr = f.ClientRights(ctx, ttnpb.ClientIdentifiers{ClientID: id})
+		wg.Done()
+	}()
+	go func() {
+		res.ClsRights, res.ClsErr = f.ClusterRights(ctx, ttnpb.ClusterIdentifiers{ClusterID: id})
 		wg.Done()
 	}()
 	go func() {
@@ -75,6 +81,10 @@ type mockClientAccessServer struct {
 	ttnpb.ClientAccessServer
 	*mockFetcher
 }
+type mockClusterAccessServer struct {
+	ttnpb.ClusterAccessServer
+	*mockFetcher
+}
 type mockGatewayAccessServer struct {
 	ttnpb.GatewayAccessServer
 	*mockFetcher
@@ -96,6 +106,7 @@ func (as *mockAccessServer) Server() *grpc.Server {
 	srv := grpc.NewServer()
 	ttnpb.RegisterApplicationAccessServer(srv, mockApplicationAccessServer{mockFetcher: &as.mockFetcher})
 	ttnpb.RegisterClientAccessServer(srv, mockClientAccessServer{mockFetcher: &as.mockFetcher})
+	ttnpb.RegisterClusterAccessServer(srv, mockClusterAccessServer{mockFetcher: &as.mockFetcher})
 	ttnpb.RegisterGatewayAccessServer(srv, mockGatewayAccessServer{mockFetcher: &as.mockFetcher})
 	ttnpb.RegisterOrganizationAccessServer(srv, mockOrganizationAccessServer{mockFetcher: &as.mockFetcher})
 	ttnpb.RegisterUserAccessServer(srv, mockUserAccessServer{mockFetcher: &as.mockFetcher})
@@ -116,6 +127,14 @@ func (as mockClientAccessServer) ListRights(ctx context.Context, ids *ttnpb.Clie
 		return nil, as.clientError
 	}
 	return as.clientRights, nil
+}
+
+func (as mockClusterAccessServer) ListRights(ctx context.Context, ids *ttnpb.ClusterIdentifiers) (*ttnpb.Rights, error) {
+	as.clusterCtx, as.clusterIDs = ctx, *ids
+	if as.clusterError != nil {
+		return nil, as.clusterError
+	}
+	return as.clusterRights, nil
 }
 
 func (as mockGatewayAccessServer) ListRights(ctx context.Context, ids *ttnpb.GatewayIdentifiers) (*ttnpb.Rights, error) {
@@ -164,13 +183,15 @@ func TestFetcherFunc(t *testing.T) {
 	res := fetchRights(test.Context(), "foo", f)
 	a.So(res.AppErr, should.Resemble, fetcher.err)
 	a.So(res.CliErr, should.Resemble, fetcher.err)
+	a.So(res.ClsErr, should.Resemble, fetcher.err)
 	a.So(res.GtwErr, should.Resemble, fetcher.err)
 	a.So(res.OrgErr, should.Resemble, fetcher.err)
 	a.So(res.UsrErr, should.Resemble, fetcher.err)
 
-	if a.So(fetcher.ids, should.HaveLength, 5) {
+	if a.So(fetcher.ids, should.HaveLength, 6) {
 		a.So(fetcher.ids, should.Contain, ttnpb.ApplicationIdentifiers{ApplicationID: "foo"})
 		a.So(fetcher.ids, should.Contain, ttnpb.ClientIdentifiers{ClientID: "foo"})
+		a.So(fetcher.ids, should.Contain, ttnpb.ClusterIdentifiers{ClusterID: "foo"})
 		a.So(fetcher.ids, should.Contain, ttnpb.GatewayIdentifiers{GatewayID: "foo"})
 		a.So(fetcher.ids, should.Contain, ttnpb.OrganizationIdentifiers{OrganizationID: "foo"})
 		a.So(fetcher.ids, should.Contain, ttnpb.UserIdentifiers{UserID: "foo"})
@@ -184,6 +205,7 @@ func TestAccessFetcher(t *testing.T) {
 		mockFetcher: mockFetcher{
 			applicationRights:  ttnpb.RightsFrom(ttnpb.RIGHT_APPLICATION_INFO),
 			clientRights:       ttnpb.RightsFrom(ttnpb.RIGHT_CLIENT_ALL),
+			clusterRights:      ttnpb.RightsFrom(ttnpb.RIGHT_CLUSTER_ALL),
 			gatewayRights:      ttnpb.RightsFrom(ttnpb.RIGHT_GATEWAY_INFO),
 			organizationRights: ttnpb.RightsFrom(ttnpb.RIGHT_ORGANIZATION_INFO),
 			userRights:         ttnpb.RightsFrom(ttnpb.RIGHT_USER_INFO),
@@ -208,6 +230,7 @@ func TestAccessFetcher(t *testing.T) {
 	unavailableRes := fetchRights(test.Context(), "foo", unavailableFetcher)
 	a.So(errors.IsUnavailable(unavailableRes.AppErr), should.BeTrue)
 	a.So(errors.IsUnavailable(unavailableRes.CliErr), should.BeTrue)
+	a.So(errors.IsUnavailable(unavailableRes.ClsErr), should.BeTrue)
 	a.So(errors.IsUnavailable(unavailableRes.GtwErr), should.BeTrue)
 	a.So(errors.IsUnavailable(unavailableRes.OrgErr), should.BeTrue)
 	a.So(errors.IsUnavailable(unavailableRes.UsrErr), should.BeTrue)
@@ -219,6 +242,7 @@ func TestAccessFetcher(t *testing.T) {
 	bgRes := fetchRights(test.Context(), "foo", onlySecureFetcher)
 	a.So(errors.IsUnauthenticated(bgRes.AppErr), should.BeTrue)
 	a.So(errors.IsUnauthenticated(bgRes.CliErr), should.BeTrue)
+	a.So(errors.IsUnauthenticated(bgRes.ClsErr), should.BeTrue)
 	a.So(errors.IsUnauthenticated(bgRes.GtwErr), should.BeTrue)
 	a.So(errors.IsUnauthenticated(bgRes.OrgErr), should.BeTrue)
 	a.So(errors.IsUnauthenticated(bgRes.UsrErr), should.BeTrue)
@@ -232,6 +256,7 @@ func TestAccessFetcher(t *testing.T) {
 	authRes := fetchRights(authCtx, "foo", onlySecureFetcher)
 	a.So(errors.IsUnauthenticated(authRes.AppErr), should.BeTrue)
 	a.So(errors.IsUnauthenticated(authRes.CliErr), should.BeTrue)
+	a.So(errors.IsUnauthenticated(authRes.ClsErr), should.BeTrue)
 	a.So(errors.IsUnauthenticated(authRes.GtwErr), should.BeTrue)
 	a.So(errors.IsUnauthenticated(authRes.OrgErr), should.BeTrue)
 	a.So(errors.IsUnauthenticated(authRes.UsrErr), should.BeTrue)
@@ -243,12 +268,14 @@ func TestAccessFetcher(t *testing.T) {
 	authRes = fetchRights(authCtx, "foo", alsoInsecureFetcher)
 	a.So(authRes.AppErr, should.BeNil)
 	a.So(authRes.CliErr, should.BeNil)
+	a.So(authRes.ClsErr, should.BeNil)
 	a.So(authRes.GtwErr, should.BeNil)
 	a.So(authRes.OrgErr, should.BeNil)
 	a.So(authRes.UsrErr, should.BeNil)
 
 	a.So(authRes.AppRights, should.Resemble, is.mockFetcher.applicationRights)
 	a.So(authRes.CliRights, should.Resemble, is.mockFetcher.clientRights)
+	a.So(authRes.ClsRights, should.Resemble, is.mockFetcher.clusterRights)
 	a.So(authRes.GtwRights, should.Resemble, is.mockFetcher.gatewayRights)
 	a.So(authRes.OrgRights, should.Resemble, is.mockFetcher.organizationRights)
 	a.So(authRes.UsrRights, should.Resemble, is.mockFetcher.userRights)

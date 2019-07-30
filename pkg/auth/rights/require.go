@@ -40,6 +40,14 @@ var (
 		"insufficient_client_rights",
 		"insufficient rights for client `{uid}`",
 	)
+	ErrNoClusterRights = errors.DefinePermissionDenied(
+		"no_cluster_rights",
+		"no rights for cluster `{uid}`",
+	)
+	ErrInsufficientClusterRights = errors.DefinePermissionDenied(
+		"insufficient_cluster_rights",
+		"insufficient rights for cluster `{uid}`",
+	)
 	ErrNoGatewayRights = errors.DefinePermissionDenied(
 		"no_gateway_rights",
 		"no rights for gateway `{uid}`",
@@ -98,6 +106,24 @@ func RequireClient(ctx context.Context, id ttnpb.ClientIdentifiers, required ...
 	missing := ttnpb.RightsFrom(required...).Sub(rights).GetRights()
 	if len(missing) > 0 {
 		return ErrInsufficientClientRights.WithAttributes("uid", uid, "missing", missing)
+	}
+	return nil
+}
+
+// RequireCluster checks that context contains the required rights for the
+// given cluster ID.
+func RequireCluster(ctx context.Context, id ttnpb.ClusterIdentifiers, required ...ttnpb.Right) (err error) {
+	uid := unique.ID(ctx, id)
+	rights, err := ListCluster(ctx, id)
+	if err != nil {
+		return err
+	}
+	if len(rights.GetRights()) == 0 {
+		return ErrNoClusterRights.WithAttributes("uid", uid)
+	}
+	missing := ttnpb.RightsFrom(required...).Sub(rights).GetRights()
+	if len(missing) > 0 {
+		return ErrInsufficientClusterRights.WithAttributes("uid", uid, "missing", missing)
 	}
 	return nil
 }

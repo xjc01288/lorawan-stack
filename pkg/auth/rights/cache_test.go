@@ -46,6 +46,7 @@ func TestCache(t *testing.T) {
 
 	mockFetcher.applicationError = mockErr
 	mockFetcher.clientError = mockErr
+	mockFetcher.clusterError = mockErr
 	mockFetcher.gatewayError = mockErr
 	mockFetcher.organizationError = mockErr
 	mockFetcher.userError = mockErr

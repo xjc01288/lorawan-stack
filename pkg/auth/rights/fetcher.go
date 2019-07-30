@@ -27,6 +27,7 @@ import (
 type Fetcher interface {
 	ApplicationRights(context.Context, ttnpb.ApplicationIdentifiers) (*ttnpb.Rights, error)
 	ClientRights(context.Context, ttnpb.ClientIdentifiers) (*ttnpb.Rights, error)
+	ClusterRights(context.Context, ttnpb.ClusterIdentifiers) (*ttnpb.Rights, error)
 	GatewayRights(context.Context, ttnpb.GatewayIdentifiers) (*ttnpb.Rights, error)
 	OrganizationRights(context.Context, ttnpb.OrganizationIdentifiers) (*ttnpb.Rights, error)
 	UserRights(context.Context, ttnpb.UserIdentifiers) (*ttnpb.Rights, error)
@@ -55,6 +56,13 @@ func (f FetcherFunc) ApplicationRights(ctx context.Context, ids ttnpb.Applicatio
 func (f FetcherFunc) ClientRights(ctx context.Context, ids ttnpb.ClientIdentifiers) (*ttnpb.Rights, error) {
 	rights, err := f(ctx, ids)
 	registerRightsFetch(ctx, "client", rights, err)
+	return rights, err
+}
+
+// ClusterRights implements the Fetcher interface.
+func (f FetcherFunc) ClusterRights(ctx context.Context, ids ttnpb.ClusterIdentifiers) (*ttnpb.Rights, error) {
+	rights, err := f(ctx, ids)
+	registerRightsFetch(ctx, "cluster", rights, err)
 	return rights, err
 }
 
@@ -138,6 +146,23 @@ func (f accessFetcher) ClientRights(ctx context.Context, clientID ttnpb.ClientId
 	}
 	rights, err := ttnpb.NewClientAccessClient(cc).ListRights(ctx, &clientID, callOpt)
 	registerRightsFetch(ctx, "client", rights, err)
+	if err != nil {
+		return nil, err
+	}
+	return rights, nil
+}
+
+func (f accessFetcher) ClusterRights(ctx context.Context, clusterID ttnpb.ClusterIdentifiers) (*ttnpb.Rights, error) {
+	cc := f.getConn(ctx)
+	if cc == nil {
+		return nil, errNoISConn
+	}
+	callOpt, err := rpcmetadata.WithForwardedAuth(ctx, f.allowInsecure)
+	if err != nil {
+		return nil, err
+	}
+	rights, err := ttnpb.NewClusterAccessClient(cc).ListRights(ctx, &clusterID, callOpt)
+	registerRightsFetch(ctx, "cluster", rights, err)
 	if err != nil {
 		return nil, err
 	}

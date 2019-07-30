@@ -82,6 +82,36 @@ func ListClient(ctx context.Context, id ttnpb.ClientIdentifiers) (rights *ttnpb.
 	return rights, nil
 }
 
+// ListCluster lists the rights for the given cluster ID in the context.
+func ListCluster(ctx context.Context, id ttnpb.ClusterIdentifiers) (rights *ttnpb.Rights, err error) {
+	uid := unique.ID(ctx, id)
+	if inCtx, ok := fromContext(ctx); ok {
+		return inCtx.ClusterRights[uid], nil
+	}
+	if inCtx, ok := cacheFromContext(ctx); ok {
+		if rights, ok := inCtx.ClusterRights[uid]; ok {
+			return rights, nil
+		}
+	}
+	defer func() {
+		if err == nil {
+			cacheInContext(ctx, func(r *Rights) { r.setClusterRights(uid, rights) })
+		}
+	}()
+	fetcher, ok := fetcherFromContext(ctx)
+	if !ok {
+		panic(errNoFetcher)
+	}
+	rights, err = fetcher.ClusterRights(ctx, id)
+	if err != nil {
+		if errors.IsPermissionDenied(err) {
+			return &ttnpb.Rights{}, nil
+		}
+		return nil, err
+	}
+	return rights, nil
+}
+
 // ListGateway lists the rights for the given gateway ID in the context.
 func ListGateway(ctx context.Context, id ttnpb.GatewayIdentifiers) (rights *ttnpb.Rights, err error) {
 	uid := unique.ID(ctx, id)

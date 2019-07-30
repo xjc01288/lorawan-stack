@@ -88,6 +88,7 @@ func NewInMemoryCache(fetcher Fetcher, successTTL, errorTTL time.Duration) Fetch
 		lastCleanup:        now(),
 		applicationRights:  make(map[cachedReq]*cachedRes),
 		clientRights:       make(map[cachedReq]*cachedRes),
+		clusterRights:      make(map[cachedReq]*cachedRes),
 		gatewayRights:      make(map[cachedReq]*cachedRes),
 		organizationRights: make(map[cachedReq]*cachedRes),
 		userRights:         make(map[cachedReq]*cachedRes),
@@ -102,6 +103,7 @@ type inMemoryCache struct {
 	lastCleanup        time.Time
 	applicationRights  map[cachedReq]*cachedRes
 	clientRights       map[cachedReq]*cachedRes
+	clusterRights      map[cachedReq]*cachedRes
 	gatewayRights      map[cachedReq]*cachedRes
 	organizationRights map[cachedReq]*cachedRes
 	userRights         map[cachedReq]*cachedRes
@@ -124,6 +126,11 @@ func (f *inMemoryCache) maybeCleanup() {
 	for req, res := range f.clientRights {
 		if !res.valid(f.successTTL, f.errorTTL) {
 			delete(f.clientRights, req)
+		}
+	}
+	for req, res := range f.clusterRights {
+		if !res.valid(f.successTTL, f.errorTTL) {
+			delete(f.clusterRights, req)
 		}
 	}
 	for req, res := range f.gatewayRights {
@@ -169,6 +176,22 @@ func (f *inMemoryCache) ClientRights(ctx context.Context, clientID ttnpb.ClientI
 		res = newRes()
 		f.clientRights[req] = res
 		go res.set(f.Fetcher.ClientRights(ctx, clientID))
+	}
+	f.maybeCleanup()
+	f.mu.Unlock()
+	res.wait()
+	return res.rights, res.err
+}
+
+func (f *inMemoryCache) ClusterRights(ctx context.Context, clusterID ttnpb.ClusterIdentifiers) (rights *ttnpb.Rights, err error) {
+	defer func() { registerRightsRequest(ctx, "cluster", rights, err) }()
+	req := newReq(ctx, clusterID)
+	f.mu.Lock()
+	res := f.clusterRights[req]
+	if !res.valid(f.successTTL, f.errorTTL) {
+		res = newRes()
+		f.clusterRights[req] = res
+		go res.set(f.Fetcher.ClusterRights(ctx, clusterID))
 	}
 	f.maybeCleanup()
 	f.mu.Unlock()

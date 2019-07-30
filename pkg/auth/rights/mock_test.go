@@ -44,6 +44,8 @@ type mockFetcher struct {
 	applicationIDs  ttnpb.ApplicationIdentifiers
 	clientCtx       context.Context
 	clientIDs       ttnpb.ClientIdentifiers
+	clusterCtx      context.Context
+	clusterIDs      ttnpb.ClusterIdentifiers
 	gatewayCtx      context.Context
 	gatewayIDs      ttnpb.GatewayIdentifiers
 	organizationCtx context.Context
@@ -56,6 +58,8 @@ type mockFetcher struct {
 	applicationError   error
 	clientRights       *ttnpb.Rights
 	clientError        error
+	clusterRights      *ttnpb.Rights
+	clusterError       error
 	gatewayRights      *ttnpb.Rights
 	gatewayError       error
 	organizationRights *ttnpb.Rights
@@ -71,6 +75,10 @@ func (f *mockFetcher) ApplicationRights(ctx context.Context, ids ttnpb.Applicati
 func (f *mockFetcher) ClientRights(ctx context.Context, ids ttnpb.ClientIdentifiers) (*ttnpb.Rights, error) {
 	f.clientCtx, f.clientIDs = ctx, ids
 	return f.clientRights, f.clientError
+}
+func (f *mockFetcher) ClusterRights(ctx context.Context, ids ttnpb.ClusterIdentifiers) (*ttnpb.Rights, error) {
+	f.clusterCtx, f.clusterIDs = ctx, ids
+	return f.clusterRights, f.clusterError
 }
 func (f *mockFetcher) GatewayRights(ctx context.Context, ids ttnpb.GatewayIdentifiers) (*ttnpb.Rights, error) {
 	f.gatewayCtx, f.gatewayIDs = ctx, ids

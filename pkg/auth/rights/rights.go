@@ -25,6 +25,7 @@ import (
 type Rights struct {
 	ApplicationRights  map[string]*ttnpb.Rights
 	ClientRights       map[string]*ttnpb.Rights
+	ClusterRights      map[string]*ttnpb.Rights
 	GatewayRights      map[string]*ttnpb.Rights
 	OrganizationRights map[string]*ttnpb.Rights
 	UserRights         map[string]*ttnpb.Rights
@@ -44,6 +45,14 @@ func (r *Rights) setClientRights(cliUID string, rights *ttnpb.Rights) {
 		r.ClientRights = make(map[string]*ttnpb.Rights)
 	}
 	r.ClientRights[cliUID] = rights
+}
+
+// SetClusterRights sets the rights for the given cluster.
+func (r *Rights) setClusterRights(clsUID string, rights *ttnpb.Rights) {
+	if r.ClusterRights == nil {
+		r.ClusterRights = make(map[string]*ttnpb.Rights)
+	}
+	r.ClusterRights[clsUID] = rights
 }
 
 // SetGatewayRights sets the rights for the given gateway.
@@ -80,6 +89,11 @@ func (r Rights) MissingClientRights(cliUID string, rights ...ttnpb.Right) []ttnp
 	return ttnpb.RightsFrom(rights...).Sub(r.ClientRights[cliUID]).GetRights()
 }
 
+// MissingClusterRights returns the rights that are missing for the given cluster.
+func (r Rights) MissingClusterRights(clsUID string, rights ...ttnpb.Right) []ttnpb.Right {
+	return ttnpb.RightsFrom(rights...).Sub(r.ClusterRights[clsUID]).GetRights()
+}
+
 // MissingGatewayRights returns the rights that are missing for the given gateway.
 func (r Rights) MissingGatewayRights(gtwUID string, rights ...ttnpb.Right) []ttnpb.Right {
 	return ttnpb.RightsFrom(rights...).Sub(r.GatewayRights[gtwUID]).GetRights()
@@ -103,6 +117,11 @@ func (r Rights) IncludesApplicationRights(appUID string, rights ...ttnpb.Right) 
 // IncludesClientRights returns whether the given rights are included for the given client.
 func (r Rights) IncludesClientRights(cliUID string, rights ...ttnpb.Right) bool {
 	return len(r.MissingClientRights(cliUID, rights...)) == 0
+}
+
+// IncludesClusterRights returns whether the given rights are included for the given cluter.
+func (r Rights) IncludesClusterRights(clsUID string, rights ...ttnpb.Right) bool {
+	return len(r.MissingClusterRights(clsUID, rights...)) == 0
 }
 
 // IncludesGatewayRights returns whether the given rights are included for the given gateway.
