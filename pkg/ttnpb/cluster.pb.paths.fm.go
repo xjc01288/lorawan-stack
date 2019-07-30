@@ -34,6 +34,7 @@ var ClusterFieldPathsNested = []string{
 	"name",
 	"roles",
 	"secret",
+	"state",
 	"updated_at",
 }
 
@@ -50,6 +51,7 @@ var ClusterFieldPathsTopLevel = []string{
 	"name",
 	"roles",
 	"secret",
+	"state",
 	"updated_at",
 }
 var ClustersFieldPathsNested = []string{
@@ -117,6 +119,7 @@ var CreateClusterRequestFieldPathsNested = []string{
 	"cluster.name",
 	"cluster.roles",
 	"cluster.secret",
+	"cluster.state",
 	"cluster.updated_at",
 	"collaborator",
 	"collaborator.ids",
@@ -151,6 +154,7 @@ var UpdateClusterRequestFieldPathsNested = []string{
 	"cluster.name",
 	"cluster.roles",
 	"cluster.secret",
+	"cluster.state",
 	"cluster.updated_at",
 	"field_mask",
 }

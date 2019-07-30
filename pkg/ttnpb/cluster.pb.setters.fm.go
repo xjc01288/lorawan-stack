@@ -137,15 +137,6 @@ func (dst *Cluster) SetFields(src *Cluster, paths ...string) error {
 			} else {
 				dst.ContactInfo = nil
 			}
-		case "addresses":
-			if len(subs) > 0 {
-				return fmt.Errorf("'addresses' has no subfields, but %s were specified", subs)
-			}
-			if src != nil {
-				dst.Addresses = src.Addresses
-			} else {
-				dst.Addresses = nil
-			}
 		case "secret":
 			if len(subs) > 0 {
 				return fmt.Errorf("'secret' has no subfields, but %s were specified", subs)
@@ -155,6 +146,25 @@ func (dst *Cluster) SetFields(src *Cluster, paths ...string) error {
 			} else {
 				var zero string
 				dst.Secret = zero
+			}
+		case "addresses":
+			if len(subs) > 0 {
+				return fmt.Errorf("'addresses' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.Addresses = src.Addresses
+			} else {
+				dst.Addresses = nil
+			}
+		case "state":
+			if len(subs) > 0 {
+				return fmt.Errorf("'state' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.State = src.State
+			} else {
+				var zero State
+				dst.State = zero
 			}
 		case "location":
 			if len(subs) > 0 {

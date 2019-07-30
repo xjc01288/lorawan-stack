@@ -230,10 +230,19 @@ func (m *Cluster) ValidateFields(paths ...string) error {
 
 			}
 
-		case "addresses":
-
 		case "secret":
 			// no validation rules for Secret
+		case "addresses":
+
+		case "state":
+
+			if _, ok := State_name[int32(m.GetState())]; !ok {
+				return ClusterValidationError{
+					field:  "state",
+					reason: "value must be one of the defined enum values",
+				}
+			}
+
 		case "location":
 
 			if v, ok := interface{}(&m.Location).(interface{ ValidateFields(...string) error }); ok {

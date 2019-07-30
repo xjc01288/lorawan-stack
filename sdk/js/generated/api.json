@@ -4493,6 +4493,16 @@
               "defaultValue": ""
             },
             {
+              "name": "secret",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
               "name": "addresses",
               "description": "The list of addresses this cluster has or used to have.\nAddresses can not be removed from this list after they have been added.",
               "label": "repeated",
@@ -4503,14 +4513,22 @@
               "defaultValue": ""
             },
             {
-              "name": "secret",
-              "description": "",
+              "name": "state",
+              "description": "The reviewing state of the cluster.\nThis field can only be modified by admins.",
               "label": "",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
+              "type": "State",
+              "longType": "State",
+              "fullType": "ttn.lorawan.v3.State",
               "ismap": false,
-              "defaultValue": ""
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "enum.defined_only",
+                    "value": true
+                  }
+                ]
+              }
             },
             {
               "name": "location",

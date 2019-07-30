@@ -1438,8 +1438,9 @@ Cluster is the message that defines a Cluster in the network.
 | `description` | [`string`](#string) |  |  |
 | `attributes` | [`Cluster.AttributesEntry`](#ttn.lorawan.v3.Cluster.AttributesEntry) | repeated |  |
 | `contact_info` | [`ContactInfo`](#ttn.lorawan.v3.ContactInfo) | repeated |  |
-| `addresses` | [`string`](#string) | repeated | The list of addresses this cluster has or used to have. Addresses can not be removed from this list after they have been added. |
 | `secret` | [`string`](#string) |  |  |
+| `addresses` | [`string`](#string) | repeated | The list of addresses this cluster has or used to have. Addresses can not be removed from this list after they have been added. |
+| `state` | [`State`](#ttn.lorawan.v3.State) |  | The reviewing state of the cluster. This field can only be modified by admins. |
 | `location` | [`Location`](#ttn.lorawan.v3.Location) |  |  |
 | `location_description` | [`string`](#string) |  |  |
 | `roles` | [`ClusterRole`](#ttn.lorawan.v3.ClusterRole) | repeated |  |
@@ -1453,6 +1454,7 @@ Cluster is the message that defines a Cluster in the network.
 | `name` | <p>`string.max_len`: `50`</p> |
 | `description` | <p>`string.max_len`: `2000`</p> |
 | `attributes` | <p>`map.keys.string.max_len`: `36`</p><p>`map.keys.string.pattern`: `^[a-z0-9](?:[-]?[a-z0-9]){2,}$`</p> |
+| `state` | <p>`enum.defined_only`: `true`</p> |
 | `location` | <p>`message.required`: `true`</p> |
 
 ### <a name="ttn.lorawan.v3.Cluster.AttributesEntry">Message `Cluster.AttributesEntry`</a>
