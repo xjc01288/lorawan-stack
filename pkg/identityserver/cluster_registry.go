@@ -19,6 +19,7 @@ import (
 
 	"github.com/gogo/protobuf/types"
 	"github.com/jinzhu/gorm"
+	"go.thethings.network/lorawan-stack/pkg/auth"
 	"go.thethings.network/lorawan-stack/pkg/auth/rights"
 	"go.thethings.network/lorawan-stack/pkg/identityserver/blacklist"
 	"go.thethings.network/lorawan-stack/pkg/identityserver/store"
@@ -46,6 +47,18 @@ func (is *IdentityServer) createCluster(ctx context.Context, req *ttnpb.CreateCl
 	if err := validateContactInfo(req.Cluster.ContactInfo); err != nil {
 		return nil, err
 	}
+	secret := req.Cluster.Secret
+	if secret == "" {
+		secret, err = auth.GenerateKey(ctx)
+		if err != nil {
+			return nil, err
+		}
+	}
+	hashedSecret, err := auth.Hash(secret)
+	if err != nil {
+		return nil, err
+	}
+	req.Cluster.Secret = string(hashedSecret)
 	if !createdByAdmin {
 		req.Cluster.State = ttnpb.STATE_REQUESTED
 	}
@@ -74,6 +87,8 @@ func (is *IdentityServer) createCluster(ctx context.Context, req *ttnpb.CreateCl
 	if err != nil {
 		return nil, err
 	}
+
+	cls.Secret = secret // Return the unhashed secret, in case it was generated.
 
 	is.invalidateCachedMembershipsForAccount(ctx, &req.Collaborator)
 
