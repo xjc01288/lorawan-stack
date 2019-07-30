@@ -34,7 +34,7 @@ import (
 var (
 	setup        sync.Once
 	dbConnString string
-	population   = store.NewPopulator(12, 42)
+	population   = store.NewPopulator(13, 42)
 )
 
 var (
@@ -47,6 +47,7 @@ var (
 	collaboratorUser, collaboratorUserIdx             = getTestUser()
 	applicationAccessUser, applicationAccessUserIdx   = getTestUser()
 	clientAccessUser, clientAccessUserIdx             = getTestUser()
+	clusterAccessUser, clusterAccessUserIdx           = getTestUser()
 	gatewayAccessUser, gatewayAccessUserIdx           = getTestUser()
 	organizationAccessUser, organizationAccessUserIdx = getTestUser()
 	userAccessUser, userAccessUserIdx                 = getTestUser()
@@ -216,6 +217,25 @@ func userClients(userID *ttnpb.UserIdentifiers) ttnpb.Clients {
 
 	return ttnpb.Clients{
 		Clients: clients,
+	}
+}
+
+func userClusters(userID *ttnpb.UserIdentifiers) ttnpb.Clusters {
+	clusters := []*ttnpb.Cluster{}
+	for _, cluster := range population.Clusters {
+		for id, collaborators := range population.Memberships {
+			if cluster.IDString() == id.IDString() {
+				for _, collaborator := range collaborators {
+					if collaborator.IDString() == userID.GetUserID() {
+						clusters = append(clusters, cluster)
+					}
+				}
+			}
+		}
+	}
+
+	return ttnpb.Clusters{
+		Clusters: clusters,
 	}
 }
 

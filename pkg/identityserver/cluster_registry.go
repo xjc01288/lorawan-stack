@@ -19,37 +19,47 @@ import (
 
 	"github.com/gogo/protobuf/types"
 	"github.com/jinzhu/gorm"
-	"go.thethings.network/lorawan-stack/pkg/errors"
+	"go.thethings.network/lorawan-stack/pkg/auth/rights"
 	"go.thethings.network/lorawan-stack/pkg/identityserver/blacklist"
 	"go.thethings.network/lorawan-stack/pkg/identityserver/store"
 	"go.thethings.network/lorawan-stack/pkg/ttnpb"
+	"go.thethings.network/lorawan-stack/pkg/unique"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 )
 
-// TODO: Write func to determine if caller can manage clusters.
-var canManageClusters = func(_ context.Context) bool {
-	return false
-}
-
-var errNoClusterAdminRights = errors.DefinePermissionDenied("no_cluster_admin_rights", "no cluster admin rights")
 
 func (is *IdentityServer) createCluster(ctx context.Context, req *ttnpb.CreateClusterRequest) (cls *ttnpb.Cluster, err error) {
+	createdByAdmin := is.IsAdmin(ctx)
 	if err = blacklist.Check(ctx, req.ClusterID); err != nil {
 		return nil, err
 	}
-	if err = is.RequireAuthenticated(ctx); err != nil {
-		return nil, err
-	}
-	if !canManageClusters(ctx) {
-		return nil, errNoClusterAdminRights
+	if usrIDs := req.Collaborator.GetUserIDs(); usrIDs != nil {
+		if err = rights.RequireUser(ctx, *usrIDs, ttnpb.RIGHT_USER_CLUSTERS_CREATE); err != nil {
+			return nil, err
+		}
+	} else if orgIDs := req.Collaborator.GetOrganizationIDs(); orgIDs != nil {
+		if err = rights.RequireOrganization(ctx, *orgIDs, ttnpb.RIGHT_ORGANIZATION_CLUSTERS_CREATE); err != nil {
+			return nil, err
+		}
 	}
 	if err := validateContactInfo(req.Cluster.ContactInfo); err != nil {
 		return nil, err
 	}
+	if !createdByAdmin {
+		req.Cluster.State = ttnpb.STATE_REQUESTED
+	}
 	err = is.withDatabase(ctx, func(db *gorm.DB) (err error) {
 		cls, err = store.GetClusterStore(db).CreateCluster(ctx, &req.Cluster)
 		if err != nil {
+			return err
+		}
+		if err = store.GetMembershipStore(db).SetMember(
+			ctx,
+			&req.Collaborator,
+			cls.ClusterIdentifiers,
+			ttnpb.RightsFrom(ttnpb.RIGHT_ALL),
+		); err != nil {
 			return err
 		}
 		if len(req.ContactInfo) > 0 {
@@ -64,14 +74,24 @@ func (is *IdentityServer) createCluster(ctx context.Context, req *ttnpb.CreateCl
 	if err != nil {
 		return nil, err
 	}
+
+	is.invalidateCachedMembershipsForAccount(ctx, &req.Collaborator)
+
 	return cls, nil
 }
 
 func (is *IdentityServer) getCluster(ctx context.Context, req *ttnpb.GetClusterRequest) (cls *ttnpb.Cluster, err error) {
-	if !canManageClusters(ctx) {
-		defer func() { cls = cls.PublicSafe() }()
+	if err = is.RequireAuthenticated(ctx); err != nil {
+		return nil, err
 	}
 	req.FieldMask.Paths = cleanFieldMaskPaths(ttnpb.ClusterFieldPathsNested, req.FieldMask.Paths, getPaths, nil)
+	if err = rights.RequireCluster(ctx, req.ClusterIdentifiers, ttnpb.RIGHT_CLUSTER_ALL); err != nil {
+		if ttnpb.HasOnlyAllowedFields(req.FieldMask.Paths, ttnpb.PublicClusterFields...) {
+			defer func() { cls = cls.PublicSafe() }()
+		} else {
+			return nil, err
+		}
+	}
 	err = is.withDatabase(ctx, func(db *gorm.DB) (err error) {
 		cls, err = store.GetClusterStore(db).GetCluster(ctx, &req.ClusterIdentifiers, &req.FieldMask)
 		if err != nil {
@@ -92,14 +112,32 @@ func (is *IdentityServer) getCluster(ctx context.Context, req *ttnpb.GetClusterR
 }
 
 func (is *IdentityServer) listClusters(ctx context.Context, req *ttnpb.ListClustersRequest) (clss *ttnpb.Clusters, err error) {
-	if !canManageClusters(ctx) {
-		defer func() {
-			for i, cls := range clss.Clusters {
-				clss.Clusters[i] = cls.PublicSafe()
-			}
-		}()
-	}
 	req.FieldMask.Paths = cleanFieldMaskPaths(ttnpb.ClusterFieldPathsNested, req.FieldMask.Paths, getPaths, nil)
+	var clsRights map[string]*ttnpb.Rights
+	if req.Collaborator == nil {
+		callerRights, _, err := is.getRights(ctx)
+		if err != nil {
+			return nil, err
+		}
+		clsRights = make(map[string]*ttnpb.Rights, len(callerRights))
+		for ids, rights := range callerRights {
+			if ids.EntityType() == "cluster" {
+				clsRights[unique.ID(ctx, ids)] = rights
+			}
+		}
+		if len(clsRights) == 0 {
+			return &ttnpb.Clusters{}, nil
+		}
+	}
+	if usrIDs := req.Collaborator.GetUserIDs(); usrIDs != nil {
+		if err = rights.RequireUser(ctx, *usrIDs, ttnpb.RIGHT_USER_CLUSTERS_LIST); err != nil {
+			return nil, err
+		}
+	} else if orgIDs := req.Collaborator.GetOrganizationIDs(); orgIDs != nil {
+		if err = rights.RequireOrganization(ctx, *orgIDs, ttnpb.RIGHT_ORGANIZATION_CLUSTERS_LIST); err != nil {
+			return nil, err
+		}
+	}
 	var total uint64
 	ctx = store.WithPagination(ctx, req.Limit, req.Page, &total)
 	defer func() {
@@ -108,10 +146,36 @@ func (is *IdentityServer) listClusters(ctx context.Context, req *ttnpb.ListClust
 		}
 	}()
 	clss = &ttnpb.Clusters{}
-	err = is.withDatabase(ctx, func(db *gorm.DB) (err error) {
-		clss.Clusters, err = store.GetClusterStore(db).FindClusters(ctx, nil, &req.FieldMask)
+	err = is.withDatabase(ctx, func(db *gorm.DB) error {
+		if clsRights == nil {
+			rights, err := store.GetMembershipStore(db).FindMemberRights(ctx, req.Collaborator, "cluster")
+			if err != nil {
+				return err
+			}
+			clsRights = make(map[string]*ttnpb.Rights, len(rights))
+			for ids, rights := range rights {
+				clsRights[unique.ID(ctx, ids)] = rights
+			}
+		}
+		if len(clsRights) == 0 {
+			return nil
+		}
+		clsIDs := make([]*ttnpb.ClusterIdentifiers, 0, len(clsRights))
+		for uid := range clsRights {
+			clsID, err := unique.ToClusterID(uid)
+			if err != nil {
+				continue
+			}
+			clsIDs = append(clsIDs, &clsID)
+		}
+		clss.Clusters, err = store.GetClusterStore(db).FindClusters(ctx, clsIDs, &req.FieldMask)
 		if err != nil {
 			return err
+		}
+		for i, cls := range clss.Clusters {
+			if rights.RequireCluster(ctx, cls.ClusterIdentifiers, ttnpb.RIGHT_CLUSTER_ALL) != nil {
+				clss.Clusters[i] = cls.PublicSafe()
+			}
 		}
 		return nil
 	})
@@ -122,11 +186,8 @@ func (is *IdentityServer) listClusters(ctx context.Context, req *ttnpb.ListClust
 }
 
 func (is *IdentityServer) updateCluster(ctx context.Context, req *ttnpb.UpdateClusterRequest) (cls *ttnpb.Cluster, err error) {
-	if err = is.RequireAuthenticated(ctx); err != nil {
+	if err = rights.RequireCluster(ctx, req.ClusterIdentifiers, ttnpb.RIGHT_CLUSTER_ALL); err != nil {
 		return nil, err
-	}
-	if !canManageClusters(ctx) {
-		return nil, errNoClusterAdminRights
 	}
 	req.FieldMask.Paths = cleanFieldMaskPaths(ttnpb.ClusterFieldPathsNested, req.FieldMask.Paths, nil, getPaths)
 	if len(req.FieldMask.Paths) == 0 {
@@ -137,6 +198,17 @@ func (is *IdentityServer) updateCluster(ctx context.Context, req *ttnpb.UpdateCl
 			return nil, err
 		}
 	}
+	updatedByAdmin := is.IsAdmin(ctx)
+
+	if !updatedByAdmin {
+		for _, path := range req.FieldMask.Paths {
+			switch path {
+			case "state":
+				return nil, errUpdateUserAdminField.WithAttributes("field", path)
+			}
+		}
+	}
+
 	err = is.withDatabase(ctx, func(db *gorm.DB) (err error) {
 		cls, err = store.GetClusterStore(db).UpdateCluster(ctx, &req.Cluster, &req.FieldMask)
 		if err != nil {
@@ -158,11 +230,8 @@ func (is *IdentityServer) updateCluster(ctx context.Context, req *ttnpb.UpdateCl
 }
 
 func (is *IdentityServer) deleteCluster(ctx context.Context, ids *ttnpb.ClusterIdentifiers) (*types.Empty, error) {
-	if err := is.RequireAuthenticated(ctx); err != nil {
+	if err := rights.RequireCluster(ctx, *ids, ttnpb.RIGHT_CLUSTER_ALL); err != nil {
 		return nil, err
-	}
-	if !canManageClusters(ctx) {
-		return nil, errNoClusterAdminRights
 	}
 	err := is.withDatabase(ctx, func(db *gorm.DB) error {
 		return store.GetClusterStore(db).DeleteCluster(ctx, ids)

@@ -15,8 +15,6 @@
 package identityserver
 
 import (
-	"context"
-	"fmt"
 	"testing"
 
 	"github.com/gogo/protobuf/types"
@@ -28,57 +26,35 @@ import (
 	"google.golang.org/grpc"
 )
 
-func TestClustersUnauthenticated(t *testing.T) {
-	a := assertions.New(t)
-	ctx := test.Context()
-
-	canManageClusters = func(_ context.Context) bool {
-		return false
+func init() {
+	// remove Clusters assigned to the user by the populator
+	userID := paginationUser.UserIdentifiers
+	for _, Cluster := range population.Clusters {
+		for id, collaborators := range population.Memberships {
+			if Cluster.IDString() == id.IDString() {
+				for i, collaborator := range collaborators {
+					if collaborator.IDString() == userID.GetUserID() {
+						collaborators = collaborators[:i+copy(collaborators[i:], collaborators[i+1:])]
+					}
+				}
+			}
+		}
 	}
 
-	testWithIdentityServer(t, func(is *IdentityServer, cc *grpc.ClientConn) {
-		reg := ttnpb.NewClusterRegistryClient(cc)
-
-		_, err := reg.Create(ctx, &ttnpb.CreateClusterRequest{
-			Cluster: ttnpb.Cluster{
-				ClusterIdentifiers: ttnpb.ClusterIdentifiers{ClusterID: "foo-cls"},
-			},
+	// add deterministic number of Clusters
+	for i := 0; i < 3; i++ {
+		ClusterID := population.Clusters[i].EntityIdentifiers()
+		population.Memberships[ClusterID] = append(population.Memberships[ClusterID], &ttnpb.Collaborator{
+			OrganizationOrUserIdentifiers: *paginationUser.OrganizationOrUserIdentifiers(),
+			Rights:                        []ttnpb.Right{ttnpb.RIGHT_CLUSTER_ALL},
 		})
-
-		if a.So(err, should.NotBeNil) {
-			a.So(errors.IsUnauthenticated(err), should.BeTrue)
-		}
-
-		_, err = reg.Update(ctx, &ttnpb.UpdateClusterRequest{
-			Cluster: ttnpb.Cluster{
-				ClusterIdentifiers: ttnpb.ClusterIdentifiers{ClusterID: "foo-cls"},
-				Name:               "Updated Name",
-			},
-			FieldMask: types.FieldMask{Paths: []string{"name"}},
-		})
-
-		if a.So(err, should.NotBeNil) {
-			a.So(errors.IsUnauthenticated(err), should.BeTrue)
-		}
-
-		_, err = reg.Delete(ctx, &ttnpb.ClusterIdentifiers{ClusterID: "foo-cls"})
-
-		if a.So(err, should.NotBeNil) {
-			a.So(errors.IsUnauthenticated(err), should.BeTrue)
-		}
-	})
+	}
 }
 
 func TestClustersPermissionDenied(t *testing.T) {
 	a := assertions.New(t)
 	ctx := test.Context()
 
-	canManageClusters = func(_ context.Context) bool {
-		return false
-	}
-
-	creds := userCreds(defaultUserIdx, "key without rights")
-
 	testWithIdentityServer(t, func(is *IdentityServer, cc *grpc.ClientConn) {
 		reg := ttnpb.NewClusterRegistryClient(cc)
 
@@ -86,7 +62,33 @@ func TestClustersPermissionDenied(t *testing.T) {
 			Cluster: ttnpb.Cluster{
 				ClusterIdentifiers: ttnpb.ClusterIdentifiers{ClusterID: "foo-cls"},
 			},
-		}, creds)
+			Collaborator: *ttnpb.UserIdentifiers{UserID: "foo-usr"}.OrganizationOrUserIdentifiers(),
+		})
+
+		if a.So(err, should.NotBeNil) {
+			a.So(errors.IsPermissionDenied(err), should.BeTrue)
+		}
+
+		_, err = reg.Get(ctx, &ttnpb.GetClusterRequest{
+			ClusterIdentifiers: ttnpb.ClusterIdentifiers{ClusterID: "foo-cls"},
+			FieldMask:          types.FieldMask{Paths: []string{"name"}},
+		})
+
+		if a.So(err, should.NotBeNil) {
+			a.So(errors.IsUnauthenticated(err), should.BeTrue)
+		}
+
+		listRes, err := reg.List(ctx, &ttnpb.ListClustersRequest{
+			FieldMask: types.FieldMask{Paths: []string{"name"}},
+		})
+
+		a.So(err, should.BeNil)
+		a.So(listRes.Clusters, should.BeEmpty)
+
+		_, err = reg.List(ctx, &ttnpb.ListClustersRequest{
+			Collaborator: ttnpb.UserIdentifiers{UserID: "foo-usr"}.OrganizationOrUserIdentifiers(),
+			FieldMask:    types.FieldMask{Paths: []string{"name"}},
+		})
 
 		if a.So(err, should.NotBeNil) {
 			a.So(errors.IsPermissionDenied(err), should.BeTrue)
@@ -98,13 +100,13 @@ func TestClustersPermissionDenied(t *testing.T) {
 				Name:               "Updated Name",
 			},
 			FieldMask: types.FieldMask{Paths: []string{"name"}},
-		}, creds)
+		})
 
 		if a.So(err, should.NotBeNil) {
 			a.So(errors.IsPermissionDenied(err), should.BeTrue)
 		}
 
-		_, err = reg.Delete(ctx, &ttnpb.ClusterIdentifiers{ClusterID: "foo-cls"}, creds)
+		_, err = reg.Delete(ctx, &ttnpb.ClusterIdentifiers{ClusterID: "foo-cls"})
 
 		if a.So(err, should.NotBeNil) {
 			a.So(errors.IsPermissionDenied(err), should.BeTrue)
@@ -116,20 +118,18 @@ func TestClustersCRUD(t *testing.T) {
 	a := assertions.New(t)
 	ctx := test.Context()
 
-	creds := userCreds(adminUserIdx, "") // TODO: Replace with cluster management creds.
-
-	canManageClusters = func(_ context.Context) bool {
-		return true
-	}
-
 	testWithIdentityServer(t, func(is *IdentityServer, cc *grpc.ClientConn) {
 		reg := ttnpb.NewClusterRegistryClient(cc)
+
+		userID, creds := population.Users[defaultUserIdx].UserIdentifiers, userCreds(defaultUserIdx)
+		credsWithoutRights := userCreds(defaultUserIdx, "key without rights")
 
 		created, err := reg.Create(ctx, &ttnpb.CreateClusterRequest{
 			Cluster: ttnpb.Cluster{
 				ClusterIdentifiers: ttnpb.ClusterIdentifiers{ClusterID: "foo"},
 				Name:               "Foo Cluster",
 			},
+			Collaborator: *userID.OrganizationOrUserIdentifiers(),
 		}, creds)
 
 		a.So(err, should.BeNil)
@@ -143,11 +143,21 @@ func TestClustersCRUD(t *testing.T) {
 		a.So(err, should.BeNil)
 		a.So(got.Name, should.Equal, created.Name)
 
-		_, err = reg.Get(ctx, &ttnpb.GetClusterRequest{
+		got, err = reg.Get(ctx, &ttnpb.GetClusterRequest{
 			ClusterIdentifiers: created.ClusterIdentifiers,
-			FieldMask:          types.FieldMask{Paths: []string{"name"}},
-		})
+			FieldMask:          types.FieldMask{Paths: []string{"ids"}},
+		}, credsWithoutRights)
+
 		a.So(err, should.BeNil)
+
+		got, err = reg.Get(ctx, &ttnpb.GetClusterRequest{
+			ClusterIdentifiers: created.ClusterIdentifiers,
+			FieldMask:          types.FieldMask{Paths: []string{"attributes"}},
+		}, credsWithoutRights)
+
+		if a.So(err, should.NotBeNil) {
+			a.So(errors.IsPermissionDenied(err), should.BeTrue)
+		}
 
 		updated, err := reg.Update(ctx, &ttnpb.UpdateClusterRequest{
 			Cluster: ttnpb.Cluster{
@@ -160,25 +170,23 @@ func TestClustersCRUD(t *testing.T) {
 		a.So(err, should.BeNil)
 		a.So(updated.Name, should.Equal, "Updated Name")
 
-		list, err := reg.List(ctx, &ttnpb.ListClustersRequest{
-			FieldMask: types.FieldMask{Paths: []string{"name"}},
-		}, creds)
-		a.So(err, should.BeNil)
-		if a.So(list.Clusters, should.NotBeEmpty) {
-			var found bool
-			for _, item := range list.Clusters {
-				if item.ClusterIdentifiers == created.ClusterIdentifiers {
-					found = true
-					a.So(item.Name, should.Equal, updated.Name)
+		for _, collaborator := range []*ttnpb.OrganizationOrUserIdentifiers{nil, userID.OrganizationOrUserIdentifiers()} {
+			list, err := reg.List(ctx, &ttnpb.ListClustersRequest{
+				FieldMask:    types.FieldMask{Paths: []string{"name"}},
+				Collaborator: collaborator,
+			}, creds)
+			a.So(err, should.BeNil)
+			if a.So(list.Clusters, should.NotBeEmpty) {
+				var found bool
+				for _, item := range list.Clusters {
+					if item.ClusterIdentifiers == created.ClusterIdentifiers {
+						found = true
+						a.So(item.Name, should.Equal, updated.Name)
+					}
 				}
+				a.So(found, should.BeTrue)
 			}
-			a.So(found, should.BeTrue)
 		}
-
-		_, err = reg.List(ctx, &ttnpb.ListClustersRequest{
-			FieldMask: types.FieldMask{Paths: []string{"name"}},
-		})
-		a.So(err, should.BeNil)
 
 		_, err = reg.Delete(ctx, &created.ClusterIdentifiers, creds)
 		a.So(err, should.BeNil)
@@ -187,30 +195,18 @@ func TestClustersCRUD(t *testing.T) {
 
 func TestClustersPagination(t *testing.T) {
 	a := assertions.New(t)
-	ctx := test.Context()
-
-	creds := userCreds(adminUserIdx, "") // TODO: Replace with cluster management creds.
-
-	canManageClusters = func(_ context.Context) bool {
-		return true
-	}
 
 	testWithIdentityServer(t, func(is *IdentityServer, cc *grpc.ClientConn) {
+		userID := paginationUser.UserIdentifiers
+		creds := userCreds(paginationUserIdx)
+
 		reg := ttnpb.NewClusterRegistryClient(cc)
 
-		for i := 0; i < 3; i++ {
-			reg.Create(ctx, &ttnpb.CreateClusterRequest{
-				Cluster: ttnpb.Cluster{
-					ClusterIdentifiers: ttnpb.ClusterIdentifiers{ClusterID: fmt.Sprintf("foo-%d", i)},
-					Name:               fmt.Sprintf("Foo Cluster %d", i),
-				},
-			}, creds)
-		}
-
 		list, err := reg.List(test.Context(), &ttnpb.ListClustersRequest{
-			FieldMask: types.FieldMask{Paths: []string{"name"}},
-			Limit:     2,
-			Page:      1,
+			FieldMask:    types.FieldMask{Paths: []string{"name"}},
+			Collaborator: userID.OrganizationOrUserIdentifiers(),
+			Limit:        2,
+			Page:         1,
 		}, creds)
 
 		a.So(list, should.NotBeNil)
@@ -218,9 +214,10 @@ func TestClustersPagination(t *testing.T) {
 		a.So(err, should.BeNil)
 
 		list, err = reg.List(test.Context(), &ttnpb.ListClustersRequest{
-			FieldMask: types.FieldMask{Paths: []string{"name"}},
-			Limit:     2,
-			Page:      2,
+			FieldMask:    types.FieldMask{Paths: []string{"name"}},
+			Collaborator: userID.OrganizationOrUserIdentifiers(),
+			Limit:        2,
+			Page:         2,
 		}, creds)
 
 		a.So(list, should.NotBeNil)
@@ -228,9 +225,10 @@ func TestClustersPagination(t *testing.T) {
 		a.So(err, should.BeNil)
 
 		list, err = reg.List(test.Context(), &ttnpb.ListClustersRequest{
-			FieldMask: types.FieldMask{Paths: []string{"name"}},
-			Limit:     2,
-			Page:      3,
+			FieldMask:    types.FieldMask{Paths: []string{"name"}},
+			Collaborator: userID.OrganizationOrUserIdentifiers(),
+			Limit:        2,
+			Page:         3,
 		}, creds)
 
 		a.So(list, should.NotBeNil)
