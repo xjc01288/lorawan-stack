@@ -21,6 +21,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"go.thethings.network/lorawan-stack/pkg/auth"
 	"go.thethings.network/lorawan-stack/pkg/auth/rights"
+	"go.thethings.network/lorawan-stack/pkg/events"
 	"go.thethings.network/lorawan-stack/pkg/identityserver/blacklist"
 	"go.thethings.network/lorawan-stack/pkg/identityserver/store"
 	"go.thethings.network/lorawan-stack/pkg/ttnpb"
@@ -29,6 +30,20 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
+var (
+	evtCreateCluster = events.Define(
+		"cluster.create", "create OAuth cluster",
+		ttnpb.RIGHT_CLUSTER_ALL,
+	)
+	evtUpdateCluster = events.Define(
+		"cluster.update", "update OAuth cluster",
+		ttnpb.RIGHT_CLUSTER_ALL,
+	)
+	evtDeleteCluster = events.Define(
+		"cluster.delete", "delete OAuth cluster",
+		ttnpb.RIGHT_CLUSTER_ALL,
+	)
+)
 
 func (is *IdentityServer) createCluster(ctx context.Context, req *ttnpb.CreateClusterRequest) (cls *ttnpb.Cluster, err error) {
 	createdByAdmin := is.IsAdmin(ctx)
@@ -90,6 +105,7 @@ func (is *IdentityServer) createCluster(ctx context.Context, req *ttnpb.CreateCl
 
 	cls.Secret = secret // Return the unhashed secret, in case it was generated.
 
+	events.Publish(evtCreateCluster(ctx, req.ClusterIdentifiers, nil))
 	is.invalidateCachedMembershipsForAccount(ctx, &req.Collaborator)
 
 	return cls, nil
@@ -241,6 +257,7 @@ func (is *IdentityServer) updateCluster(ctx context.Context, req *ttnpb.UpdateCl
 	if err != nil {
 		return nil, err
 	}
+	events.Publish(evtUpdateCluster(ctx, req.ClusterIdentifiers, req.FieldMask.Paths))
 	return cls, nil
 }
 
@@ -254,6 +271,7 @@ func (is *IdentityServer) deleteCluster(ctx context.Context, ids *ttnpb.ClusterI
 	if err != nil {
 		return nil, err
 	}
+	events.Publish(evtDeleteCluster(ctx, ids, nil))
 	return ttnpb.Empty, nil
 }
 
