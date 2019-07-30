@@ -28,6 +28,8 @@ import (
 // NewPopulator returns a new database populator with a population of the given size.
 // It is seeded by the given seed.
 func NewPopulator(size int, seed int64) *Populator {
+	pbkdf2.SetDefaultIterations(10)
+
 	randy := rand.New(randutil.NewLockedSource(rand.NewSource(seed)))
 	p := &Populator{
 		APIKeys:     make(map[*ttnpb.EntityIdentifiers][]*ttnpb.APIKey),

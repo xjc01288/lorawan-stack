@@ -164,6 +164,30 @@ func (is *IdentityServer) ClientRights(ctx context.Context, cliIDs ttnpb.ClientI
 	return universal, nil
 }
 
+// ClusterRights returns the rights the caller has on the given cluster.
+func (is *IdentityServer) ClusterRights(ctx context.Context, clsIDs ttnpb.ClusterIdentifiers) (*ttnpb.Rights, error) {
+	entity, universal, err := is.getRights(ctx)
+	if err != nil {
+		return nil, err
+	}
+	for ids, rights := range entity {
+		if ids.EntityType() == "cluster" && ids.IDString() == clsIDs.IDString() {
+			return rights.Union(universal), nil
+		}
+	}
+	if universal == nil {
+		return &ttnpb.Rights{}, nil
+	}
+	err = is.withDatabase(ctx, func(db *gorm.DB) error {
+		_, err := store.GetClusterStore(db).GetCluster(ctx, &clsIDs, &types.FieldMask{Paths: []string{"ids"}})
+		return err
+	})
+	if err != nil {
+		return nil, err
+	}
+	return universal, nil
+}
+
 // GatewayRights returns the rights the caller has on the given gateway.
 func (is *IdentityServer) GatewayRights(ctx context.Context, gtwIDs ttnpb.GatewayIdentifiers) (*ttnpb.Rights, error) {
 	entity, universal, err := is.getRights(ctx, gtwIDs)
