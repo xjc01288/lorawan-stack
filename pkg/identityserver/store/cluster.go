@@ -25,10 +25,11 @@ type Cluster struct {
 	SoftDelete
 
 	// BEGIN common fields
-	ClusterID   string      `gorm:"unique_index:cluster_id_index;type:VARCHAR(36);not null"`
-	Name        string      `gorm:"type:VARCHAR"`
-	Description string      `gorm:"type:TEXT"`
-	Attributes  []Attribute `gorm:"polymorphic:Entity;polymorphic_value:cluster"`
+	ClusterID   string       `gorm:"unique_index:cluster_id_index;type:VARCHAR(36);not null"`
+	Name        string       `gorm:"type:VARCHAR"`
+	Description string       `gorm:"type:TEXT"`
+	Attributes  []Attribute  `gorm:"polymorphic:Entity;polymorphic_value:cluster"`
+	Memberships []Membership `gorm:"polymorphic:Entity;polymorphic_value:client"`
 	// END common fields
 
 	ClusterSecret string `gorm:"type:VARCHAR"`
