@@ -293,6 +293,27 @@ func (dst *GetClusterIdentifiersForAddressRequest) SetFields(src *GetClusterIden
 func (dst *ListClustersRequest) SetFields(src *ListClustersRequest, paths ...string) error {
 	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
 		switch name {
+		case "collaborator":
+			if len(subs) > 0 {
+				newDst := dst.Collaborator
+				if newDst == nil {
+					newDst = &OrganizationOrUserIdentifiers{}
+					dst.Collaborator = newDst
+				}
+				var newSrc *OrganizationOrUserIdentifiers
+				if src != nil {
+					newSrc = src.Collaborator
+				}
+				if err := newDst.SetFields(newSrc, subs...); err != nil {
+					return err
+				}
+			} else {
+				if src != nil {
+					dst.Collaborator = src.Collaborator
+				} else {
+					dst.Collaborator = nil
+				}
+			}
 		case "field_mask":
 			if len(subs) > 0 {
 				return fmt.Errorf("'field_mask' has no subfields, but %s were specified", subs)
@@ -362,6 +383,24 @@ func (dst *CreateClusterRequest) SetFields(src *CreateClusterRequest, paths ...s
 					dst.Cluster = zero
 				}
 			}
+		case "collaborator":
+			if len(subs) > 0 {
+				newDst := &dst.Collaborator
+				var newSrc *OrganizationOrUserIdentifiers
+				if src != nil {
+					newSrc = &src.Collaborator
+				}
+				if err := newDst.SetFields(newSrc, subs...); err != nil {
+					return err
+				}
+			} else {
+				if src != nil {
+					dst.Collaborator = src.Collaborator
+				} else {
+					var zero OrganizationOrUserIdentifiers
+					dst.Collaborator = zero
+				}
+			}
 
 		default:
 			return fmt.Errorf("invalid field: '%s'", name)
@@ -400,6 +439,149 @@ func (dst *UpdateClusterRequest) SetFields(src *UpdateClusterRequest, paths ...s
 			} else {
 				var zero types.FieldMask
 				dst.FieldMask = zero
+			}
+
+		default:
+			return fmt.Errorf("invalid field: '%s'", name)
+		}
+	}
+	return nil
+}
+
+func (dst *ListClusterCollaboratorsRequest) SetFields(src *ListClusterCollaboratorsRequest, paths ...string) error {
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		switch name {
+		case "cluster_ids":
+			if len(subs) > 0 {
+				newDst := &dst.ClusterIdentifiers
+				var newSrc *ClusterIdentifiers
+				if src != nil {
+					newSrc = &src.ClusterIdentifiers
+				}
+				if err := newDst.SetFields(newSrc, subs...); err != nil {
+					return err
+				}
+			} else {
+				if src != nil {
+					dst.ClusterIdentifiers = src.ClusterIdentifiers
+				} else {
+					var zero ClusterIdentifiers
+					dst.ClusterIdentifiers = zero
+				}
+			}
+		case "limit":
+			if len(subs) > 0 {
+				return fmt.Errorf("'limit' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.Limit = src.Limit
+			} else {
+				var zero uint32
+				dst.Limit = zero
+			}
+		case "page":
+			if len(subs) > 0 {
+				return fmt.Errorf("'page' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.Page = src.Page
+			} else {
+				var zero uint32
+				dst.Page = zero
+			}
+
+		default:
+			return fmt.Errorf("invalid field: '%s'", name)
+		}
+	}
+	return nil
+}
+
+func (dst *GetClusterCollaboratorRequest) SetFields(src *GetClusterCollaboratorRequest, paths ...string) error {
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		switch name {
+		case "cluster_ids":
+			if len(subs) > 0 {
+				newDst := &dst.ClusterIdentifiers
+				var newSrc *ClusterIdentifiers
+				if src != nil {
+					newSrc = &src.ClusterIdentifiers
+				}
+				if err := newDst.SetFields(newSrc, subs...); err != nil {
+					return err
+				}
+			} else {
+				if src != nil {
+					dst.ClusterIdentifiers = src.ClusterIdentifiers
+				} else {
+					var zero ClusterIdentifiers
+					dst.ClusterIdentifiers = zero
+				}
+			}
+		case "collaborator":
+			if len(subs) > 0 {
+				newDst := &dst.OrganizationOrUserIdentifiers
+				var newSrc *OrganizationOrUserIdentifiers
+				if src != nil {
+					newSrc = &src.OrganizationOrUserIdentifiers
+				}
+				if err := newDst.SetFields(newSrc, subs...); err != nil {
+					return err
+				}
+			} else {
+				if src != nil {
+					dst.OrganizationOrUserIdentifiers = src.OrganizationOrUserIdentifiers
+				} else {
+					var zero OrganizationOrUserIdentifiers
+					dst.OrganizationOrUserIdentifiers = zero
+				}
+			}
+
+		default:
+			return fmt.Errorf("invalid field: '%s'", name)
+		}
+	}
+	return nil
+}
+
+func (dst *SetClusterCollaboratorRequest) SetFields(src *SetClusterCollaboratorRequest, paths ...string) error {
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		switch name {
+		case "cluster_ids":
+			if len(subs) > 0 {
+				newDst := &dst.ClusterIdentifiers
+				var newSrc *ClusterIdentifiers
+				if src != nil {
+					newSrc = &src.ClusterIdentifiers
+				}
+				if err := newDst.SetFields(newSrc, subs...); err != nil {
+					return err
+				}
+			} else {
+				if src != nil {
+					dst.ClusterIdentifiers = src.ClusterIdentifiers
+				} else {
+					var zero ClusterIdentifiers
+					dst.ClusterIdentifiers = zero
+				}
+			}
+		case "collaborator":
+			if len(subs) > 0 {
+				newDst := &dst.Collaborator
+				var newSrc *Collaborator
+				if src != nil {
+					newSrc = &src.Collaborator
+				}
+				if err := newDst.SetFields(newSrc, subs...); err != nil {
+					return err
+				}
+			} else {
+				if src != nil {
+					dst.Collaborator = src.Collaborator
+				} else {
+					var zero Collaborator
+					dst.Collaborator = zero
+				}
 			}
 
 		default:

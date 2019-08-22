@@ -2148,6 +2148,27 @@
         },
         "parameters": [
           {
+            "name": "collaborator.organization_ids.organization_id",
+            "description": "This ID shares namespace with user IDs.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.user_ids.user_id",
+            "description": "This ID shares namespace with organization IDs.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.user_ids.email",
+            "description": "Secondary identifier, which can only be used in specific requests.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "field_mask.paths",
             "description": "The set of field mask paths.",
             "in": "query",
@@ -2180,30 +2201,6 @@
             "required": false,
             "type": "integer",
             "format": "int64"
-          }
-        ],
-        "tags": [
-          "ClusterRegistry"
-        ]
-      },
-      "post": {
-        "operationId": "Create",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v3Cluster"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3CreateClusterRequest"
-            }
           }
         ],
         "tags": [
@@ -2279,6 +2276,215 @@
         ]
       }
     },
+    "/clusters/{cluster_ids.cluster_id}/collaborator": {
+      "get": {
+        "summary": "Get the cluster with the given identifiers, selecting the fields given\nby the field mask.",
+        "operationId": "GetCollaborator",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3GetCollaboratorResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cluster_ids.cluster_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.organization_ids.organization_id",
+            "description": "This ID shares namespace with user IDs.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.user_ids.user_id",
+            "description": "This ID shares namespace with organization IDs.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.user_ids.email",
+            "description": "Secondary identifier, which can only be used in specific requests.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ClusterAccess"
+        ]
+      }
+    },
+    "/clusters/{cluster_ids.cluster_id}/collaborator/organization/{collaborator.organization_ids.organization_id}": {
+      "get": {
+        "summary": "Get the cluster with the given identifiers, selecting the fields given\nby the field mask.",
+        "operationId": "GetCollaborator3",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3GetCollaboratorResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cluster_ids.cluster_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.organization_ids.organization_id",
+            "description": "This ID shares namespace with user IDs.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.user_ids.user_id",
+            "description": "This ID shares namespace with organization IDs.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.user_ids.email",
+            "description": "Secondary identifier, which can only be used in specific requests.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ClusterAccess"
+        ]
+      }
+    },
+    "/clusters/{cluster_ids.cluster_id}/collaborator/user/{collaborator.user_ids.user_id}": {
+      "get": {
+        "summary": "Get the cluster with the given identifiers, selecting the fields given\nby the field mask.",
+        "operationId": "GetCollaborator2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3GetCollaboratorResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cluster_ids.cluster_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.user_ids.user_id",
+            "description": "This ID shares namespace with organization IDs.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.organization_ids.organization_id",
+            "description": "This ID shares namespace with user IDs.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.user_ids.email",
+            "description": "Secondary identifier, which can only be used in specific requests.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ClusterAccess"
+        ]
+      }
+    },
+    "/clusters/{cluster_ids.cluster_id}/collaborators": {
+      "get": {
+        "summary": "List clusters, selecting the fields given by the field mask.",
+        "operationId": "ListCollaborators",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Collaborators"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cluster_ids.cluster_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "description": "Limit the number of results per page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "description": "Page number for pagination. 0 is interpreted as 1.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ClusterAccess"
+        ]
+      },
+      "put": {
+        "operationId": "SetCollaborator",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cluster_ids.cluster_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3SetClusterCollaboratorRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ClusterAccess"
+        ]
+      }
+    },
     "/clusters/{cluster_id}": {
       "delete": {
         "operationId": "Delete",
@@ -2300,6 +2506,30 @@
         ],
         "tags": [
           "ClusterRegistry"
+        ]
+      }
+    },
+    "/clusters/{cluster_id}/rights": {
+      "get": {
+        "operationId": "ListRights",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Rights"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cluster_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ClusterAccess"
         ]
       }
     },
@@ -3913,6 +4143,111 @@
         ]
       }
     },
+    "/organizations/{collaborator.organization_ids.organization_id}/clusters": {
+      "get": {
+        "summary": "List clusters, selecting the fields given by the field mask.",
+        "operationId": "List3",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Clusters"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "collaborator.organization_ids.organization_id",
+            "description": "This ID shares namespace with user IDs.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.user_ids.user_id",
+            "description": "This ID shares namespace with organization IDs.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.user_ids.email",
+            "description": "Secondary identifier, which can only be used in specific requests.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "field_mask.paths",
+            "description": "The set of field mask paths.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "order",
+            "description": "Order the results by this field path (must be present in the field mask).\nDefault ordering is by ID. Prepend with a minus (-) to reverse the order.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "description": "Limit the number of results per page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "description": "Page number for pagination. 0 is interpreted as 1.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ClusterRegistry"
+        ]
+      },
+      "post": {
+        "operationId": "Create2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Cluster"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "collaborator.organization_ids.organization_id",
+            "description": "This ID shares namespace with user IDs.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3CreateClusterRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ClusterRegistry"
+        ]
+      }
+    },
     "/organizations/{collaborator.organization_ids.organization_id}/gateways": {
       "get": {
         "summary": "List gateways. See request message for details.",
@@ -5002,6 +5337,111 @@
         ],
         "tags": [
           "ClientRegistry"
+        ]
+      }
+    },
+    "/users/{collaborator.user_ids.user_id}/clusters": {
+      "get": {
+        "summary": "List clusters, selecting the fields given by the field mask.",
+        "operationId": "List2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Clusters"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "collaborator.user_ids.user_id",
+            "description": "This ID shares namespace with organization IDs.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.organization_ids.organization_id",
+            "description": "This ID shares namespace with user IDs.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "collaborator.user_ids.email",
+            "description": "Secondary identifier, which can only be used in specific requests.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "field_mask.paths",
+            "description": "The set of field mask paths.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "order",
+            "description": "Order the results by this field path (must be present in the field mask).\nDefault ordering is by ID. Prepend with a minus (-) to reverse the order.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "description": "Limit the number of results per page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "description": "Page number for pagination. 0 is interpreted as 1.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ClusterRegistry"
+        ]
+      },
+      "post": {
+        "operationId": "Create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Cluster"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "collaborator.user_ids.user_id",
+            "description": "This ID shares namespace with organization IDs.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3CreateClusterRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ClusterRegistry"
         ]
       }
     },
@@ -7967,6 +8407,10 @@
       "properties": {
         "cluster": {
           "$ref": "#/definitions/v3Cluster"
+        },
+        "collaborator": {
+          "$ref": "#/definitions/v3OrganizationOrUserIdentifiers",
+          "description": "Collaborator to grant all rights on the newly created cluster."
         }
       }
     },
@@ -10520,6 +10964,17 @@
       "properties": {
         "client_ids": {
           "$ref": "#/definitions/v3ClientIdentifiers"
+        },
+        "collaborator": {
+          "$ref": "#/definitions/v3Collaborator"
+        }
+      }
+    },
+    "v3SetClusterCollaboratorRequest": {
+      "type": "object",
+      "properties": {
+        "cluster_ids": {
+          "$ref": "#/definitions/v3ClusterIdentifiers"
         },
         "collaborator": {
           "$ref": "#/definitions/v3Collaborator"

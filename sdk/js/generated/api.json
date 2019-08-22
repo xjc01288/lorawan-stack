@@ -4905,6 +4905,71 @@
                   }
                 ]
               }
+            },
+            {
+              "name": "collaborator",
+              "description": "Collaborator to grant all rights on the newly created cluster.",
+              "label": "",
+              "type": "OrganizationOrUserIdentifiers",
+              "longType": "OrganizationOrUserIdentifiers",
+              "fullType": "ttn.lorawan.v3.OrganizationOrUserIdentifiers",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "message.required",
+                    "value": true
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetClusterCollaboratorRequest",
+          "longName": "GetClusterCollaboratorRequest",
+          "fullName": "ttn.lorawan.v3.GetClusterCollaboratorRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "cluster_ids",
+              "description": "",
+              "label": "",
+              "type": "ClusterIdentifiers",
+              "longType": "ClusterIdentifiers",
+              "fullType": "ttn.lorawan.v3.ClusterIdentifiers",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "message.required",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "name": "collaborator",
+              "description": "",
+              "label": "",
+              "type": "OrganizationOrUserIdentifiers",
+              "longType": "OrganizationOrUserIdentifiers",
+              "fullType": "ttn.lorawan.v3.OrganizationOrUserIdentifiers",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "message.required",
+                    "value": true
+                  }
+                ]
+              }
             }
           ]
         },
@@ -4969,14 +5034,81 @@
           ]
         },
         {
-          "name": "ListClustersRequest",
-          "longName": "ListClustersRequest",
-          "fullName": "ttn.lorawan.v3.ListClustersRequest",
+          "name": "ListClusterCollaboratorsRequest",
+          "longName": "ListClusterCollaboratorsRequest",
+          "fullName": "ttn.lorawan.v3.ListClusterCollaboratorsRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
           "extensions": [],
           "fields": [
+            {
+              "name": "cluster_ids",
+              "description": "",
+              "label": "",
+              "type": "ClusterIdentifiers",
+              "longType": "ClusterIdentifiers",
+              "fullType": "ttn.lorawan.v3.ClusterIdentifiers",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "message.required",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "name": "limit",
+              "description": "Limit the number of results per page.",
+              "label": "",
+              "type": "uint32",
+              "longType": "uint32",
+              "fullType": "uint32",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "uint32.lte",
+                    "value": 1000
+                  }
+                ]
+              }
+            },
+            {
+              "name": "page",
+              "description": "Page number for pagination. 0 is interpreted as 1.",
+              "label": "",
+              "type": "uint32",
+              "longType": "uint32",
+              "fullType": "uint32",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ListClustersRequest",
+          "longName": "ListClustersRequest",
+          "fullName": "ttn.lorawan.v3.ListClustersRequest",
+          "description": "By default we list all clusters the caller has rights on.\nSet the user or the organization (not both) to instead list the clusters\nwhere the user or organization is collaborator on.",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "collaborator",
+              "description": "",
+              "label": "",
+              "type": "OrganizationOrUserIdentifiers",
+              "longType": "OrganizationOrUserIdentifiers",
+              "fullType": "ttn.lorawan.v3.OrganizationOrUserIdentifiers",
+              "ismap": false,
+              "defaultValue": ""
+            },
             {
               "name": "field_mask",
               "description": "",
@@ -5110,6 +5242,53 @@
           ]
         },
         {
+          "name": "SetClusterCollaboratorRequest",
+          "longName": "SetClusterCollaboratorRequest",
+          "fullName": "ttn.lorawan.v3.SetClusterCollaboratorRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "cluster_ids",
+              "description": "",
+              "label": "",
+              "type": "ClusterIdentifiers",
+              "longType": "ClusterIdentifiers",
+              "fullType": "ttn.lorawan.v3.ClusterIdentifiers",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "message.required",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "name": "collaborator",
+              "description": "",
+              "label": "",
+              "type": "Collaborator",
+              "longType": "Collaborator",
+              "fullType": "ttn.lorawan.v3.Collaborator",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "message.required",
+                    "value": true
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "UpdateClusterRequest",
           "longName": "UpdateClusterRequest",
           "fullName": "ttn.lorawan.v3.UpdateClusterRequest",
@@ -5164,6 +5343,111 @@
       "messages": [],
       "services": [
         {
+          "name": "ClusterAccess",
+          "longName": "ClusterAccess",
+          "fullName": "ttn.lorawan.v3.ClusterAccess",
+          "description": "",
+          "methods": [
+            {
+              "name": "ListRights",
+              "description": "",
+              "requestType": "ClusterIdentifiers",
+              "requestLongType": "ClusterIdentifiers",
+              "requestFullType": "ttn.lorawan.v3.ClusterIdentifiers",
+              "requestStreaming": false,
+              "responseType": "Rights",
+              "responseLongType": "Rights",
+              "responseFullType": "ttn.lorawan.v3.Rights",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/clusters/{cluster_id}/rights"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GetCollaborator",
+              "description": "Get the rights of a collaborator (member) of the cluster.\nPseudo-rights in the response (such as the \"_ALL\" right) are not expanded.",
+              "requestType": "GetClusterCollaboratorRequest",
+              "requestLongType": "GetClusterCollaboratorRequest",
+              "requestFullType": "ttn.lorawan.v3.GetClusterCollaboratorRequest",
+              "requestStreaming": false,
+              "responseType": "GetCollaboratorResponse",
+              "responseLongType": "GetCollaboratorResponse",
+              "responseFullType": "ttn.lorawan.v3.GetCollaboratorResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/clusters/{cluster_ids.cluster_id}/collaborator"
+                    },
+                    {
+                      "method": "GET",
+                      "pattern": "/clusters/{cluster_ids.cluster_id}/collaborator/user/{collaborator.user_ids.user_id}"
+                    },
+                    {
+                      "method": "GET",
+                      "pattern": "/clusters/{cluster_ids.cluster_id}/collaborator/organization/{collaborator.organization_ids.organization_id}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "SetCollaborator",
+              "description": "Set the rights of a collaborator (member) on the cluster.\nSetting a collaborator without rights, removes them.",
+              "requestType": "SetClusterCollaboratorRequest",
+              "requestLongType": "SetClusterCollaboratorRequest",
+              "requestFullType": "ttn.lorawan.v3.SetClusterCollaboratorRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "PUT",
+                      "pattern": "/clusters/{cluster_ids.cluster_id}/collaborators",
+                      "body": "*"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "ListCollaborators",
+              "description": "",
+              "requestType": "ListClusterCollaboratorsRequest",
+              "requestLongType": "ListClusterCollaboratorsRequest",
+              "requestFullType": "ttn.lorawan.v3.ListClusterCollaboratorsRequest",
+              "requestStreaming": false,
+              "responseType": "Collaborators",
+              "responseLongType": "Collaborators",
+              "responseFullType": "ttn.lorawan.v3.Collaborators",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/clusters/{cluster_ids.cluster_id}/collaborators"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
           "name": "ClusterRegistry",
           "longName": "ClusterRegistry",
           "fullName": "ttn.lorawan.v3.ClusterRegistry",
@@ -5185,7 +5469,12 @@
                   "rules": [
                     {
                       "method": "POST",
-                      "pattern": "/clusters",
+                      "pattern": "/users/{collaborator.user_ids.user_id}/clusters",
+                      "body": "*"
+                    },
+                    {
+                      "method": "POST",
+                      "pattern": "/organizations/{collaborator.organization_ids.organization_id}/clusters",
                       "body": "*"
                     }
                   ]
@@ -5253,6 +5542,14 @@
                     {
                       "method": "GET",
                       "pattern": "/clusters"
+                    },
+                    {
+                      "method": "GET",
+                      "pattern": "/users/{collaborator.user_ids.user_id}/clusters"
+                    },
+                    {
+                      "method": "GET",
+                      "pattern": "/organizations/{collaborator.organization_ids.organization_id}/clusters"
                     }
                   ]
                 }

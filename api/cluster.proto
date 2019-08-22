@@ -22,6 +22,7 @@ import "lorawan-stack/api/contact_info.proto";
 import "lorawan-stack/api/enums.proto";
 import "lorawan-stack/api/identifiers.proto";
 import "lorawan-stack/api/metadata.proto";
+import "lorawan-stack/api/rights.proto";
 
 package ttn.lorawan.v3;
 
@@ -125,7 +126,11 @@ message GetClusterIdentifiersForAddressRequest {
 }
 
 message ListClustersRequest {
-  reserved 1; // In other ListEntityRequest this is OrganizationOrUserIdentifiers collaborator = 1;
+  // By default we list all clusters the caller has rights on.
+  // Set the user or the organization (not both) to instead list the clusters
+  // where the user or organization is collaborator on.
+
+  OrganizationOrUserIdentifiers collaborator = 1;
   google.protobuf.FieldMask field_mask = 2 [(gogoproto.nullable) = false];
   // Order the results by this field path (must be present in the field mask).
   // Default ordering is by ID. Prepend with a minus (-) to reverse the order.
@@ -138,9 +143,29 @@ message ListClustersRequest {
 
 message CreateClusterRequest {
   Cluster cluster = 1 [(gogoproto.embed) = true, (gogoproto.nullable) = false, (validate.rules).message.required = true];
+  // Collaborator to grant all rights on the newly created cluster.
+  OrganizationOrUserIdentifiers collaborator = 2 [(gogoproto.nullable) = false, (validate.rules).message.required = true];
 }
 
 message UpdateClusterRequest {
   Cluster cluster = 1 [(gogoproto.embed) = true, (gogoproto.nullable) = false, (validate.rules).message.required = true];
   google.protobuf.FieldMask field_mask = 2 [(gogoproto.nullable) = false];
+}
+
+message ListClusterCollaboratorsRequest {
+  ClusterIdentifiers cluster_ids = 1 [(gogoproto.embed) = true, (gogoproto.nullable) = false, (validate.rules).message.required = true];
+  // Limit the number of results per page.
+  uint32 limit = 2 [(validate.rules).uint32.lte = 1000];
+  // Page number for pagination. 0 is interpreted as 1.
+  uint32 page = 3;
+}
+
+message GetClusterCollaboratorRequest {
+  ClusterIdentifiers cluster_ids = 1 [(gogoproto.embed) = true, (gogoproto.nullable) = false, (validate.rules).message.required = true];
+  OrganizationOrUserIdentifiers collaborator = 2 [(gogoproto.embed) = true, (gogoproto.nullable) = false, (validate.rules).message.required = true];
+}
+
+message SetClusterCollaboratorRequest {
+  ClusterIdentifiers cluster_ids = 1 [(gogoproto.embed) = true, (gogoproto.nullable) = false, (validate.rules).message.required = true];
+  Collaborator collaborator = 2 [(gogoproto.nullable) = false, (validate.rules).message.required = true];
 }

@@ -77,6 +77,13 @@ var GetClusterIdentifiersForAddressRequestFieldPathsTopLevel = []string{
 	"address",
 }
 var ListClustersRequestFieldPathsNested = []string{
+	"collaborator",
+	"collaborator.ids",
+	"collaborator.ids.organization_ids",
+	"collaborator.ids.organization_ids.organization_id",
+	"collaborator.ids.user_ids",
+	"collaborator.ids.user_ids.email",
+	"collaborator.ids.user_ids.user_id",
 	"field_mask",
 	"limit",
 	"order",
@@ -84,6 +91,7 @@ var ListClustersRequestFieldPathsNested = []string{
 }
 
 var ListClustersRequestFieldPathsTopLevel = []string{
+	"collaborator",
 	"field_mask",
 	"limit",
 	"order",
@@ -110,10 +118,18 @@ var CreateClusterRequestFieldPathsNested = []string{
 	"cluster.roles",
 	"cluster.secret",
 	"cluster.updated_at",
+	"collaborator",
+	"collaborator.ids",
+	"collaborator.ids.organization_ids",
+	"collaborator.ids.organization_ids.organization_id",
+	"collaborator.ids.user_ids",
+	"collaborator.ids.user_ids.email",
+	"collaborator.ids.user_ids.user_id",
 }
 
 var CreateClusterRequestFieldPathsTopLevel = []string{
 	"cluster",
+	"collaborator",
 }
 var UpdateClusterRequestFieldPathsNested = []string{
 	"cluster",
@@ -142,6 +158,52 @@ var UpdateClusterRequestFieldPathsNested = []string{
 var UpdateClusterRequestFieldPathsTopLevel = []string{
 	"cluster",
 	"field_mask",
+}
+var ListClusterCollaboratorsRequestFieldPathsNested = []string{
+	"cluster_ids",
+	"cluster_ids.cluster_id",
+	"limit",
+	"page",
+}
+
+var ListClusterCollaboratorsRequestFieldPathsTopLevel = []string{
+	"cluster_ids",
+	"limit",
+	"page",
+}
+var GetClusterCollaboratorRequestFieldPathsNested = []string{
+	"cluster_ids",
+	"cluster_ids.cluster_id",
+	"collaborator",
+	"collaborator.ids",
+	"collaborator.ids.organization_ids",
+	"collaborator.ids.organization_ids.organization_id",
+	"collaborator.ids.user_ids",
+	"collaborator.ids.user_ids.email",
+	"collaborator.ids.user_ids.user_id",
+}
+
+var GetClusterCollaboratorRequestFieldPathsTopLevel = []string{
+	"cluster_ids",
+	"collaborator",
+}
+var SetClusterCollaboratorRequestFieldPathsNested = []string{
+	"cluster_ids",
+	"cluster_ids.cluster_id",
+	"collaborator",
+	"collaborator.ids",
+	"collaborator.ids.ids",
+	"collaborator.ids.ids.organization_ids",
+	"collaborator.ids.ids.organization_ids.organization_id",
+	"collaborator.ids.ids.user_ids",
+	"collaborator.ids.ids.user_ids.email",
+	"collaborator.ids.ids.user_ids.user_id",
+	"collaborator.rights",
+}
+
+var SetClusterCollaboratorRequestFieldPathsTopLevel = []string{
+	"cluster_ids",
+	"collaborator",
 }
 var Cluster_EndpointFieldPathsNested = []string{
 	"endpoint",

@@ -89,13 +89,17 @@
   - [Message `Cluster.Endpoint.UDP`](#ttn.lorawan.v3.Cluster.Endpoint.UDP)
   - [Message `Clusters`](#ttn.lorawan.v3.Clusters)
   - [Message `CreateClusterRequest`](#ttn.lorawan.v3.CreateClusterRequest)
+  - [Message `GetClusterCollaboratorRequest`](#ttn.lorawan.v3.GetClusterCollaboratorRequest)
   - [Message `GetClusterIdentifiersForAddressRequest`](#ttn.lorawan.v3.GetClusterIdentifiersForAddressRequest)
   - [Message `GetClusterRequest`](#ttn.lorawan.v3.GetClusterRequest)
+  - [Message `ListClusterCollaboratorsRequest`](#ttn.lorawan.v3.ListClusterCollaboratorsRequest)
   - [Message `ListClustersRequest`](#ttn.lorawan.v3.ListClustersRequest)
   - [Message `PeerInfo`](#ttn.lorawan.v3.PeerInfo)
   - [Message `PeerInfo.TagsEntry`](#ttn.lorawan.v3.PeerInfo.TagsEntry)
+  - [Message `SetClusterCollaboratorRequest`](#ttn.lorawan.v3.SetClusterCollaboratorRequest)
   - [Message `UpdateClusterRequest`](#ttn.lorawan.v3.UpdateClusterRequest)
 - [File `lorawan-stack/api/cluster_services.proto`](#lorawan-stack/api/cluster_services.proto)
+  - [Service `ClusterAccess`](#ttn.lorawan.v3.ClusterAccess)
   - [Service `ClusterRegistry`](#ttn.lorawan.v3.ClusterRegistry)
 - [File `lorawan-stack/api/configuration_services.proto`](#lorawan-stack/api/configuration_services.proto)
   - [Message `FrequencyPlanDescription`](#ttn.lorawan.v3.FrequencyPlanDescription)
@@ -1515,12 +1519,28 @@ Cluster is the message that defines a Cluster in the network.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `cluster` | [`Cluster`](#ttn.lorawan.v3.Cluster) |  |  |
+| `collaborator` | [`OrganizationOrUserIdentifiers`](#ttn.lorawan.v3.OrganizationOrUserIdentifiers) |  | Collaborator to grant all rights on the newly created cluster. |
 
 #### Field Rules
 
 | Field | Validations |
 | ----- | ----------- |
 | `cluster` | <p>`message.required`: `true`</p> |
+| `collaborator` | <p>`message.required`: `true`</p> |
+
+### <a name="ttn.lorawan.v3.GetClusterCollaboratorRequest">Message `GetClusterCollaboratorRequest`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `cluster_ids` | [`ClusterIdentifiers`](#ttn.lorawan.v3.ClusterIdentifiers) |  |  |
+| `collaborator` | [`OrganizationOrUserIdentifiers`](#ttn.lorawan.v3.OrganizationOrUserIdentifiers) |  |  |
+
+#### Field Rules
+
+| Field | Validations |
+| ----- | ----------- |
+| `cluster_ids` | <p>`message.required`: `true`</p> |
+| `collaborator` | <p>`message.required`: `true`</p> |
 
 ### <a name="ttn.lorawan.v3.GetClusterIdentifiersForAddressRequest">Message `GetClusterIdentifiersForAddressRequest`</a>
 
@@ -1541,10 +1561,30 @@ Cluster is the message that defines a Cluster in the network.
 | ----- | ----------- |
 | `cluster_ids` | <p>`message.required`: `true`</p> |
 
-### <a name="ttn.lorawan.v3.ListClustersRequest">Message `ListClustersRequest`</a>
+### <a name="ttn.lorawan.v3.ListClusterCollaboratorsRequest">Message `ListClusterCollaboratorsRequest`</a>
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
+| `cluster_ids` | [`ClusterIdentifiers`](#ttn.lorawan.v3.ClusterIdentifiers) |  |  |
+| `limit` | [`uint32`](#uint32) |  | Limit the number of results per page. |
+| `page` | [`uint32`](#uint32) |  | Page number for pagination. 0 is interpreted as 1. |
+
+#### Field Rules
+
+| Field | Validations |
+| ----- | ----------- |
+| `cluster_ids` | <p>`message.required`: `true`</p> |
+| `limit` | <p>`uint32.lte`: `1000`</p> |
+
+### <a name="ttn.lorawan.v3.ListClustersRequest">Message `ListClustersRequest`</a>
+
+By default we list all clusters the caller has rights on.
+Set the user or the organization (not both) to instead list the clusters
+where the user or organization is collaborator on.
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `collaborator` | [`OrganizationOrUserIdentifiers`](#ttn.lorawan.v3.OrganizationOrUserIdentifiers) |  |  |
 | `field_mask` | [`google.protobuf.FieldMask`](#google.protobuf.FieldMask) |  |  |
 | `order` | [`string`](#string) |  | Order the results by this field path (must be present in the field mask). Default ordering is by ID. Prepend with a minus (-) to reverse the order. |
 | `limit` | [`uint32`](#uint32) |  | Limit the number of results per page. |
@@ -1574,6 +1614,20 @@ PeerInfo
 | `key` | [`string`](#string) |  |  |
 | `value` | [`string`](#string) |  |  |
 
+### <a name="ttn.lorawan.v3.SetClusterCollaboratorRequest">Message `SetClusterCollaboratorRequest`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `cluster_ids` | [`ClusterIdentifiers`](#ttn.lorawan.v3.ClusterIdentifiers) |  |  |
+| `collaborator` | [`Collaborator`](#ttn.lorawan.v3.Collaborator) |  |  |
+
+#### Field Rules
+
+| Field | Validations |
+| ----- | ----------- |
+| `cluster_ids` | <p>`message.required`: `true`</p> |
+| `collaborator` | <p>`message.required`: `true`</p> |
+
 ### <a name="ttn.lorawan.v3.UpdateClusterRequest">Message `UpdateClusterRequest`</a>
 
 | Field | Type | Label | Description |
@@ -1588,6 +1642,26 @@ PeerInfo
 | `cluster` | <p>`message.required`: `true`</p> |
 
 ## <a name="lorawan-stack/api/cluster_services.proto">File `lorawan-stack/api/cluster_services.proto`</a>
+
+### <a name="ttn.lorawan.v3.ClusterAccess">Service `ClusterAccess`</a>
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| `ListRights` | [`ClusterIdentifiers`](#ttn.lorawan.v3.ClusterIdentifiers) | [`Rights`](#ttn.lorawan.v3.Rights) |  |
+| `GetCollaborator` | [`GetClusterCollaboratorRequest`](#ttn.lorawan.v3.GetClusterCollaboratorRequest) | [`GetCollaboratorResponse`](#ttn.lorawan.v3.GetCollaboratorResponse) | Get the rights of a collaborator (member) of the cluster. Pseudo-rights in the response (such as the "_ALL" right) are not expanded. |
+| `SetCollaborator` | [`SetClusterCollaboratorRequest`](#ttn.lorawan.v3.SetClusterCollaboratorRequest) | [`.google.protobuf.Empty`](#google.protobuf.Empty) | Set the rights of a collaborator (member) on the cluster. Setting a collaborator without rights, removes them. |
+| `ListCollaborators` | [`ListClusterCollaboratorsRequest`](#ttn.lorawan.v3.ListClusterCollaboratorsRequest) | [`Collaborators`](#ttn.lorawan.v3.Collaborators) |  |
+
+#### HTTP bindings
+
+| Method Name | Method | Pattern | Body |
+| ----------- | ------ | ------- | ---- |
+| `ListRights` | `GET` | `/api/v3/clusters/{cluster_id}/rights` |  |
+| `GetCollaborator` | `GET` | `/api/v3/clusters/{cluster_ids.cluster_id}/collaborator` |  |
+| `GetCollaborator` | `GET` | `/api/v3/clusters/{cluster_ids.cluster_id}/collaborator/user/{collaborator.user_ids.user_id}` |  |
+| `GetCollaborator` | `GET` | `/api/v3/clusters/{cluster_ids.cluster_id}/collaborator/organization/{collaborator.organization_ids.organization_id}` |  |
+| `SetCollaborator` | `PUT` | `/api/v3/clusters/{cluster_ids.cluster_id}/collaborators` | `*` |
+| `ListCollaborators` | `GET` | `/api/v3/clusters/{cluster_ids.cluster_id}/collaborators` |  |
 
 ### <a name="ttn.lorawan.v3.ClusterRegistry">Service `ClusterRegistry`</a>
 
@@ -1604,10 +1678,13 @@ PeerInfo
 
 | Method Name | Method | Pattern | Body |
 | ----------- | ------ | ------- | ---- |
-| `Create` | `POST` | `/api/v3/clusters` | `*` |
+| `Create` | `POST` | `/api/v3/users/{collaborator.user_ids.user_id}/clusters` | `*` |
+| `Create` | `POST` | `/api/v3/organizations/{collaborator.organization_ids.organization_id}/clusters` | `*` |
 | `Get` | `GET` | `/api/v3/clusters/{cluster_ids.cluster_id}` |  |
 | `GetIdentifiersForAddress` | `GET` | `/api/v3/cluster-id/address/{address}` |  |
 | `List` | `GET` | `/api/v3/clusters` |  |
+| `List` | `GET` | `/api/v3/users/{collaborator.user_ids.user_id}/clusters` |  |
+| `List` | `GET` | `/api/v3/organizations/{collaborator.organization_ids.organization_id}/clusters` |  |
 | `Update` | `PUT` | `/api/v3/clusters/{cluster.ids.cluster_id}` | `*` |
 | `Delete` | `DELETE` | `/api/v3/clusters/{cluster_id}` |  |
 

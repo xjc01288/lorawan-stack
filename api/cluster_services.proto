@@ -19,6 +19,7 @@ import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "lorawan-stack/api/cluster.proto";
 import "lorawan-stack/api/identifiers.proto";
+import "lorawan-stack/api/rights.proto";
 
 package ttn.lorawan.v3;
 
@@ -27,8 +28,12 @@ option go_package = "go.thethings.network/lorawan-stack/pkg/ttnpb";
 service ClusterRegistry {
   rpc Create(CreateClusterRequest) returns (Cluster) {
     option (google.api.http) = {
-      post: "/clusters"
+      post: "/users/{collaborator.user_ids.user_id}/clusters"
       body: "*"
+      additional_bindings {
+        post: "/organizations/{collaborator.organization_ids.organization_id}/clusters"
+        body: "*"
+      }
     };
   };
 
@@ -50,6 +55,12 @@ service ClusterRegistry {
   rpc List(ListClustersRequest) returns (Clusters) {
     option (google.api.http) = {
       get: "/clusters"
+      additional_bindings {
+        get: "/users/{collaborator.user_ids.user_id}/clusters"
+      }
+      additional_bindings {
+        get: "/organizations/{collaborator.organization_ids.organization_id}/clusters"
+      }
     };
   };
 
@@ -63,6 +74,43 @@ service ClusterRegistry {
   rpc Delete(ClusterIdentifiers) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       delete: "/clusters/{cluster_id}"
+    };
+  };
+}
+
+service ClusterAccess {
+  rpc ListRights(ClusterIdentifiers) returns (Rights) {
+    option (google.api.http) = {
+      get: "/clusters/{cluster_id}/rights"
+    };
+  };
+
+  // Get the rights of a collaborator (member) of the cluster.
+  // Pseudo-rights in the response (such as the "_ALL" right) are not expanded.
+  rpc GetCollaborator(GetClusterCollaboratorRequest) returns (GetCollaboratorResponse) {
+    option (google.api.http) = {
+      get: "/clusters/{cluster_ids.cluster_id}/collaborator"
+      additional_bindings {
+        get: "/clusters/{cluster_ids.cluster_id}/collaborator/user/{collaborator.user_ids.user_id}"
+      }
+      additional_bindings {
+        get: "/clusters/{cluster_ids.cluster_id}/collaborator/organization/{collaborator.organization_ids.organization_id}"
+      }
+    };
+  }
+
+  // Set the rights of a collaborator (member) on the cluster.
+  // Setting a collaborator without rights, removes them.
+  rpc SetCollaborator(SetClusterCollaboratorRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/clusters/{cluster_ids.cluster_id}/collaborators"
+      body: "*"
+    };
+  };
+
+  rpc ListCollaborators(ListClusterCollaboratorsRequest) returns (Collaborators) {
+    option (google.api.http) = {
+      get: "/clusters/{cluster_ids.cluster_id}/collaborators"
     };
   };
 }

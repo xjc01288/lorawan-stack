@@ -1067,15 +1067,92 @@
       ]
     }
   },
+  "ClusterAccess": {
+    "ListRights": {
+      "file": "lorawan-stack/api/cluster_services.proto",
+      "http": [
+        {
+          "method": "get",
+          "pattern": "/clusters/{cluster_id}/rights",
+          "parameters": [
+            "cluster_id"
+          ]
+        }
+      ]
+    },
+    "GetCollaborator": {
+      "file": "lorawan-stack/api/cluster_services.proto",
+      "http": [
+        {
+          "method": "get",
+          "pattern": "/clusters/{cluster_ids.cluster_id}/collaborator",
+          "parameters": [
+            "cluster_ids.cluster_id"
+          ]
+        },
+        {
+          "method": "get",
+          "pattern": "/clusters/{cluster_ids.cluster_id}/collaborator/user/{collaborator.user_ids.user_id}",
+          "parameters": [
+            "cluster_ids.cluster_id",
+            "collaborator.user_ids.user_id"
+          ]
+        },
+        {
+          "method": "get",
+          "pattern": "/clusters/{cluster_ids.cluster_id}/collaborator/organization/{collaborator.organization_ids.organization_id}",
+          "parameters": [
+            "cluster_ids.cluster_id",
+            "collaborator.organization_ids.organization_id"
+          ]
+        }
+      ]
+    },
+    "SetCollaborator": {
+      "file": "lorawan-stack/api/cluster_services.proto",
+      "http": [
+        {
+          "method": "put",
+          "pattern": "/clusters/{cluster_ids.cluster_id}/collaborators",
+          "body": "*",
+          "parameters": [
+            "cluster_ids.cluster_id"
+          ]
+        }
+      ]
+    },
+    "ListCollaborators": {
+      "file": "lorawan-stack/api/cluster_services.proto",
+      "http": [
+        {
+          "method": "get",
+          "pattern": "/clusters/{cluster_ids.cluster_id}/collaborators",
+          "parameters": [
+            "cluster_ids.cluster_id"
+          ]
+        }
+      ]
+    }
+  },
   "ClusterRegistry": {
     "Create": {
       "file": "lorawan-stack/api/cluster_services.proto",
       "http": [
         {
           "method": "post",
-          "pattern": "/clusters",
+          "pattern": "/users/{collaborator.user_ids.user_id}/clusters",
           "body": "*",
-          "parameters": []
+          "parameters": [
+            "collaborator.user_ids.user_id"
+          ]
+        },
+        {
+          "method": "post",
+          "pattern": "/organizations/{collaborator.organization_ids.organization_id}/clusters",
+          "body": "*",
+          "parameters": [
+            "collaborator.organization_ids.organization_id"
+          ]
         }
       ]
     },
@@ -1130,6 +1207,20 @@
           "method": "get",
           "pattern": "/clusters",
           "parameters": []
+        },
+        {
+          "method": "get",
+          "pattern": "/users/{collaborator.user_ids.user_id}/clusters",
+          "parameters": [
+            "collaborator.user_ids.user_id"
+          ]
+        },
+        {
+          "method": "get",
+          "pattern": "/organizations/{collaborator.organization_ids.organization_id}/clusters",
+          "parameters": [
+            "collaborator.organization_ids.organization_id"
+          ]
         }
       ],
       "allowedFieldMaskPaths": [

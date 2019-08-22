@@ -633,6 +633,18 @@ func (m *ListClustersRequest) ValidateFields(paths ...string) error {
 	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
 		_ = subs
 		switch name {
+		case "collaborator":
+
+			if v, ok := interface{}(m.GetCollaborator()).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return ListClustersRequestValidationError{
+						field:  "collaborator",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
 		case "field_mask":
 
 			if v, ok := interface{}(&m.FieldMask).(interface{ ValidateFields(...string) error }); ok {
@@ -745,6 +757,18 @@ func (m *CreateClusterRequest) ValidateFields(paths ...string) error {
 				if err := v.ValidateFields(subs...); err != nil {
 					return CreateClusterRequestValidationError{
 						field:  "cluster",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		case "collaborator":
+
+			if v, ok := interface{}(&m.Collaborator).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return CreateClusterRequestValidationError{
+						field:  "collaborator",
 						reason: "embedded message failed validation",
 						cause:  err,
 					}
@@ -921,6 +945,323 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateClusterRequestValidationError{}
+
+// ValidateFields checks the field values on ListClusterCollaboratorsRequest
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, an error is returned.
+func (m *ListClusterCollaboratorsRequest) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = ListClusterCollaboratorsRequestFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "cluster_ids":
+
+			if v, ok := interface{}(&m.ClusterIdentifiers).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return ListClusterCollaboratorsRequestValidationError{
+						field:  "cluster_ids",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		case "limit":
+
+			if m.GetLimit() > 1000 {
+				return ListClusterCollaboratorsRequestValidationError{
+					field:  "limit",
+					reason: "value must be less than or equal to 1000",
+				}
+			}
+
+		case "page":
+			// no validation rules for Page
+		default:
+			return ListClusterCollaboratorsRequestValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// ListClusterCollaboratorsRequestValidationError is the validation error
+// returned by ListClusterCollaboratorsRequest.ValidateFields if the
+// designated constraints aren't met.
+type ListClusterCollaboratorsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListClusterCollaboratorsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListClusterCollaboratorsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListClusterCollaboratorsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListClusterCollaboratorsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListClusterCollaboratorsRequestValidationError) ErrorName() string {
+	return "ListClusterCollaboratorsRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListClusterCollaboratorsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListClusterCollaboratorsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListClusterCollaboratorsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListClusterCollaboratorsRequestValidationError{}
+
+// ValidateFields checks the field values on GetClusterCollaboratorRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, an error is returned.
+func (m *GetClusterCollaboratorRequest) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = GetClusterCollaboratorRequestFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "cluster_ids":
+
+			if v, ok := interface{}(&m.ClusterIdentifiers).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return GetClusterCollaboratorRequestValidationError{
+						field:  "cluster_ids",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		case "collaborator":
+
+			if v, ok := interface{}(&m.OrganizationOrUserIdentifiers).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return GetClusterCollaboratorRequestValidationError{
+						field:  "collaborator",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		default:
+			return GetClusterCollaboratorRequestValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// GetClusterCollaboratorRequestValidationError is the validation error
+// returned by GetClusterCollaboratorRequest.ValidateFields if the designated
+// constraints aren't met.
+type GetClusterCollaboratorRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetClusterCollaboratorRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetClusterCollaboratorRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetClusterCollaboratorRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetClusterCollaboratorRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetClusterCollaboratorRequestValidationError) ErrorName() string {
+	return "GetClusterCollaboratorRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetClusterCollaboratorRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetClusterCollaboratorRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetClusterCollaboratorRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetClusterCollaboratorRequestValidationError{}
+
+// ValidateFields checks the field values on SetClusterCollaboratorRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, an error is returned.
+func (m *SetClusterCollaboratorRequest) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = SetClusterCollaboratorRequestFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "cluster_ids":
+
+			if v, ok := interface{}(&m.ClusterIdentifiers).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return SetClusterCollaboratorRequestValidationError{
+						field:  "cluster_ids",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		case "collaborator":
+
+			if v, ok := interface{}(&m.Collaborator).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return SetClusterCollaboratorRequestValidationError{
+						field:  "collaborator",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		default:
+			return SetClusterCollaboratorRequestValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// SetClusterCollaboratorRequestValidationError is the validation error
+// returned by SetClusterCollaboratorRequest.ValidateFields if the designated
+// constraints aren't met.
+type SetClusterCollaboratorRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SetClusterCollaboratorRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SetClusterCollaboratorRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SetClusterCollaboratorRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SetClusterCollaboratorRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SetClusterCollaboratorRequestValidationError) ErrorName() string {
+	return "SetClusterCollaboratorRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SetClusterCollaboratorRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSetClusterCollaboratorRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SetClusterCollaboratorRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SetClusterCollaboratorRequestValidationError{}
 
 // ValidateFields checks the field values on Cluster_Endpoint with the rules
 // defined in the proto definition for this message. If any rules are
