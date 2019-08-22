@@ -1068,6 +1068,17 @@
     }
   },
   "ClusterRegistry": {
+    "Create": {
+      "file": "lorawan-stack/api/cluster_services.proto",
+      "http": [
+        {
+          "method": "post",
+          "pattern": "/clusters",
+          "body": "*",
+          "parameters": []
+        }
+      ]
+    },
     "Get": {
       "file": "lorawan-stack/api/cluster_services.proto",
       "http": [
@@ -1099,6 +1110,31 @@
           "method": "get",
           "pattern": "/clusters",
           "parameters": []
+        }
+      ]
+    },
+    "Update": {
+      "file": "lorawan-stack/api/cluster_services.proto",
+      "http": [
+        {
+          "method": "put",
+          "pattern": "/clusters/{cluster.ids.cluster_id}",
+          "body": "*",
+          "parameters": [
+            "cluster.ids.cluster_id"
+          ]
+        }
+      ]
+    },
+    "Delete": {
+      "file": "lorawan-stack/api/cluster_services.proto",
+      "http": [
+        {
+          "method": "delete",
+          "pattern": "/clusters/{cluster_id}",
+          "parameters": [
+            "cluster_id"
+          ]
         }
       ]
     }

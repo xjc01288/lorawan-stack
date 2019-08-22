@@ -4880,6 +4880,35 @@
           ]
         },
         {
+          "name": "CreateClusterRequest",
+          "longName": "CreateClusterRequest",
+          "fullName": "ttn.lorawan.v3.CreateClusterRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "cluster",
+              "description": "",
+              "label": "",
+              "type": "Cluster",
+              "longType": "Cluster",
+              "fullType": "ttn.lorawan.v3.Cluster",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "message.required",
+                    "value": true
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "GetClusterIdentifiersForAddressRequest",
           "longName": "GetClusterIdentifiersForAddressRequest",
           "fullName": "ttn.lorawan.v3.GetClusterIdentifiersForAddressRequest",
@@ -5079,6 +5108,45 @@
               "defaultValue": ""
             }
           ]
+        },
+        {
+          "name": "UpdateClusterRequest",
+          "longName": "UpdateClusterRequest",
+          "fullName": "ttn.lorawan.v3.UpdateClusterRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "cluster",
+              "description": "",
+              "label": "",
+              "type": "Cluster",
+              "longType": "Cluster",
+              "fullType": "ttn.lorawan.v3.Cluster",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "message.required",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "name": "field_mask",
+              "description": "",
+              "label": "",
+              "type": "FieldMask",
+              "longType": "google.protobuf.FieldMask",
+              "fullType": "google.protobuf.FieldMask",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
         }
       ],
       "services": []
@@ -5101,6 +5169,29 @@
           "fullName": "ttn.lorawan.v3.ClusterRegistry",
           "description": "",
           "methods": [
+            {
+              "name": "Create",
+              "description": "",
+              "requestType": "CreateClusterRequest",
+              "requestLongType": "CreateClusterRequest",
+              "requestFullType": "ttn.lorawan.v3.CreateClusterRequest",
+              "requestStreaming": false,
+              "responseType": "Cluster",
+              "responseLongType": "Cluster",
+              "responseFullType": "ttn.lorawan.v3.Cluster",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/clusters",
+                      "body": "*"
+                    }
+                  ]
+                }
+              }
+            },
             {
               "name": "Get",
               "description": "Get the cluster with the given identifiers, selecting the fields given\nby the field mask.",
@@ -5162,6 +5253,51 @@
                     {
                       "method": "GET",
                       "pattern": "/clusters"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update",
+              "description": "",
+              "requestType": "UpdateClusterRequest",
+              "requestLongType": "UpdateClusterRequest",
+              "requestFullType": "ttn.lorawan.v3.UpdateClusterRequest",
+              "requestStreaming": false,
+              "responseType": "Cluster",
+              "responseLongType": "Cluster",
+              "responseFullType": "ttn.lorawan.v3.Cluster",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "PUT",
+                      "pattern": "/clusters/{cluster.ids.cluster_id}",
+                      "body": "*"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Delete",
+              "description": "",
+              "requestType": "ClusterIdentifiers",
+              "requestLongType": "ClusterIdentifiers",
+              "requestFullType": "ttn.lorawan.v3.ClusterIdentifiers",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "DELETE",
+                      "pattern": "/clusters/{cluster_id}"
                     }
                   ]
                 }

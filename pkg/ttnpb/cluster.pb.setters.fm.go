@@ -341,6 +341,74 @@ func (dst *ListClustersRequest) SetFields(src *ListClustersRequest, paths ...str
 	return nil
 }
 
+func (dst *CreateClusterRequest) SetFields(src *CreateClusterRequest, paths ...string) error {
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		switch name {
+		case "cluster":
+			if len(subs) > 0 {
+				newDst := &dst.Cluster
+				var newSrc *Cluster
+				if src != nil {
+					newSrc = &src.Cluster
+				}
+				if err := newDst.SetFields(newSrc, subs...); err != nil {
+					return err
+				}
+			} else {
+				if src != nil {
+					dst.Cluster = src.Cluster
+				} else {
+					var zero Cluster
+					dst.Cluster = zero
+				}
+			}
+
+		default:
+			return fmt.Errorf("invalid field: '%s'", name)
+		}
+	}
+	return nil
+}
+
+func (dst *UpdateClusterRequest) SetFields(src *UpdateClusterRequest, paths ...string) error {
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		switch name {
+		case "cluster":
+			if len(subs) > 0 {
+				newDst := &dst.Cluster
+				var newSrc *Cluster
+				if src != nil {
+					newSrc = &src.Cluster
+				}
+				if err := newDst.SetFields(newSrc, subs...); err != nil {
+					return err
+				}
+			} else {
+				if src != nil {
+					dst.Cluster = src.Cluster
+				} else {
+					var zero Cluster
+					dst.Cluster = zero
+				}
+			}
+		case "field_mask":
+			if len(subs) > 0 {
+				return fmt.Errorf("'field_mask' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.FieldMask = src.FieldMask
+			} else {
+				var zero types.FieldMask
+				dst.FieldMask = zero
+			}
+
+		default:
+			return fmt.Errorf("invalid field: '%s'", name)
+		}
+	}
+	return nil
+}
+
 func (dst *Cluster_Endpoint) SetFields(src *Cluster_Endpoint, paths ...string) error {
 	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
 		switch name {

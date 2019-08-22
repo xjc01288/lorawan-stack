@@ -89,6 +89,60 @@ var ListClustersRequestFieldPathsTopLevel = []string{
 	"order",
 	"page",
 }
+var CreateClusterRequestFieldPathsNested = []string{
+	"cluster",
+	"cluster.addresses",
+	"cluster.attributes",
+	"cluster.contact_info",
+	"cluster.created_at",
+	"cluster.description",
+	"cluster.endpoints",
+	"cluster.ids",
+	"cluster.ids.cluster_id",
+	"cluster.location",
+	"cluster.location.accuracy",
+	"cluster.location.altitude",
+	"cluster.location.latitude",
+	"cluster.location.longitude",
+	"cluster.location.source",
+	"cluster.location_description",
+	"cluster.name",
+	"cluster.roles",
+	"cluster.secret",
+	"cluster.updated_at",
+}
+
+var CreateClusterRequestFieldPathsTopLevel = []string{
+	"cluster",
+}
+var UpdateClusterRequestFieldPathsNested = []string{
+	"cluster",
+	"cluster.addresses",
+	"cluster.attributes",
+	"cluster.contact_info",
+	"cluster.created_at",
+	"cluster.description",
+	"cluster.endpoints",
+	"cluster.ids",
+	"cluster.ids.cluster_id",
+	"cluster.location",
+	"cluster.location.accuracy",
+	"cluster.location.altitude",
+	"cluster.location.latitude",
+	"cluster.location.longitude",
+	"cluster.location.source",
+	"cluster.location_description",
+	"cluster.name",
+	"cluster.roles",
+	"cluster.secret",
+	"cluster.updated_at",
+	"field_mask",
+}
+
+var UpdateClusterRequestFieldPathsTopLevel = []string{
+	"cluster",
+	"field_mask",
+}
 var Cluster_EndpointFieldPathsNested = []string{
 	"endpoint",
 	"endpoint.backend_interfaces_http",

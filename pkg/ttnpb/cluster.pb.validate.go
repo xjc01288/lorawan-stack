@@ -724,6 +724,204 @@ var _ interface {
 	ErrorName() string
 } = ListClustersRequestValidationError{}
 
+// ValidateFields checks the field values on CreateClusterRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *CreateClusterRequest) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = CreateClusterRequestFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "cluster":
+
+			if v, ok := interface{}(&m.Cluster).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return CreateClusterRequestValidationError{
+						field:  "cluster",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		default:
+			return CreateClusterRequestValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// CreateClusterRequestValidationError is the validation error returned by
+// CreateClusterRequest.ValidateFields if the designated constraints aren't met.
+type CreateClusterRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CreateClusterRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CreateClusterRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CreateClusterRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CreateClusterRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CreateClusterRequestValidationError) ErrorName() string {
+	return "CreateClusterRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CreateClusterRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCreateClusterRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CreateClusterRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CreateClusterRequestValidationError{}
+
+// ValidateFields checks the field values on UpdateClusterRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *UpdateClusterRequest) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = UpdateClusterRequestFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "cluster":
+
+			if v, ok := interface{}(&m.Cluster).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return UpdateClusterRequestValidationError{
+						field:  "cluster",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		case "field_mask":
+
+			if v, ok := interface{}(&m.FieldMask).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return UpdateClusterRequestValidationError{
+						field:  "field_mask",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		default:
+			return UpdateClusterRequestValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// UpdateClusterRequestValidationError is the validation error returned by
+// UpdateClusterRequest.ValidateFields if the designated constraints aren't met.
+type UpdateClusterRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateClusterRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateClusterRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateClusterRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateClusterRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateClusterRequestValidationError) ErrorName() string {
+	return "UpdateClusterRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateClusterRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateClusterRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateClusterRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateClusterRequestValidationError{}
+
 // ValidateFields checks the field values on Cluster_Endpoint with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, an error is returned.

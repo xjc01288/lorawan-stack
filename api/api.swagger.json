@@ -2185,6 +2185,62 @@
         "tags": [
           "ClusterRegistry"
         ]
+      },
+      "post": {
+        "operationId": "Create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Cluster"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3CreateClusterRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ClusterRegistry"
+        ]
+      }
+    },
+    "/clusters/{cluster.ids.cluster_id}": {
+      "put": {
+        "operationId": "Update",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Cluster"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cluster.ids.cluster_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3UpdateClusterRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ClusterRegistry"
+        ]
       }
     },
     "/clusters/{cluster_ids.cluster_id}": {
@@ -2216,6 +2272,30 @@
               "type": "string"
             },
             "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "ClusterRegistry"
+        ]
+      }
+    },
+    "/clusters/{cluster_id}": {
+      "delete": {
+        "operationId": "Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cluster_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "tags": [
@@ -7882,6 +7962,14 @@
         }
       }
     },
+    "v3CreateClusterRequest": {
+      "type": "object",
+      "properties": {
+        "cluster": {
+          "$ref": "#/definitions/v3Cluster"
+        }
+      }
+    },
     "v3CreateEndDeviceRequest": {
       "type": "object",
       "properties": {
@@ -10646,6 +10734,17 @@
       "properties": {
         "client": {
           "$ref": "#/definitions/v3Client"
+        },
+        "field_mask": {
+          "$ref": "#/definitions/protobufFieldMask"
+        }
+      }
+    },
+    "v3UpdateClusterRequest": {
+      "type": "object",
+      "properties": {
+        "cluster": {
+          "$ref": "#/definitions/v3Cluster"
         },
         "field_mask": {
           "$ref": "#/definitions/protobufFieldMask"

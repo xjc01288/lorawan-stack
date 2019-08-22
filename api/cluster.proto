@@ -135,3 +135,12 @@ message ListClustersRequest {
   // Page number for pagination. 0 is interpreted as 1.
   uint32 page = 5;
 }
+
+message CreateClusterRequest {
+  Cluster cluster = 1 [(gogoproto.embed) = true, (gogoproto.nullable) = false, (validate.rules).message.required = true];
+}
+
+message UpdateClusterRequest {
+  Cluster cluster = 1 [(gogoproto.embed) = true, (gogoproto.nullable) = false, (validate.rules).message.required = true];
+  google.protobuf.FieldMask field_mask = 2 [(gogoproto.nullable) = false];
+}

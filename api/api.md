@@ -88,11 +88,13 @@
   - [Message `Cluster.Endpoint.MQTT`](#ttn.lorawan.v3.Cluster.Endpoint.MQTT)
   - [Message `Cluster.Endpoint.UDP`](#ttn.lorawan.v3.Cluster.Endpoint.UDP)
   - [Message `Clusters`](#ttn.lorawan.v3.Clusters)
+  - [Message `CreateClusterRequest`](#ttn.lorawan.v3.CreateClusterRequest)
   - [Message `GetClusterIdentifiersForAddressRequest`](#ttn.lorawan.v3.GetClusterIdentifiersForAddressRequest)
   - [Message `GetClusterRequest`](#ttn.lorawan.v3.GetClusterRequest)
   - [Message `ListClustersRequest`](#ttn.lorawan.v3.ListClustersRequest)
   - [Message `PeerInfo`](#ttn.lorawan.v3.PeerInfo)
   - [Message `PeerInfo.TagsEntry`](#ttn.lorawan.v3.PeerInfo.TagsEntry)
+  - [Message `UpdateClusterRequest`](#ttn.lorawan.v3.UpdateClusterRequest)
 - [File `lorawan-stack/api/cluster_services.proto`](#lorawan-stack/api/cluster_services.proto)
   - [Service `ClusterRegistry`](#ttn.lorawan.v3.ClusterRegistry)
 - [File `lorawan-stack/api/configuration_services.proto`](#lorawan-stack/api/configuration_services.proto)
@@ -1508,6 +1510,18 @@ Cluster is the message that defines a Cluster in the network.
 | ----- | ---- | ----- | ----------- |
 | `clusters` | [`Cluster`](#ttn.lorawan.v3.Cluster) | repeated |  |
 
+### <a name="ttn.lorawan.v3.CreateClusterRequest">Message `CreateClusterRequest`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `cluster` | [`Cluster`](#ttn.lorawan.v3.Cluster) |  |  |
+
+#### Field Rules
+
+| Field | Validations |
+| ----- | ----------- |
+| `cluster` | <p>`message.required`: `true`</p> |
+
 ### <a name="ttn.lorawan.v3.GetClusterIdentifiersForAddressRequest">Message `GetClusterIdentifiersForAddressRequest`</a>
 
 | Field | Type | Label | Description |
@@ -1560,23 +1574,42 @@ PeerInfo
 | `key` | [`string`](#string) |  |  |
 | `value` | [`string`](#string) |  |  |
 
+### <a name="ttn.lorawan.v3.UpdateClusterRequest">Message `UpdateClusterRequest`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `cluster` | [`Cluster`](#ttn.lorawan.v3.Cluster) |  |  |
+| `field_mask` | [`google.protobuf.FieldMask`](#google.protobuf.FieldMask) |  |  |
+
+#### Field Rules
+
+| Field | Validations |
+| ----- | ----------- |
+| `cluster` | <p>`message.required`: `true`</p> |
+
 ## <a name="lorawan-stack/api/cluster_services.proto">File `lorawan-stack/api/cluster_services.proto`</a>
 
 ### <a name="ttn.lorawan.v3.ClusterRegistry">Service `ClusterRegistry`</a>
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
+| `Create` | [`CreateClusterRequest`](#ttn.lorawan.v3.CreateClusterRequest) | [`Cluster`](#ttn.lorawan.v3.Cluster) |  |
 | `Get` | [`GetClusterRequest`](#ttn.lorawan.v3.GetClusterRequest) | [`Cluster`](#ttn.lorawan.v3.Cluster) | Get the cluster with the given identifiers, selecting the fields given by the field mask. |
 | `GetIdentifiersForAddress` | [`GetClusterIdentifiersForAddressRequest`](#ttn.lorawan.v3.GetClusterIdentifiersForAddressRequest) | [`ClusterIdentifiers`](#ttn.lorawan.v3.ClusterIdentifiers) |  |
 | `List` | [`ListClustersRequest`](#ttn.lorawan.v3.ListClustersRequest) | [`Clusters`](#ttn.lorawan.v3.Clusters) | List clusters, selecting the fields given by the field mask. |
+| `Update` | [`UpdateClusterRequest`](#ttn.lorawan.v3.UpdateClusterRequest) | [`Cluster`](#ttn.lorawan.v3.Cluster) |  |
+| `Delete` | [`ClusterIdentifiers`](#ttn.lorawan.v3.ClusterIdentifiers) | [`.google.protobuf.Empty`](#google.protobuf.Empty) |  |
 
 #### HTTP bindings
 
 | Method Name | Method | Pattern | Body |
 | ----------- | ------ | ------- | ---- |
+| `Create` | `POST` | `/api/v3/clusters` | `*` |
 | `Get` | `GET` | `/api/v3/clusters/{cluster_ids.cluster_id}` |  |
 | `GetIdentifiersForAddress` | `GET` | `/api/v3/cluster-id/address/{address}` |  |
 | `List` | `GET` | `/api/v3/clusters` |  |
+| `Update` | `PUT` | `/api/v3/clusters/{cluster.ids.cluster_id}` | `*` |
+| `Delete` | `DELETE` | `/api/v3/clusters/{cluster_id}` |  |
 
 ## <a name="lorawan-stack/api/configuration_services.proto">File `lorawan-stack/api/configuration_services.proto`</a>
 
