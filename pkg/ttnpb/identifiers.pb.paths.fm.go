@@ -16,6 +16,13 @@ var ClientIdentifiersFieldPathsNested = []string{
 var ClientIdentifiersFieldPathsTopLevel = []string{
 	"client_id",
 }
+var ClusterIdentifiersFieldPathsNested = []string{
+	"cluster_id",
+}
+
+var ClusterIdentifiersFieldPathsTopLevel = []string{
+	"cluster_id",
+}
 var EndDeviceIdentifiersFieldPathsNested = []string{
 	"application_ids",
 	"application_ids.application_id",
@@ -75,6 +82,8 @@ var EntityIdentifiersFieldPathsNested = []string{
 	"ids.application_ids.application_id",
 	"ids.client_ids",
 	"ids.client_ids.client_id",
+	"ids.cluster_ids",
+	"ids.cluster_ids.cluster_id",
 	"ids.device_ids",
 	"ids.device_ids.application_ids",
 	"ids.device_ids.application_ids.application_id",

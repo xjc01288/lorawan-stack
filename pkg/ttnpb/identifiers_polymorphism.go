@@ -39,6 +39,13 @@ func (ids ClientIdentifiers) EntityIdentifiers() *EntityIdentifiers {
 	}}
 }
 
+// EntityIdentifiers returns the ClusterIdentifiers as EntityIdentifiers.
+func (ids ClusterIdentifiers) EntityIdentifiers() *EntityIdentifiers {
+	return &EntityIdentifiers{Ids: &EntityIdentifiers_ClusterIDs{
+		ClusterIDs: &ids,
+	}}
+}
+
 // EntityIdentifiers returns the EndDeviceIdentifiers as EntityIdentifiers.
 func (ids EndDeviceIdentifiers) EntityIdentifiers() *EntityIdentifiers {
 	return &EntityIdentifiers{Ids: &EntityIdentifiers_DeviceIDs{
@@ -91,6 +98,9 @@ func (ids ApplicationIdentifiers) Identifiers() Identifiers { return &ids }
 func (ids ClientIdentifiers) Identifiers() Identifiers { return &ids }
 
 // Identifiers returns itself.
+func (ids ClusterIdentifiers) Identifiers() Identifiers { return &ids }
+
+// Identifiers returns itself.
 func (ids EndDeviceIdentifiers) Identifiers() Identifiers { return &ids }
 
 // Identifiers returns itself.
@@ -139,6 +149,9 @@ func (ids ApplicationIdentifiers) IDString() string { return ids.ApplicationID }
 
 // IDString returns the ID string of this Identifier.
 func (ids ClientIdentifiers) IDString() string { return ids.ClientID }
+
+// IDString returns the ID string of this Identifier.
+func (ids ClusterIdentifiers) IDString() string { return ids.ClusterID }
 
 // IDString returns the ID string of this Identifier.
 func (ids EndDeviceIdentifiers) IDString() string {
@@ -191,6 +204,9 @@ func (ApplicationIdentifiers) EntityType() string { return "application" }
 
 // EntityType returns the entity type for this ID (client).
 func (ClientIdentifiers) EntityType() string { return "client" }
+
+// EntityType returns the entity type for this ID (cluster).
+func (ClusterIdentifiers) EntityType() string { return "cluster" }
 
 // EntityType returns the entity type for this ID (end device).
 func (EndDeviceIdentifiers) EntityType() string { return "end device" }

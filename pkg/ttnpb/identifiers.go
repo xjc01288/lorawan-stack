@@ -31,6 +31,11 @@ func (ids ClientIdentifiers) IsZero() bool {
 	return ids.ClientID == ""
 }
 
+// IsZero returns true if all identifiers have zero-values.
+func (ids ClusterIdentifiers) IsZero() bool {
+	return ids.ClusterID == ""
+}
+
 // IsZero reports whether ids represent zero identifiers.
 func (ids EndDeviceIdentifiers) IsZero() bool {
 	return ids.GetDeviceID() == "" &&

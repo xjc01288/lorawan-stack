@@ -4378,6 +4378,596 @@
       "extensions": [],
       "messages": [
         {
+          "name": "Cluster",
+          "longName": "Cluster",
+          "fullName": "ttn.lorawan.v3.Cluster",
+          "description": "Cluster is the message that defines a Cluster in the network.",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "ids",
+              "description": "",
+              "label": "",
+              "type": "ClusterIdentifiers",
+              "longType": "ClusterIdentifiers",
+              "fullType": "ttn.lorawan.v3.ClusterIdentifiers",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "message.required",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "name": "created_at",
+              "description": "",
+              "label": "",
+              "type": "Timestamp",
+              "longType": "google.protobuf.Timestamp",
+              "fullType": "google.protobuf.Timestamp",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "updated_at",
+              "description": "",
+              "label": "",
+              "type": "Timestamp",
+              "longType": "google.protobuf.Timestamp",
+              "fullType": "google.protobuf.Timestamp",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "name",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "string.max_len",
+                    "value": 50
+                  }
+                ]
+              }
+            },
+            {
+              "name": "description",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "string.max_len",
+                    "value": 2000
+                  }
+                ]
+              }
+            },
+            {
+              "name": "attributes",
+              "description": "",
+              "label": "repeated",
+              "type": "AttributesEntry",
+              "longType": "Cluster.AttributesEntry",
+              "fullType": "ttn.lorawan.v3.Cluster.AttributesEntry",
+              "ismap": true,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "map.keys.string.max_len",
+                    "value": 36
+                  },
+                  {
+                    "name": "map.keys.string.pattern",
+                    "value": "^[a-z0-9](?:[-]?[a-z0-9]){2,}$"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "contact_info",
+              "description": "",
+              "label": "repeated",
+              "type": "ContactInfo",
+              "longType": "ContactInfo",
+              "fullType": "ttn.lorawan.v3.ContactInfo",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "secret",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "location",
+              "description": "",
+              "label": "",
+              "type": "Location",
+              "longType": "Location",
+              "fullType": "ttn.lorawan.v3.Location",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "message.required",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "name": "location_description",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "roles",
+              "description": "",
+              "label": "repeated",
+              "type": "ClusterRole",
+              "longType": "ClusterRole",
+              "fullType": "ttn.lorawan.v3.ClusterRole",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "endpoints",
+              "description": "",
+              "label": "repeated",
+              "type": "Endpoint",
+              "longType": "Cluster.Endpoint",
+              "fullType": "ttn.lorawan.v3.Cluster.Endpoint",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "AttributesEntry",
+          "longName": "Cluster.AttributesEntry",
+          "fullName": "ttn.lorawan.v3.Cluster.AttributesEntry",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "key",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "value",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "Endpoint",
+          "longName": "Cluster.Endpoint",
+          "fullName": "ttn.lorawan.v3.Cluster.Endpoint",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "roles",
+              "description": "",
+              "label": "repeated",
+              "type": "ClusterRole",
+              "longType": "ClusterRole",
+              "fullType": "ttn.lorawan.v3.ClusterRole",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "grpc",
+              "description": "gRPC API endpoint.",
+              "label": "",
+              "type": "GRPC",
+              "longType": "Cluster.Endpoint.GRPC",
+              "fullType": "ttn.lorawan.v3.Cluster.Endpoint.GRPC",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "grpc_http",
+              "description": "gRPC-gateway API endpoint. Prefix is inserted before endpoints specified in other protos.\nUsually the path should be \"/api/v3\".",
+              "label": "",
+              "type": "HTTP",
+              "longType": "Cluster.Endpoint.HTTP",
+              "fullType": "ttn.lorawan.v3.Cluster.Endpoint.HTTP",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "http",
+              "description": "HTTP endpoint for User Interface.",
+              "label": "",
+              "type": "HTTP",
+              "longType": "Cluster.Endpoint.HTTP",
+              "fullType": "ttn.lorawan.v3.Cluster.Endpoint.HTTP",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "mqtt",
+              "description": "MQTT Endpoint (only GATEWAY_SERVER, APPLICATION_SERVER).",
+              "label": "",
+              "type": "MQTT",
+              "longType": "Cluster.Endpoint.MQTT",
+              "fullType": "ttn.lorawan.v3.Cluster.Endpoint.MQTT",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "packet_forwarder_udp",
+              "description": "Packet Forwarder UDP API endpoint (only GATEWAY_SERVER).",
+              "label": "",
+              "type": "UDP",
+              "longType": "Cluster.Endpoint.UDP",
+              "fullType": "ttn.lorawan.v3.Cluster.Endpoint.UDP",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "backend_interfaces_http",
+              "description": "Backend Interfaces HTTP API endpoint (only NETWORK_SERVER, APPLICATION_SERVER, JOIN_SERVER).",
+              "label": "",
+              "type": "HTTP",
+              "longType": "Cluster.Endpoint.HTTP",
+              "fullType": "ttn.lorawan.v3.Cluster.Endpoint.HTTP",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "basic_station_http",
+              "description": "Basic Station HTTP API endpoint (only GATEWAY_SERVER).",
+              "label": "",
+              "type": "HTTP",
+              "longType": "Cluster.Endpoint.HTTP",
+              "fullType": "ttn.lorawan.v3.Cluster.Endpoint.HTTP",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "GRPC",
+          "longName": "Cluster.Endpoint.GRPC",
+          "fullName": "ttn.lorawan.v3.Cluster.Endpoint.GRPC",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "host",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "port",
+              "description": "",
+              "label": "",
+              "type": "uint32",
+              "longType": "uint32",
+              "fullType": "uint32",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "tls",
+              "description": "",
+              "label": "",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "HTTP",
+          "longName": "Cluster.Endpoint.HTTP",
+          "fullName": "ttn.lorawan.v3.Cluster.Endpoint.HTTP",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "host",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "port",
+              "description": "",
+              "label": "",
+              "type": "uint32",
+              "longType": "uint32",
+              "fullType": "uint32",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "tls",
+              "description": "",
+              "label": "",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "path",
+              "description": "URL path (prefix) to use.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "MQTT",
+          "longName": "Cluster.Endpoint.MQTT",
+          "fullName": "ttn.lorawan.v3.Cluster.Endpoint.MQTT",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "host",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "port",
+              "description": "",
+              "label": "",
+              "type": "uint32",
+              "longType": "uint32",
+              "fullType": "uint32",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "tls",
+              "description": "",
+              "label": "",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "UDP",
+          "longName": "Cluster.Endpoint.UDP",
+          "fullName": "ttn.lorawan.v3.Cluster.Endpoint.UDP",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "host",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "port",
+              "description": "",
+              "label": "",
+              "type": "uint32",
+              "longType": "uint32",
+              "fullType": "uint32",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "dtls",
+              "description": "",
+              "label": "",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "Clusters",
+          "longName": "Clusters",
+          "fullName": "ttn.lorawan.v3.Clusters",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "clusters",
+              "description": "",
+              "label": "repeated",
+              "type": "Cluster",
+              "longType": "Cluster",
+              "fullType": "ttn.lorawan.v3.Cluster",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "GetClusterRequest",
+          "longName": "GetClusterRequest",
+          "fullName": "ttn.lorawan.v3.GetClusterRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "cluster_ids",
+              "description": "",
+              "label": "",
+              "type": "ClusterIdentifiers",
+              "longType": "ClusterIdentifiers",
+              "fullType": "ttn.lorawan.v3.ClusterIdentifiers",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "message.required",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "name": "field_mask",
+              "description": "",
+              "label": "",
+              "type": "FieldMask",
+              "longType": "google.protobuf.FieldMask",
+              "fullType": "google.protobuf.FieldMask",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ListClustersRequest",
+          "longName": "ListClustersRequest",
+          "fullName": "ttn.lorawan.v3.ListClustersRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "field_mask",
+              "description": "",
+              "label": "",
+              "type": "FieldMask",
+              "longType": "google.protobuf.FieldMask",
+              "fullType": "google.protobuf.FieldMask",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "order",
+              "description": "Order the results by this field path (must be present in the field mask).\nDefault ordering is by ID. Prepend with a minus (-) to reverse the order.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "limit",
+              "description": "Limit the number of results per page.",
+              "label": "",
+              "type": "uint32",
+              "longType": "uint32",
+              "fullType": "uint32",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "uint32.lte",
+                    "value": 1000
+                  }
+                ]
+              }
+            },
+            {
+              "name": "page",
+              "description": "Page number for pagination. 0 is interpreted as 1.",
+              "label": "",
+              "type": "uint32",
+              "longType": "uint32",
+              "fullType": "uint32",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
           "name": "PeerInfo",
           "longName": "PeerInfo",
           "fullName": "ttn.lorawan.v3.PeerInfo",
@@ -4461,6 +5051,72 @@
         }
       ],
       "services": []
+    },
+    {
+      "name": "lorawan-stack/api/cluster_services.proto",
+      "description": "",
+      "package": "ttn.lorawan.v3",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": false,
+      "hasServices": true,
+      "enums": [],
+      "extensions": [],
+      "messages": [],
+      "services": [
+        {
+          "name": "ClusterRegistry",
+          "longName": "ClusterRegistry",
+          "fullName": "ttn.lorawan.v3.ClusterRegistry",
+          "description": "",
+          "methods": [
+            {
+              "name": "Get",
+              "description": "Get the cluster with the given identifiers, selecting the fields given\nby the field mask.",
+              "requestType": "GetClusterRequest",
+              "requestLongType": "GetClusterRequest",
+              "requestFullType": "ttn.lorawan.v3.GetClusterRequest",
+              "requestStreaming": false,
+              "responseType": "Cluster",
+              "responseLongType": "Cluster",
+              "responseFullType": "ttn.lorawan.v3.Cluster",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/clusters/{cluster_ids.cluster_id}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "List",
+              "description": "List clusters, selecting the fields given by the field mask.",
+              "requestType": "ListClustersRequest",
+              "requestLongType": "ListClustersRequest",
+              "requestFullType": "ttn.lorawan.v3.ListClustersRequest",
+              "requestStreaming": false,
+              "responseType": "Clusters",
+              "responseLongType": "Clusters",
+              "responseFullType": "ttn.lorawan.v3.Clusters",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/clusters"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "lorawan-stack/api/configuration_services.proto",
@@ -10905,6 +11561,39 @@
           ]
         },
         {
+          "name": "ClusterIdentifiers",
+          "longName": "ClusterIdentifiers",
+          "fullName": "ttn.lorawan.v3.ClusterIdentifiers",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "cluster_id",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": "",
+              "options": {
+                "validate.rules": [
+                  {
+                    "name": "string.max_len",
+                    "value": 36
+                  },
+                  {
+                    "name": "string.pattern",
+                    "value": "^[a-z0-9](?:[-]?[a-z0-9]){2,}$"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "CombinedIdentifiers",
           "longName": "CombinedIdentifiers",
           "fullName": "ttn.lorawan.v3.CombinedIdentifiers",
@@ -11072,6 +11761,16 @@
               "type": "UserIdentifiers",
               "longType": "UserIdentifiers",
               "fullType": "ttn.lorawan.v3.UserIdentifiers",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "cluster_ids",
+              "description": "",
+              "label": "",
+              "type": "ClusterIdentifiers",
+              "longType": "ClusterIdentifiers",
+              "fullType": "ttn.lorawan.v3.ClusterIdentifiers",
               "ismap": false,
               "defaultValue": ""
             }

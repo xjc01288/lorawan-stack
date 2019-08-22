@@ -46,6 +46,27 @@ func (dst *ClientIdentifiers) SetFields(src *ClientIdentifiers, paths ...string)
 	return nil
 }
 
+func (dst *ClusterIdentifiers) SetFields(src *ClusterIdentifiers, paths ...string) error {
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		switch name {
+		case "cluster_id":
+			if len(subs) > 0 {
+				return fmt.Errorf("'cluster_id' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.ClusterID = src.ClusterID
+			} else {
+				var zero string
+				dst.ClusterID = zero
+			}
+
+		default:
+			return fmt.Errorf("invalid field: '%s'", name)
+		}
+	}
+	return nil
+}
+
 func (dst *EndDeviceIdentifiers) SetFields(src *EndDeviceIdentifiers, paths ...string) error {
 	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
 		switch name {
@@ -435,6 +456,30 @@ func (dst *EntityIdentifiers) SetFields(src *EntityIdentifiers, paths ...string)
 							dst.Ids.(*EntityIdentifiers_UserIDs).UserIDs = src.GetUserIDs()
 						} else {
 							dst.Ids.(*EntityIdentifiers_UserIDs).UserIDs = nil
+						}
+					}
+				case "cluster_ids":
+					if _, ok := dst.Ids.(*EntityIdentifiers_ClusterIDs); !ok {
+						dst.Ids = &EntityIdentifiers_ClusterIDs{}
+					}
+					if len(oneofSubs) > 0 {
+						newDst := dst.Ids.(*EntityIdentifiers_ClusterIDs).ClusterIDs
+						if newDst == nil {
+							newDst = &ClusterIdentifiers{}
+							dst.Ids.(*EntityIdentifiers_ClusterIDs).ClusterIDs = newDst
+						}
+						var newSrc *ClusterIdentifiers
+						if src != nil {
+							newSrc = src.GetClusterIDs()
+						}
+						if err := newDst.SetFields(newSrc, subs...); err != nil {
+							return err
+						}
+					} else {
+						if src != nil {
+							dst.Ids.(*EntityIdentifiers_ClusterIDs).ClusterIDs = src.GetClusterIDs()
+						} else {
+							dst.Ids.(*EntityIdentifiers_ClusterIDs).ClusterIDs = nil
 						}
 					}
 

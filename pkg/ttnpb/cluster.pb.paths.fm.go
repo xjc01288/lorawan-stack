@@ -15,3 +15,155 @@ var PeerInfoFieldPathsTopLevel = []string{
 	"tags",
 	"tls",
 }
+var ClusterFieldPathsNested = []string{
+	"attributes",
+	"contact_info",
+	"created_at",
+	"description",
+	"endpoints",
+	"ids",
+	"ids.cluster_id",
+	"location",
+	"location.accuracy",
+	"location.altitude",
+	"location.latitude",
+	"location.longitude",
+	"location.source",
+	"location_description",
+	"name",
+	"roles",
+	"secret",
+	"updated_at",
+}
+
+var ClusterFieldPathsTopLevel = []string{
+	"attributes",
+	"contact_info",
+	"created_at",
+	"description",
+	"endpoints",
+	"ids",
+	"location",
+	"location_description",
+	"name",
+	"roles",
+	"secret",
+	"updated_at",
+}
+var ClustersFieldPathsNested = []string{
+	"clusters",
+}
+
+var ClustersFieldPathsTopLevel = []string{
+	"clusters",
+}
+var GetClusterRequestFieldPathsNested = []string{
+	"cluster_ids",
+	"cluster_ids.cluster_id",
+	"field_mask",
+}
+
+var GetClusterRequestFieldPathsTopLevel = []string{
+	"cluster_ids",
+	"field_mask",
+}
+var ListClustersRequestFieldPathsNested = []string{
+	"field_mask",
+	"limit",
+	"order",
+	"page",
+}
+
+var ListClustersRequestFieldPathsTopLevel = []string{
+	"field_mask",
+	"limit",
+	"order",
+	"page",
+}
+var Cluster_EndpointFieldPathsNested = []string{
+	"endpoint",
+	"endpoint.backend_interfaces_http",
+	"endpoint.backend_interfaces_http.host",
+	"endpoint.backend_interfaces_http.path",
+	"endpoint.backend_interfaces_http.port",
+	"endpoint.backend_interfaces_http.tls",
+	"endpoint.basic_station_http",
+	"endpoint.basic_station_http.host",
+	"endpoint.basic_station_http.path",
+	"endpoint.basic_station_http.port",
+	"endpoint.basic_station_http.tls",
+	"endpoint.grpc",
+	"endpoint.grpc.host",
+	"endpoint.grpc.port",
+	"endpoint.grpc.tls",
+	"endpoint.grpc_http",
+	"endpoint.grpc_http.host",
+	"endpoint.grpc_http.path",
+	"endpoint.grpc_http.port",
+	"endpoint.grpc_http.tls",
+	"endpoint.http",
+	"endpoint.http.host",
+	"endpoint.http.path",
+	"endpoint.http.port",
+	"endpoint.http.tls",
+	"endpoint.mqtt",
+	"endpoint.mqtt.host",
+	"endpoint.mqtt.port",
+	"endpoint.mqtt.tls",
+	"endpoint.packet_forwarder_udp",
+	"endpoint.packet_forwarder_udp.dtls",
+	"endpoint.packet_forwarder_udp.host",
+	"endpoint.packet_forwarder_udp.port",
+	"roles",
+}
+
+var Cluster_EndpointFieldPathsTopLevel = []string{
+	"endpoint",
+	"roles",
+}
+var Cluster_Endpoint_GRPCFieldPathsNested = []string{
+	"host",
+	"port",
+	"tls",
+}
+
+var Cluster_Endpoint_GRPCFieldPathsTopLevel = []string{
+	"host",
+	"port",
+	"tls",
+}
+var Cluster_Endpoint_HTTPFieldPathsNested = []string{
+	"host",
+	"path",
+	"port",
+	"tls",
+}
+
+var Cluster_Endpoint_HTTPFieldPathsTopLevel = []string{
+	"host",
+	"path",
+	"port",
+	"tls",
+}
+var Cluster_Endpoint_MQTTFieldPathsNested = []string{
+	"host",
+	"port",
+	"tls",
+}
+
+var Cluster_Endpoint_MQTTFieldPathsTopLevel = []string{
+	"host",
+	"port",
+	"tls",
+}
+var Cluster_Endpoint_UDPFieldPathsNested = []string{
+	"dtls",
+	"host",
+	"port",
+}
+
+var Cluster_Endpoint_UDPFieldPathsTopLevel = []string{
+	"dtls",
+	"host",
+	"port",
+}

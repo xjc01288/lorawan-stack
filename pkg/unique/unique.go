@@ -62,6 +62,15 @@ func ToClientID(uid string) (id ttnpb.ClientIdentifiers, err error) {
 	return id, nil
 }
 
+// ToClusterID returns the cluster identifier of the specified unique ID.
+func ToClusterID(uid string) (id ttnpb.ClusterIdentifiers, err error) {
+	id.ClusterID = uid
+	if err := id.ValidateFields("cluster_id"); err != nil {
+		return ttnpb.ClusterIdentifiers{}, errUniqueIdentifier.WithCause(err).WithAttributes("uid", uid)
+	}
+	return id, nil
+}
+
 // ToDeviceID returns the end device identifier of the specified unique ID.
 func ToDeviceID(uid string) (id ttnpb.EndDeviceIdentifiers, err error) {
 	sepIdx := strings.Index(uid, ".")

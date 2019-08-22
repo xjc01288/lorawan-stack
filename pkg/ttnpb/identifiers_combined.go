@@ -24,6 +24,11 @@ func (ids ClientIdentifiers) CombinedIdentifiers() *CombinedIdentifiers {
 	return ids.EntityIdentifiers().CombinedIdentifiers()
 }
 
+// CombinedIdentifiers returns the ClusterIdentifiers as CombinedIdentifiers.
+func (ids ClusterIdentifiers) CombinedIdentifiers() *CombinedIdentifiers {
+	return ids.EntityIdentifiers().CombinedIdentifiers()
+}
+
 // CombinedIdentifiers returns the EndDeviceIdentifiers as CombinedIdentifiers.
 func (ids EndDeviceIdentifiers) CombinedIdentifiers() *CombinedIdentifiers {
 	return ids.EntityIdentifiers().CombinedIdentifiers()

@@ -16,7 +16,12 @@ syntax = "proto3";
 
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "lorawan-stack/api/contact_info.proto";
 import "lorawan-stack/api/enums.proto";
+import "lorawan-stack/api/identifiers.proto";
+import "lorawan-stack/api/metadata.proto";
 
 package ttn.lorawan.v3;
 
@@ -33,4 +38,90 @@ message PeerInfo {
 
   // Tags of the peer
   map<string,string> tags = 4;
+}
+
+// Cluster is the message that defines a Cluster in the network.
+message Cluster {
+  message Endpoint {
+    message GRPC {
+      string host = 1;
+      uint32 port = 2;
+      bool tls = 3;
+    }
+    message HTTP {
+      string host = 1;
+      uint32 port = 2;
+      bool tls = 3;
+      string path = 4; // URL path (prefix) to use.
+    }
+    message MQTT {
+      string host = 1;
+      uint32 port = 2;
+      bool tls = 3;
+    }
+    message UDP {
+      string host = 1;
+      uint32 port = 2;
+      bool dtls = 3;
+    }
+
+    repeated ClusterRole roles = 1;
+
+    oneof endpoint {
+      // gRPC API endpoint.
+      GRPC grpc = 2;
+      // gRPC-gateway API endpoint. Prefix is inserted before endpoints specified in other protos.
+      // Usually the path should be "/api/v3".
+      HTTP grpc_http = 3;
+      // HTTP endpoint for User Interface.
+      HTTP http = 4;
+      // MQTT Endpoint (only GATEWAY_SERVER, APPLICATION_SERVER).
+      MQTT mqtt = 5;
+      // Packet Forwarder UDP API endpoint (only GATEWAY_SERVER).
+      UDP packet_forwarder_udp = 6;
+      // Backend Interfaces HTTP API endpoint (only NETWORK_SERVER, APPLICATION_SERVER, JOIN_SERVER).
+      HTTP backend_interfaces_http = 7;
+      // Basic Station HTTP API endpoint (only GATEWAY_SERVER).
+      HTTP basic_station_http = 8;
+    }
+  }
+
+  ClusterIdentifiers ids = 1 [(gogoproto.embed) = true, (gogoproto.nullable) = false, (validate.rules).message.required = true];
+  google.protobuf.Timestamp created_at = 2 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+  google.protobuf.Timestamp updated_at = 3 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+
+  string name = 4 [(validate.rules).string.max_len = 50];
+  string description = 5 [(validate.rules).string.max_len = 2000];
+  map<string,string> attributes = 6 [(validate.rules).map.keys.string = {pattern: "^[a-z0-9](?:[-]?[a-z0-9]){2,}$" , max_len: 36}];
+  repeated ContactInfo contact_info = 7;
+
+  string secret = 8;
+
+  Location location = 9 [(gogoproto.nullable) = false, (validate.rules).message.required = true];
+  string location_description = 10;
+
+  repeated ClusterRole roles = 11;
+
+  repeated Endpoint endpoints = 12;
+}
+
+message Clusters {
+  repeated Cluster clusters = 1;
+}
+
+message GetClusterRequest {
+  ClusterIdentifiers cluster_ids = 1 [(gogoproto.embed) = true, (gogoproto.nullable) = false, (validate.rules).message.required = true];
+  google.protobuf.FieldMask field_mask = 2 [(gogoproto.nullable) = false];
+}
+
+message ListClustersRequest {
+  reserved 1; // In other ListEntityRequest this is OrganizationOrUserIdentifiers collaborator = 1;
+  google.protobuf.FieldMask field_mask = 2 [(gogoproto.nullable) = false];
+  // Order the results by this field path (must be present in the field mask).
+  // Default ordering is by ID. Prepend with a minus (-) to reverse the order.
+  string order = 3;
+  // Limit the number of results per page.
+  uint32 limit = 4 [(validate.rules).uint32.lte = 1000];
+  // Page number for pagination. 0 is interpreted as 1.
+  uint32 page = 5;
 }

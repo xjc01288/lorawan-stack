@@ -26,6 +26,8 @@ var ContactInfoValidationFieldPathsNested = []string{
 	"entity.ids.application_ids.application_id",
 	"entity.ids.client_ids",
 	"entity.ids.client_ids.client_id",
+	"entity.ids.cluster_ids",
+	"entity.ids.cluster_ids.cluster_id",
 	"entity.ids.device_ids",
 	"entity.ids.device_ids.application_ids",
 	"entity.ids.device_ids.application_ids.application_id",

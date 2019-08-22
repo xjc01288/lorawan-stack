@@ -1067,6 +1067,30 @@
       ]
     }
   },
+  "ClusterRegistry": {
+    "Get": {
+      "file": "lorawan-stack/api/cluster_services.proto",
+      "http": [
+        {
+          "method": "get",
+          "pattern": "/clusters/{cluster_ids.cluster_id}",
+          "parameters": [
+            "cluster_ids.cluster_id"
+          ]
+        }
+      ]
+    },
+    "List": {
+      "file": "lorawan-stack/api/cluster_services.proto",
+      "http": [
+        {
+          "method": "get",
+          "pattern": "/clusters",
+          "parameters": []
+        }
+      ]
+    }
+  },
   "Configuration": {
     "ListFrequencyPlans": {
       "file": "lorawan-stack/api/configuration_services.proto",

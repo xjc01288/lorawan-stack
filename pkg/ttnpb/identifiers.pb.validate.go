@@ -233,6 +233,105 @@ var _ interface {
 
 var _ClientIdentifiers_ClientID_Pattern = regexp.MustCompile("^[a-z0-9](?:[-]?[a-z0-9]){2,}$")
 
+// ValidateFields checks the field values on ClusterIdentifiers with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *ClusterIdentifiers) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = ClusterIdentifiersFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "cluster_id":
+
+			if utf8.RuneCountInString(m.GetClusterID()) > 36 {
+				return ClusterIdentifiersValidationError{
+					field:  "cluster_id",
+					reason: "value length must be at most 36 runes",
+				}
+			}
+
+			if !_ClusterIdentifiers_ClusterID_Pattern.MatchString(m.GetClusterID()) {
+				return ClusterIdentifiersValidationError{
+					field:  "cluster_id",
+					reason: "value does not match regex pattern \"^[a-z0-9](?:[-]?[a-z0-9]){2,}$\"",
+				}
+			}
+
+		default:
+			return ClusterIdentifiersValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// ClusterIdentifiersValidationError is the validation error returned by
+// ClusterIdentifiers.ValidateFields if the designated constraints aren't met.
+type ClusterIdentifiersValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ClusterIdentifiersValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ClusterIdentifiersValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ClusterIdentifiersValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ClusterIdentifiersValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ClusterIdentifiersValidationError) ErrorName() string {
+	return "ClusterIdentifiersValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ClusterIdentifiersValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sClusterIdentifiers.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ClusterIdentifiersValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ClusterIdentifiersValidationError{}
+
+var _ClusterIdentifiers_ClusterID_Pattern = regexp.MustCompile("^[a-z0-9](?:[-]?[a-z0-9]){2,}$")
+
 // ValidateFields checks the field values on EndDeviceIdentifiers with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, an error is returned.
@@ -784,7 +883,7 @@ func (m *EntityIdentifiers) ValidateFields(paths ...string) error {
 		case "ids":
 			if len(subs) == 0 {
 				subs = []string{
-					"application_ids", "client_ids", "device_ids", "gateway_ids", "organization_ids", "user_ids",
+					"application_ids", "client_ids", "device_ids", "gateway_ids", "organization_ids", "user_ids", "cluster_ids",
 				}
 			}
 			for name, subs := range _processPaths(subs) {
@@ -856,6 +955,18 @@ func (m *EntityIdentifiers) ValidateFields(paths ...string) error {
 						if err := v.ValidateFields(subs...); err != nil {
 							return EntityIdentifiersValidationError{
 								field:  "user_ids",
+								reason: "embedded message failed validation",
+								cause:  err,
+							}
+						}
+					}
+
+				case "cluster_ids":
+
+					if v, ok := interface{}(m.GetClusterIDs()).(interface{ ValidateFields(...string) error }); ok {
+						if err := v.ValidateFields(subs...); err != nil {
+							return EntityIdentifiersValidationError{
+								field:  "cluster_ids",
 								reason: "embedded message failed validation",
 								cause:  err,
 							}

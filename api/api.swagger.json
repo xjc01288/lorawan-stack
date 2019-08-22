@@ -2110,6 +2110,95 @@
         ]
       }
     },
+    "/clusters": {
+      "get": {
+        "summary": "List clusters, selecting the fields given by the field mask.",
+        "operationId": "List",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Clusters"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "field_mask.paths",
+            "description": "The set of field mask paths.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "order",
+            "description": "Order the results by this field path (must be present in the field mask).\nDefault ordering is by ID. Prepend with a minus (-) to reverse the order.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "description": "Limit the number of results per page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "description": "Page number for pagination. 0 is interpreted as 1.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ClusterRegistry"
+        ]
+      }
+    },
+    "/clusters/{cluster_ids.cluster_id}": {
+      "get": {
+        "summary": "Get the cluster with the given identifiers, selecting the fields given\nby the field mask.",
+        "operationId": "Get",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Cluster"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cluster_ids.cluster_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "field_mask.paths",
+            "description": "The set of field mask paths.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "ClusterRegistry"
+        ]
+      }
+    },
     "/configuration/frequency-plans": {
       "get": {
         "operationId": "ListFrequencyPlans",
@@ -5735,6 +5824,45 @@
         }
       }
     },
+    "ClusterEndpoint": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3ClusterRole"
+          }
+        },
+        "grpc": {
+          "$ref": "#/definitions/EndpointGRPC",
+          "description": "gRPC API endpoint."
+        },
+        "grpc_http": {
+          "$ref": "#/definitions/EndpointHTTP",
+          "description": "gRPC-gateway API endpoint. Prefix is inserted before endpoints specified in other protos.\nUsually the path should be \"/api/v3\"."
+        },
+        "http": {
+          "$ref": "#/definitions/EndpointHTTP",
+          "description": "HTTP endpoint for User Interface."
+        },
+        "mqtt": {
+          "$ref": "#/definitions/EndpointMQTT",
+          "description": "MQTT Endpoint (only GATEWAY_SERVER, APPLICATION_SERVER)."
+        },
+        "packet_forwarder_udp": {
+          "$ref": "#/definitions/EndpointUDP",
+          "description": "Packet Forwarder UDP API endpoint (only GATEWAY_SERVER)."
+        },
+        "backend_interfaces_http": {
+          "$ref": "#/definitions/EndpointHTTP",
+          "description": "Backend Interfaces HTTP API endpoint (only NETWORK_SERVER, APPLICATION_SERVER, JOIN_SERVER)."
+        },
+        "basic_station_http": {
+          "$ref": "#/definitions/EndpointHTTP",
+          "description": "Basic Station HTTP API endpoint (only GATEWAY_SERVER)."
+        }
+      }
+    },
     "ConcentratorConfigFSKChannel": {
       "type": "object",
       "properties": {
@@ -5787,6 +5915,73 @@
         "spreading_factor": {
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "EndpointGRPC": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "tls": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "EndpointHTTP": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "tls": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "EndpointMQTT": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "tls": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "EndpointUDP": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "dtls": {
+          "type": "boolean",
+          "format": "boolean"
         }
       }
     },
@@ -7368,6 +7563,97 @@
         }
       }
     },
+    "v3Cluster": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "$ref": "#/definitions/v3ClusterIdentifiers"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "contact_info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3ContactInfo"
+          }
+        },
+        "secret": {
+          "type": "string"
+        },
+        "location": {
+          "$ref": "#/definitions/lorawanv3Location"
+        },
+        "location_description": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3ClusterRole"
+          }
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClusterEndpoint"
+          }
+        }
+      },
+      "description": "Cluster is the message that defines a Cluster in the network."
+    },
+    "v3ClusterIdentifiers": {
+      "type": "object",
+      "properties": {
+        "cluster_id": {
+          "type": "string"
+        }
+      }
+    },
+    "v3ClusterRole": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "ENTITY_REGISTRY",
+        "ACCESS",
+        "GATEWAY_SERVER",
+        "NETWORK_SERVER",
+        "APPLICATION_SERVER",
+        "JOIN_SERVER",
+        "CRYPTO_SERVER",
+        "DEVICE_TEMPLATE_CONVERTER",
+        "DEVICE_CLAIMING_SERVER"
+      ],
+      "default": "NONE"
+    },
+    "v3Clusters": {
+      "type": "object",
+      "properties": {
+        "clusters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3Cluster"
+          }
+        }
+      }
+    },
     "v3Collaborator": {
       "type": "object",
       "properties": {
@@ -8191,6 +8477,9 @@
         },
         "user_ids": {
           "$ref": "#/definitions/v3UserIdentifiers"
+        },
+        "cluster_ids": {
+          "$ref": "#/definitions/v3ClusterIdentifiers"
         }
       },
       "description": "EntityIdentifiers contains one of the possible entity identifiers."

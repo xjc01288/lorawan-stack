@@ -121,3 +121,1045 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = PeerInfoValidationError{}
+
+// ValidateFields checks the field values on Cluster with the rules defined in
+// the proto definition for this message. If any rules are violated, an error
+// is returned.
+func (m *Cluster) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = ClusterFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "ids":
+
+			if v, ok := interface{}(&m.ClusterIdentifiers).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return ClusterValidationError{
+						field:  "ids",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		case "created_at":
+
+			if v, ok := interface{}(&m.CreatedAt).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return ClusterValidationError{
+						field:  "created_at",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		case "updated_at":
+
+			if v, ok := interface{}(&m.UpdatedAt).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return ClusterValidationError{
+						field:  "updated_at",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		case "name":
+
+			if utf8.RuneCountInString(m.GetName()) > 50 {
+				return ClusterValidationError{
+					field:  "name",
+					reason: "value length must be at most 50 runes",
+				}
+			}
+
+		case "description":
+
+			if utf8.RuneCountInString(m.GetDescription()) > 2000 {
+				return ClusterValidationError{
+					field:  "description",
+					reason: "value length must be at most 2000 runes",
+				}
+			}
+
+		case "attributes":
+
+			for key, val := range m.GetAttributes() {
+				_ = val
+
+				if utf8.RuneCountInString(key) > 36 {
+					return ClusterValidationError{
+						field:  fmt.Sprintf("attributes[%v]", key),
+						reason: "value length must be at most 36 runes",
+					}
+				}
+
+				if !_Cluster_Attributes_Pattern.MatchString(key) {
+					return ClusterValidationError{
+						field:  fmt.Sprintf("attributes[%v]", key),
+						reason: "value does not match regex pattern \"^[a-z0-9](?:[-]?[a-z0-9]){2,}$\"",
+					}
+				}
+
+				// no validation rules for Attributes[key]
+			}
+
+		case "contact_info":
+
+			for idx, item := range m.GetContactInfo() {
+				_, _ = idx, item
+
+				if v, ok := interface{}(item).(interface{ ValidateFields(...string) error }); ok {
+					if err := v.ValidateFields(subs...); err != nil {
+						return ClusterValidationError{
+							field:  fmt.Sprintf("contact_info[%v]", idx),
+							reason: "embedded message failed validation",
+							cause:  err,
+						}
+					}
+				}
+
+			}
+
+		case "secret":
+			// no validation rules for Secret
+		case "location":
+
+			if v, ok := interface{}(&m.Location).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return ClusterValidationError{
+						field:  "location",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		case "location_description":
+			// no validation rules for LocationDescription
+		case "roles":
+
+		case "endpoints":
+
+			for idx, item := range m.GetEndpoints() {
+				_, _ = idx, item
+
+				if v, ok := interface{}(item).(interface{ ValidateFields(...string) error }); ok {
+					if err := v.ValidateFields(subs...); err != nil {
+						return ClusterValidationError{
+							field:  fmt.Sprintf("endpoints[%v]", idx),
+							reason: "embedded message failed validation",
+							cause:  err,
+						}
+					}
+				}
+
+			}
+
+		default:
+			return ClusterValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// ClusterValidationError is the validation error returned by
+// Cluster.ValidateFields if the designated constraints aren't met.
+type ClusterValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ClusterValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ClusterValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ClusterValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ClusterValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ClusterValidationError) ErrorName() string { return "ClusterValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ClusterValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCluster.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ClusterValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ClusterValidationError{}
+
+var _Cluster_Attributes_Pattern = regexp.MustCompile("^[a-z0-9](?:[-]?[a-z0-9]){2,}$")
+
+// ValidateFields checks the field values on Clusters with the rules defined in
+// the proto definition for this message. If any rules are violated, an error
+// is returned.
+func (m *Clusters) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = ClustersFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "clusters":
+
+			for idx, item := range m.GetClusters() {
+				_, _ = idx, item
+
+				if v, ok := interface{}(item).(interface{ ValidateFields(...string) error }); ok {
+					if err := v.ValidateFields(subs...); err != nil {
+						return ClustersValidationError{
+							field:  fmt.Sprintf("clusters[%v]", idx),
+							reason: "embedded message failed validation",
+							cause:  err,
+						}
+					}
+				}
+
+			}
+
+		default:
+			return ClustersValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// ClustersValidationError is the validation error returned by
+// Clusters.ValidateFields if the designated constraints aren't met.
+type ClustersValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ClustersValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ClustersValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ClustersValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ClustersValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ClustersValidationError) ErrorName() string { return "ClustersValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ClustersValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sClusters.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ClustersValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ClustersValidationError{}
+
+// ValidateFields checks the field values on GetClusterRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *GetClusterRequest) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = GetClusterRequestFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "cluster_ids":
+
+			if v, ok := interface{}(&m.ClusterIdentifiers).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return GetClusterRequestValidationError{
+						field:  "cluster_ids",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		case "field_mask":
+
+			if v, ok := interface{}(&m.FieldMask).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return GetClusterRequestValidationError{
+						field:  "field_mask",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		default:
+			return GetClusterRequestValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// GetClusterRequestValidationError is the validation error returned by
+// GetClusterRequest.ValidateFields if the designated constraints aren't met.
+type GetClusterRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetClusterRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetClusterRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetClusterRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetClusterRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetClusterRequestValidationError) ErrorName() string {
+	return "GetClusterRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetClusterRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetClusterRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetClusterRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetClusterRequestValidationError{}
+
+// ValidateFields checks the field values on ListClustersRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *ListClustersRequest) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = ListClustersRequestFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "field_mask":
+
+			if v, ok := interface{}(&m.FieldMask).(interface{ ValidateFields(...string) error }); ok {
+				if err := v.ValidateFields(subs...); err != nil {
+					return ListClustersRequestValidationError{
+						field:  "field_mask",
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		case "order":
+			// no validation rules for Order
+		case "limit":
+
+			if m.GetLimit() > 1000 {
+				return ListClustersRequestValidationError{
+					field:  "limit",
+					reason: "value must be less than or equal to 1000",
+				}
+			}
+
+		case "page":
+			// no validation rules for Page
+		default:
+			return ListClustersRequestValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// ListClustersRequestValidationError is the validation error returned by
+// ListClustersRequest.ValidateFields if the designated constraints aren't met.
+type ListClustersRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListClustersRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListClustersRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListClustersRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListClustersRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListClustersRequestValidationError) ErrorName() string {
+	return "ListClustersRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListClustersRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListClustersRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListClustersRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListClustersRequestValidationError{}
+
+// ValidateFields checks the field values on Cluster_Endpoint with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *Cluster_Endpoint) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = Cluster_EndpointFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "roles":
+
+		case "endpoint":
+			if len(subs) == 0 {
+				subs = []string{
+					"grpc", "grpc_http", "http", "mqtt", "packet_forwarder_udp", "backend_interfaces_http", "basic_station_http",
+				}
+			}
+			for name, subs := range _processPaths(subs) {
+				_ = subs
+				switch name {
+				case "grpc":
+
+					if v, ok := interface{}(m.GetGrpc()).(interface{ ValidateFields(...string) error }); ok {
+						if err := v.ValidateFields(subs...); err != nil {
+							return Cluster_EndpointValidationError{
+								field:  "grpc",
+								reason: "embedded message failed validation",
+								cause:  err,
+							}
+						}
+					}
+
+				case "grpc_http":
+
+					if v, ok := interface{}(m.GetGrpcHttp()).(interface{ ValidateFields(...string) error }); ok {
+						if err := v.ValidateFields(subs...); err != nil {
+							return Cluster_EndpointValidationError{
+								field:  "grpc_http",
+								reason: "embedded message failed validation",
+								cause:  err,
+							}
+						}
+					}
+
+				case "http":
+
+					if v, ok := interface{}(m.GetHttp()).(interface{ ValidateFields(...string) error }); ok {
+						if err := v.ValidateFields(subs...); err != nil {
+							return Cluster_EndpointValidationError{
+								field:  "http",
+								reason: "embedded message failed validation",
+								cause:  err,
+							}
+						}
+					}
+
+				case "mqtt":
+
+					if v, ok := interface{}(m.GetMqtt()).(interface{ ValidateFields(...string) error }); ok {
+						if err := v.ValidateFields(subs...); err != nil {
+							return Cluster_EndpointValidationError{
+								field:  "mqtt",
+								reason: "embedded message failed validation",
+								cause:  err,
+							}
+						}
+					}
+
+				case "packet_forwarder_udp":
+
+					if v, ok := interface{}(m.GetPacketForwarderUdp()).(interface{ ValidateFields(...string) error }); ok {
+						if err := v.ValidateFields(subs...); err != nil {
+							return Cluster_EndpointValidationError{
+								field:  "packet_forwarder_udp",
+								reason: "embedded message failed validation",
+								cause:  err,
+							}
+						}
+					}
+
+				case "backend_interfaces_http":
+
+					if v, ok := interface{}(m.GetBackendInterfacesHttp()).(interface{ ValidateFields(...string) error }); ok {
+						if err := v.ValidateFields(subs...); err != nil {
+							return Cluster_EndpointValidationError{
+								field:  "backend_interfaces_http",
+								reason: "embedded message failed validation",
+								cause:  err,
+							}
+						}
+					}
+
+				case "basic_station_http":
+
+					if v, ok := interface{}(m.GetBasicStationHttp()).(interface{ ValidateFields(...string) error }); ok {
+						if err := v.ValidateFields(subs...); err != nil {
+							return Cluster_EndpointValidationError{
+								field:  "basic_station_http",
+								reason: "embedded message failed validation",
+								cause:  err,
+							}
+						}
+					}
+
+				}
+			}
+		default:
+			return Cluster_EndpointValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// Cluster_EndpointValidationError is the validation error returned by
+// Cluster_Endpoint.ValidateFields if the designated constraints aren't met.
+type Cluster_EndpointValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e Cluster_EndpointValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e Cluster_EndpointValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e Cluster_EndpointValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e Cluster_EndpointValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e Cluster_EndpointValidationError) ErrorName() string { return "Cluster_EndpointValidationError" }
+
+// Error satisfies the builtin error interface
+func (e Cluster_EndpointValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCluster_Endpoint.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = Cluster_EndpointValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = Cluster_EndpointValidationError{}
+
+// ValidateFields checks the field values on Cluster_Endpoint_GRPC with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *Cluster_Endpoint_GRPC) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = Cluster_Endpoint_GRPCFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "host":
+			// no validation rules for Host
+		case "port":
+			// no validation rules for Port
+		case "tls":
+			// no validation rules for Tls
+		default:
+			return Cluster_Endpoint_GRPCValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// Cluster_Endpoint_GRPCValidationError is the validation error returned by
+// Cluster_Endpoint_GRPC.ValidateFields if the designated constraints aren't met.
+type Cluster_Endpoint_GRPCValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e Cluster_Endpoint_GRPCValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e Cluster_Endpoint_GRPCValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e Cluster_Endpoint_GRPCValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e Cluster_Endpoint_GRPCValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e Cluster_Endpoint_GRPCValidationError) ErrorName() string {
+	return "Cluster_Endpoint_GRPCValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e Cluster_Endpoint_GRPCValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCluster_Endpoint_GRPC.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = Cluster_Endpoint_GRPCValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = Cluster_Endpoint_GRPCValidationError{}
+
+// ValidateFields checks the field values on Cluster_Endpoint_HTTP with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *Cluster_Endpoint_HTTP) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = Cluster_Endpoint_HTTPFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "host":
+			// no validation rules for Host
+		case "port":
+			// no validation rules for Port
+		case "tls":
+			// no validation rules for Tls
+		case "path":
+			// no validation rules for Path
+		default:
+			return Cluster_Endpoint_HTTPValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// Cluster_Endpoint_HTTPValidationError is the validation error returned by
+// Cluster_Endpoint_HTTP.ValidateFields if the designated constraints aren't met.
+type Cluster_Endpoint_HTTPValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e Cluster_Endpoint_HTTPValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e Cluster_Endpoint_HTTPValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e Cluster_Endpoint_HTTPValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e Cluster_Endpoint_HTTPValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e Cluster_Endpoint_HTTPValidationError) ErrorName() string {
+	return "Cluster_Endpoint_HTTPValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e Cluster_Endpoint_HTTPValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCluster_Endpoint_HTTP.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = Cluster_Endpoint_HTTPValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = Cluster_Endpoint_HTTPValidationError{}
+
+// ValidateFields checks the field values on Cluster_Endpoint_MQTT with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *Cluster_Endpoint_MQTT) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = Cluster_Endpoint_MQTTFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "host":
+			// no validation rules for Host
+		case "port":
+			// no validation rules for Port
+		case "tls":
+			// no validation rules for Tls
+		default:
+			return Cluster_Endpoint_MQTTValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// Cluster_Endpoint_MQTTValidationError is the validation error returned by
+// Cluster_Endpoint_MQTT.ValidateFields if the designated constraints aren't met.
+type Cluster_Endpoint_MQTTValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e Cluster_Endpoint_MQTTValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e Cluster_Endpoint_MQTTValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e Cluster_Endpoint_MQTTValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e Cluster_Endpoint_MQTTValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e Cluster_Endpoint_MQTTValidationError) ErrorName() string {
+	return "Cluster_Endpoint_MQTTValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e Cluster_Endpoint_MQTTValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCluster_Endpoint_MQTT.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = Cluster_Endpoint_MQTTValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = Cluster_Endpoint_MQTTValidationError{}
+
+// ValidateFields checks the field values on Cluster_Endpoint_UDP with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *Cluster_Endpoint_UDP) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = Cluster_Endpoint_UDPFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "host":
+			// no validation rules for Host
+		case "port":
+			// no validation rules for Port
+		case "dtls":
+			// no validation rules for Dtls
+		default:
+			return Cluster_Endpoint_UDPValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// Cluster_Endpoint_UDPValidationError is the validation error returned by
+// Cluster_Endpoint_UDP.ValidateFields if the designated constraints aren't met.
+type Cluster_Endpoint_UDPValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e Cluster_Endpoint_UDPValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e Cluster_Endpoint_UDPValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e Cluster_Endpoint_UDPValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e Cluster_Endpoint_UDPValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e Cluster_Endpoint_UDPValidationError) ErrorName() string {
+	return "Cluster_Endpoint_UDPValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e Cluster_Endpoint_UDPValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCluster_Endpoint_UDP.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = Cluster_Endpoint_UDPValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = Cluster_Endpoint_UDPValidationError{}

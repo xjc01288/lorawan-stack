@@ -48,6 +48,12 @@ func NewPopulatedClientIdentifiers(r randyIdentifiers, _ bool) *ClientIdentifier
 	}
 }
 
+func NewPopulatedClusterIdentifiers(r randyIdentifiers, _ bool) *ClusterIdentifiers {
+	return &ClusterIdentifiers{
+		ClusterID: NewPopulatedID(r),
+	}
+}
+
 func NewPopulatedGatewayIdentifiers(r randyIdentifiers, _ bool) *GatewayIdentifiers {
 	return &GatewayIdentifiers{
 		GatewayID: NewPopulatedID(r),

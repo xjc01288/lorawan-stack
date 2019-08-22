@@ -9,11 +9,14 @@ import (
 	math "math"
 	reflect "reflect"
 	strings "strings"
+	time "time"
 
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	github_com_gogo_protobuf_sortkeys "github.com/gogo/protobuf/sortkeys"
+	github_com_gogo_protobuf_types "github.com/gogo/protobuf/types"
+	types "github.com/gogo/protobuf/types"
 	golang_proto "github.com/golang/protobuf/proto"
 )
 
@@ -22,6 +25,7 @@ var _ = proto.Marshal
 var _ = golang_proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
+var _ = time.Kitchen
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -103,11 +107,890 @@ func (m *PeerInfo) GetTags() map[string]string {
 	return nil
 }
 
+// Cluster is the message that defines a Cluster in the network.
+type Cluster struct {
+	ClusterIdentifiers   `protobuf:"bytes,1,opt,name=ids,proto3,embedded=ids" json:"ids"`
+	CreatedAt            time.Time           `protobuf:"bytes,2,opt,name=created_at,json=createdAt,proto3,stdtime" json:"created_at"`
+	UpdatedAt            time.Time           `protobuf:"bytes,3,opt,name=updated_at,json=updatedAt,proto3,stdtime" json:"updated_at"`
+	Name                 string              `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Description          string              `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	Attributes           map[string]string   `protobuf:"bytes,6,rep,name=attributes,proto3" json:"attributes,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	ContactInfo          []*ContactInfo      `protobuf:"bytes,7,rep,name=contact_info,json=contactInfo,proto3" json:"contact_info,omitempty"`
+	Secret               string              `protobuf:"bytes,8,opt,name=secret,proto3" json:"secret,omitempty"`
+	Location             Location            `protobuf:"bytes,9,opt,name=location,proto3" json:"location"`
+	LocationDescription  string              `protobuf:"bytes,10,opt,name=location_description,json=locationDescription,proto3" json:"location_description,omitempty"`
+	Roles                []ClusterRole       `protobuf:"varint,11,rep,packed,name=roles,proto3,enum=ttn.lorawan.v3.ClusterRole" json:"roles,omitempty"`
+	Endpoints            []*Cluster_Endpoint `protobuf:"bytes,12,rep,name=endpoints,proto3" json:"endpoints,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
+}
+
+func (m *Cluster) Reset()      { *m = Cluster{} }
+func (*Cluster) ProtoMessage() {}
+func (*Cluster) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5716c3fcd711eefd, []int{1}
+}
+func (m *Cluster) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Cluster) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Cluster.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Cluster) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Cluster.Merge(m, src)
+}
+func (m *Cluster) XXX_Size() int {
+	return m.Size()
+}
+func (m *Cluster) XXX_DiscardUnknown() {
+	xxx_messageInfo_Cluster.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Cluster proto.InternalMessageInfo
+
+func (m *Cluster) GetCreatedAt() time.Time {
+	if m != nil {
+		return m.CreatedAt
+	}
+	return time.Time{}
+}
+
+func (m *Cluster) GetUpdatedAt() time.Time {
+	if m != nil {
+		return m.UpdatedAt
+	}
+	return time.Time{}
+}
+
+func (m *Cluster) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *Cluster) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *Cluster) GetAttributes() map[string]string {
+	if m != nil {
+		return m.Attributes
+	}
+	return nil
+}
+
+func (m *Cluster) GetContactInfo() []*ContactInfo {
+	if m != nil {
+		return m.ContactInfo
+	}
+	return nil
+}
+
+func (m *Cluster) GetSecret() string {
+	if m != nil {
+		return m.Secret
+	}
+	return ""
+}
+
+func (m *Cluster) GetLocation() Location {
+	if m != nil {
+		return m.Location
+	}
+	return Location{}
+}
+
+func (m *Cluster) GetLocationDescription() string {
+	if m != nil {
+		return m.LocationDescription
+	}
+	return ""
+}
+
+func (m *Cluster) GetRoles() []ClusterRole {
+	if m != nil {
+		return m.Roles
+	}
+	return nil
+}
+
+func (m *Cluster) GetEndpoints() []*Cluster_Endpoint {
+	if m != nil {
+		return m.Endpoints
+	}
+	return nil
+}
+
+type Cluster_Endpoint struct {
+	Roles []ClusterRole `protobuf:"varint,1,rep,packed,name=roles,proto3,enum=ttn.lorawan.v3.ClusterRole" json:"roles,omitempty"`
+	// Types that are valid to be assigned to Endpoint:
+	//	*Cluster_Endpoint_Grpc
+	//	*Cluster_Endpoint_GrpcHttp
+	//	*Cluster_Endpoint_Http
+	//	*Cluster_Endpoint_Mqtt
+	//	*Cluster_Endpoint_PacketForwarderUdp
+	//	*Cluster_Endpoint_BackendInterfacesHttp
+	//	*Cluster_Endpoint_BasicStationHttp
+	Endpoint             isCluster_Endpoint_Endpoint `protobuf_oneof:"endpoint"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
+}
+
+func (m *Cluster_Endpoint) Reset()      { *m = Cluster_Endpoint{} }
+func (*Cluster_Endpoint) ProtoMessage() {}
+func (*Cluster_Endpoint) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5716c3fcd711eefd, []int{1, 0}
+}
+func (m *Cluster_Endpoint) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Cluster_Endpoint) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Cluster_Endpoint.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Cluster_Endpoint) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Cluster_Endpoint.Merge(m, src)
+}
+func (m *Cluster_Endpoint) XXX_Size() int {
+	return m.Size()
+}
+func (m *Cluster_Endpoint) XXX_DiscardUnknown() {
+	xxx_messageInfo_Cluster_Endpoint.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Cluster_Endpoint proto.InternalMessageInfo
+
+type isCluster_Endpoint_Endpoint interface {
+	isCluster_Endpoint_Endpoint()
+	Equal(interface{}) bool
+	MarshalTo([]byte) (int, error)
+	Size() int
+}
+
+type Cluster_Endpoint_Grpc struct {
+	Grpc *Cluster_Endpoint_GRPC `protobuf:"bytes,2,opt,name=grpc,proto3,oneof"`
+}
+type Cluster_Endpoint_GrpcHttp struct {
+	GrpcHttp *Cluster_Endpoint_HTTP `protobuf:"bytes,3,opt,name=grpc_http,json=grpcHttp,proto3,oneof"`
+}
+type Cluster_Endpoint_Http struct {
+	Http *Cluster_Endpoint_HTTP `protobuf:"bytes,4,opt,name=http,proto3,oneof"`
+}
+type Cluster_Endpoint_Mqtt struct {
+	Mqtt *Cluster_Endpoint_MQTT `protobuf:"bytes,5,opt,name=mqtt,proto3,oneof"`
+}
+type Cluster_Endpoint_PacketForwarderUdp struct {
+	PacketForwarderUdp *Cluster_Endpoint_UDP `protobuf:"bytes,6,opt,name=packet_forwarder_udp,json=packetForwarderUdp,proto3,oneof"`
+}
+type Cluster_Endpoint_BackendInterfacesHttp struct {
+	BackendInterfacesHttp *Cluster_Endpoint_HTTP `protobuf:"bytes,7,opt,name=backend_interfaces_http,json=backendInterfacesHttp,proto3,oneof"`
+}
+type Cluster_Endpoint_BasicStationHttp struct {
+	BasicStationHttp *Cluster_Endpoint_HTTP `protobuf:"bytes,8,opt,name=basic_station_http,json=basicStationHttp,proto3,oneof"`
+}
+
+func (*Cluster_Endpoint_Grpc) isCluster_Endpoint_Endpoint()                  {}
+func (*Cluster_Endpoint_GrpcHttp) isCluster_Endpoint_Endpoint()              {}
+func (*Cluster_Endpoint_Http) isCluster_Endpoint_Endpoint()                  {}
+func (*Cluster_Endpoint_Mqtt) isCluster_Endpoint_Endpoint()                  {}
+func (*Cluster_Endpoint_PacketForwarderUdp) isCluster_Endpoint_Endpoint()    {}
+func (*Cluster_Endpoint_BackendInterfacesHttp) isCluster_Endpoint_Endpoint() {}
+func (*Cluster_Endpoint_BasicStationHttp) isCluster_Endpoint_Endpoint()      {}
+
+func (m *Cluster_Endpoint) GetEndpoint() isCluster_Endpoint_Endpoint {
+	if m != nil {
+		return m.Endpoint
+	}
+	return nil
+}
+
+func (m *Cluster_Endpoint) GetRoles() []ClusterRole {
+	if m != nil {
+		return m.Roles
+	}
+	return nil
+}
+
+func (m *Cluster_Endpoint) GetGrpc() *Cluster_Endpoint_GRPC {
+	if x, ok := m.GetEndpoint().(*Cluster_Endpoint_Grpc); ok {
+		return x.Grpc
+	}
+	return nil
+}
+
+func (m *Cluster_Endpoint) GetGrpcHttp() *Cluster_Endpoint_HTTP {
+	if x, ok := m.GetEndpoint().(*Cluster_Endpoint_GrpcHttp); ok {
+		return x.GrpcHttp
+	}
+	return nil
+}
+
+func (m *Cluster_Endpoint) GetHttp() *Cluster_Endpoint_HTTP {
+	if x, ok := m.GetEndpoint().(*Cluster_Endpoint_Http); ok {
+		return x.Http
+	}
+	return nil
+}
+
+func (m *Cluster_Endpoint) GetMqtt() *Cluster_Endpoint_MQTT {
+	if x, ok := m.GetEndpoint().(*Cluster_Endpoint_Mqtt); ok {
+		return x.Mqtt
+	}
+	return nil
+}
+
+func (m *Cluster_Endpoint) GetPacketForwarderUdp() *Cluster_Endpoint_UDP {
+	if x, ok := m.GetEndpoint().(*Cluster_Endpoint_PacketForwarderUdp); ok {
+		return x.PacketForwarderUdp
+	}
+	return nil
+}
+
+func (m *Cluster_Endpoint) GetBackendInterfacesHttp() *Cluster_Endpoint_HTTP {
+	if x, ok := m.GetEndpoint().(*Cluster_Endpoint_BackendInterfacesHttp); ok {
+		return x.BackendInterfacesHttp
+	}
+	return nil
+}
+
+func (m *Cluster_Endpoint) GetBasicStationHttp() *Cluster_Endpoint_HTTP {
+	if x, ok := m.GetEndpoint().(*Cluster_Endpoint_BasicStationHttp); ok {
+		return x.BasicStationHttp
+	}
+	return nil
+}
+
+// XXX_OneofFuncs is for the internal use of the proto package.
+func (*Cluster_Endpoint) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
+	return _Cluster_Endpoint_OneofMarshaler, _Cluster_Endpoint_OneofUnmarshaler, _Cluster_Endpoint_OneofSizer, []interface{}{
+		(*Cluster_Endpoint_Grpc)(nil),
+		(*Cluster_Endpoint_GrpcHttp)(nil),
+		(*Cluster_Endpoint_Http)(nil),
+		(*Cluster_Endpoint_Mqtt)(nil),
+		(*Cluster_Endpoint_PacketForwarderUdp)(nil),
+		(*Cluster_Endpoint_BackendInterfacesHttp)(nil),
+		(*Cluster_Endpoint_BasicStationHttp)(nil),
+	}
+}
+
+func _Cluster_Endpoint_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
+	m := msg.(*Cluster_Endpoint)
+	// endpoint
+	switch x := m.Endpoint.(type) {
+	case *Cluster_Endpoint_Grpc:
+		_ = b.EncodeVarint(2<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.Grpc); err != nil {
+			return err
+		}
+	case *Cluster_Endpoint_GrpcHttp:
+		_ = b.EncodeVarint(3<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.GrpcHttp); err != nil {
+			return err
+		}
+	case *Cluster_Endpoint_Http:
+		_ = b.EncodeVarint(4<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.Http); err != nil {
+			return err
+		}
+	case *Cluster_Endpoint_Mqtt:
+		_ = b.EncodeVarint(5<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.Mqtt); err != nil {
+			return err
+		}
+	case *Cluster_Endpoint_PacketForwarderUdp:
+		_ = b.EncodeVarint(6<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.PacketForwarderUdp); err != nil {
+			return err
+		}
+	case *Cluster_Endpoint_BackendInterfacesHttp:
+		_ = b.EncodeVarint(7<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.BackendInterfacesHttp); err != nil {
+			return err
+		}
+	case *Cluster_Endpoint_BasicStationHttp:
+		_ = b.EncodeVarint(8<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.BasicStationHttp); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("Cluster_Endpoint.Endpoint has unexpected type %T", x)
+	}
+	return nil
+}
+
+func _Cluster_Endpoint_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
+	m := msg.(*Cluster_Endpoint)
+	switch tag {
+	case 2: // endpoint.grpc
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(Cluster_Endpoint_GRPC)
+		err := b.DecodeMessage(msg)
+		m.Endpoint = &Cluster_Endpoint_Grpc{msg}
+		return true, err
+	case 3: // endpoint.grpc_http
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(Cluster_Endpoint_HTTP)
+		err := b.DecodeMessage(msg)
+		m.Endpoint = &Cluster_Endpoint_GrpcHttp{msg}
+		return true, err
+	case 4: // endpoint.http
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(Cluster_Endpoint_HTTP)
+		err := b.DecodeMessage(msg)
+		m.Endpoint = &Cluster_Endpoint_Http{msg}
+		return true, err
+	case 5: // endpoint.mqtt
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(Cluster_Endpoint_MQTT)
+		err := b.DecodeMessage(msg)
+		m.Endpoint = &Cluster_Endpoint_Mqtt{msg}
+		return true, err
+	case 6: // endpoint.packet_forwarder_udp
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(Cluster_Endpoint_UDP)
+		err := b.DecodeMessage(msg)
+		m.Endpoint = &Cluster_Endpoint_PacketForwarderUdp{msg}
+		return true, err
+	case 7: // endpoint.backend_interfaces_http
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(Cluster_Endpoint_HTTP)
+		err := b.DecodeMessage(msg)
+		m.Endpoint = &Cluster_Endpoint_BackendInterfacesHttp{msg}
+		return true, err
+	case 8: // endpoint.basic_station_http
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(Cluster_Endpoint_HTTP)
+		err := b.DecodeMessage(msg)
+		m.Endpoint = &Cluster_Endpoint_BasicStationHttp{msg}
+		return true, err
+	default:
+		return false, nil
+	}
+}
+
+func _Cluster_Endpoint_OneofSizer(msg proto.Message) (n int) {
+	m := msg.(*Cluster_Endpoint)
+	// endpoint
+	switch x := m.Endpoint.(type) {
+	case *Cluster_Endpoint_Grpc:
+		s := proto.Size(x.Grpc)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Cluster_Endpoint_GrpcHttp:
+		s := proto.Size(x.GrpcHttp)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Cluster_Endpoint_Http:
+		s := proto.Size(x.Http)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Cluster_Endpoint_Mqtt:
+		s := proto.Size(x.Mqtt)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Cluster_Endpoint_PacketForwarderUdp:
+		s := proto.Size(x.PacketForwarderUdp)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Cluster_Endpoint_BackendInterfacesHttp:
+		s := proto.Size(x.BackendInterfacesHttp)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Cluster_Endpoint_BasicStationHttp:
+		s := proto.Size(x.BasicStationHttp)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
+}
+
+type Cluster_Endpoint_GRPC struct {
+	Host                 string   `protobuf:"bytes,1,opt,name=host,proto3" json:"host,omitempty"`
+	Port                 uint32   `protobuf:"varint,2,opt,name=port,proto3" json:"port,omitempty"`
+	Tls                  bool     `protobuf:"varint,3,opt,name=tls,proto3" json:"tls,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Cluster_Endpoint_GRPC) Reset()      { *m = Cluster_Endpoint_GRPC{} }
+func (*Cluster_Endpoint_GRPC) ProtoMessage() {}
+func (*Cluster_Endpoint_GRPC) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5716c3fcd711eefd, []int{1, 0, 0}
+}
+func (m *Cluster_Endpoint_GRPC) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Cluster_Endpoint_GRPC) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Cluster_Endpoint_GRPC.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Cluster_Endpoint_GRPC) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Cluster_Endpoint_GRPC.Merge(m, src)
+}
+func (m *Cluster_Endpoint_GRPC) XXX_Size() int {
+	return m.Size()
+}
+func (m *Cluster_Endpoint_GRPC) XXX_DiscardUnknown() {
+	xxx_messageInfo_Cluster_Endpoint_GRPC.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Cluster_Endpoint_GRPC proto.InternalMessageInfo
+
+func (m *Cluster_Endpoint_GRPC) GetHost() string {
+	if m != nil {
+		return m.Host
+	}
+	return ""
+}
+
+func (m *Cluster_Endpoint_GRPC) GetPort() uint32 {
+	if m != nil {
+		return m.Port
+	}
+	return 0
+}
+
+func (m *Cluster_Endpoint_GRPC) GetTls() bool {
+	if m != nil {
+		return m.Tls
+	}
+	return false
+}
+
+type Cluster_Endpoint_HTTP struct {
+	Host                 string   `protobuf:"bytes,1,opt,name=host,proto3" json:"host,omitempty"`
+	Port                 uint32   `protobuf:"varint,2,opt,name=port,proto3" json:"port,omitempty"`
+	Tls                  bool     `protobuf:"varint,3,opt,name=tls,proto3" json:"tls,omitempty"`
+	Path                 string   `protobuf:"bytes,4,opt,name=path,proto3" json:"path,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Cluster_Endpoint_HTTP) Reset()      { *m = Cluster_Endpoint_HTTP{} }
+func (*Cluster_Endpoint_HTTP) ProtoMessage() {}
+func (*Cluster_Endpoint_HTTP) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5716c3fcd711eefd, []int{1, 0, 1}
+}
+func (m *Cluster_Endpoint_HTTP) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Cluster_Endpoint_HTTP) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Cluster_Endpoint_HTTP.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Cluster_Endpoint_HTTP) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Cluster_Endpoint_HTTP.Merge(m, src)
+}
+func (m *Cluster_Endpoint_HTTP) XXX_Size() int {
+	return m.Size()
+}
+func (m *Cluster_Endpoint_HTTP) XXX_DiscardUnknown() {
+	xxx_messageInfo_Cluster_Endpoint_HTTP.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Cluster_Endpoint_HTTP proto.InternalMessageInfo
+
+func (m *Cluster_Endpoint_HTTP) GetHost() string {
+	if m != nil {
+		return m.Host
+	}
+	return ""
+}
+
+func (m *Cluster_Endpoint_HTTP) GetPort() uint32 {
+	if m != nil {
+		return m.Port
+	}
+	return 0
+}
+
+func (m *Cluster_Endpoint_HTTP) GetTls() bool {
+	if m != nil {
+		return m.Tls
+	}
+	return false
+}
+
+func (m *Cluster_Endpoint_HTTP) GetPath() string {
+	if m != nil {
+		return m.Path
+	}
+	return ""
+}
+
+type Cluster_Endpoint_MQTT struct {
+	Host                 string   `protobuf:"bytes,1,opt,name=host,proto3" json:"host,omitempty"`
+	Port                 uint32   `protobuf:"varint,2,opt,name=port,proto3" json:"port,omitempty"`
+	Tls                  bool     `protobuf:"varint,3,opt,name=tls,proto3" json:"tls,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Cluster_Endpoint_MQTT) Reset()      { *m = Cluster_Endpoint_MQTT{} }
+func (*Cluster_Endpoint_MQTT) ProtoMessage() {}
+func (*Cluster_Endpoint_MQTT) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5716c3fcd711eefd, []int{1, 0, 2}
+}
+func (m *Cluster_Endpoint_MQTT) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Cluster_Endpoint_MQTT) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Cluster_Endpoint_MQTT.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Cluster_Endpoint_MQTT) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Cluster_Endpoint_MQTT.Merge(m, src)
+}
+func (m *Cluster_Endpoint_MQTT) XXX_Size() int {
+	return m.Size()
+}
+func (m *Cluster_Endpoint_MQTT) XXX_DiscardUnknown() {
+	xxx_messageInfo_Cluster_Endpoint_MQTT.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Cluster_Endpoint_MQTT proto.InternalMessageInfo
+
+func (m *Cluster_Endpoint_MQTT) GetHost() string {
+	if m != nil {
+		return m.Host
+	}
+	return ""
+}
+
+func (m *Cluster_Endpoint_MQTT) GetPort() uint32 {
+	if m != nil {
+		return m.Port
+	}
+	return 0
+}
+
+func (m *Cluster_Endpoint_MQTT) GetTls() bool {
+	if m != nil {
+		return m.Tls
+	}
+	return false
+}
+
+type Cluster_Endpoint_UDP struct {
+	Host                 string   `protobuf:"bytes,1,opt,name=host,proto3" json:"host,omitempty"`
+	Port                 uint32   `protobuf:"varint,2,opt,name=port,proto3" json:"port,omitempty"`
+	Dtls                 bool     `protobuf:"varint,3,opt,name=dtls,proto3" json:"dtls,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Cluster_Endpoint_UDP) Reset()      { *m = Cluster_Endpoint_UDP{} }
+func (*Cluster_Endpoint_UDP) ProtoMessage() {}
+func (*Cluster_Endpoint_UDP) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5716c3fcd711eefd, []int{1, 0, 3}
+}
+func (m *Cluster_Endpoint_UDP) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Cluster_Endpoint_UDP) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Cluster_Endpoint_UDP.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Cluster_Endpoint_UDP) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Cluster_Endpoint_UDP.Merge(m, src)
+}
+func (m *Cluster_Endpoint_UDP) XXX_Size() int {
+	return m.Size()
+}
+func (m *Cluster_Endpoint_UDP) XXX_DiscardUnknown() {
+	xxx_messageInfo_Cluster_Endpoint_UDP.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Cluster_Endpoint_UDP proto.InternalMessageInfo
+
+func (m *Cluster_Endpoint_UDP) GetHost() string {
+	if m != nil {
+		return m.Host
+	}
+	return ""
+}
+
+func (m *Cluster_Endpoint_UDP) GetPort() uint32 {
+	if m != nil {
+		return m.Port
+	}
+	return 0
+}
+
+func (m *Cluster_Endpoint_UDP) GetDtls() bool {
+	if m != nil {
+		return m.Dtls
+	}
+	return false
+}
+
+type Clusters struct {
+	Clusters             []*Cluster `protobuf:"bytes,1,rep,name=clusters,proto3" json:"clusters,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
+}
+
+func (m *Clusters) Reset()      { *m = Clusters{} }
+func (*Clusters) ProtoMessage() {}
+func (*Clusters) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5716c3fcd711eefd, []int{2}
+}
+func (m *Clusters) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Clusters) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Clusters.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Clusters) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Clusters.Merge(m, src)
+}
+func (m *Clusters) XXX_Size() int {
+	return m.Size()
+}
+func (m *Clusters) XXX_DiscardUnknown() {
+	xxx_messageInfo_Clusters.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Clusters proto.InternalMessageInfo
+
+func (m *Clusters) GetClusters() []*Cluster {
+	if m != nil {
+		return m.Clusters
+	}
+	return nil
+}
+
+type GetClusterRequest struct {
+	ClusterIdentifiers   `protobuf:"bytes,1,opt,name=cluster_ids,json=clusterIds,proto3,embedded=cluster_ids" json:"cluster_ids"`
+	FieldMask            types.FieldMask `protobuf:"bytes,2,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask"`
+	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
+	XXX_sizecache        int32           `json:"-"`
+}
+
+func (m *GetClusterRequest) Reset()      { *m = GetClusterRequest{} }
+func (*GetClusterRequest) ProtoMessage() {}
+func (*GetClusterRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5716c3fcd711eefd, []int{3}
+}
+func (m *GetClusterRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetClusterRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetClusterRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetClusterRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetClusterRequest.Merge(m, src)
+}
+func (m *GetClusterRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetClusterRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetClusterRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetClusterRequest proto.InternalMessageInfo
+
+func (m *GetClusterRequest) GetFieldMask() types.FieldMask {
+	if m != nil {
+		return m.FieldMask
+	}
+	return types.FieldMask{}
+}
+
+type ListClustersRequest struct {
+	FieldMask types.FieldMask `protobuf:"bytes,2,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask"`
+	// Order the results by this field path (must be present in the field mask).
+	// Default ordering is by ID. Prepend with a minus (-) to reverse the order.
+	Order string `protobuf:"bytes,3,opt,name=order,proto3" json:"order,omitempty"`
+	// Limit the number of results per page.
+	Limit uint32 `protobuf:"varint,4,opt,name=limit,proto3" json:"limit,omitempty"`
+	// Page number for pagination. 0 is interpreted as 1.
+	Page                 uint32   `protobuf:"varint,5,opt,name=page,proto3" json:"page,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListClustersRequest) Reset()      { *m = ListClustersRequest{} }
+func (*ListClustersRequest) ProtoMessage() {}
+func (*ListClustersRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5716c3fcd711eefd, []int{4}
+}
+func (m *ListClustersRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ListClustersRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ListClustersRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ListClustersRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListClustersRequest.Merge(m, src)
+}
+func (m *ListClustersRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *ListClustersRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListClustersRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListClustersRequest proto.InternalMessageInfo
+
+func (m *ListClustersRequest) GetFieldMask() types.FieldMask {
+	if m != nil {
+		return m.FieldMask
+	}
+	return types.FieldMask{}
+}
+
+func (m *ListClustersRequest) GetOrder() string {
+	if m != nil {
+		return m.Order
+	}
+	return ""
+}
+
+func (m *ListClustersRequest) GetLimit() uint32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *ListClustersRequest) GetPage() uint32 {
+	if m != nil {
+		return m.Page
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*PeerInfo)(nil), "ttn.lorawan.v3.PeerInfo")
 	golang_proto.RegisterType((*PeerInfo)(nil), "ttn.lorawan.v3.PeerInfo")
 	proto.RegisterMapType((map[string]string)(nil), "ttn.lorawan.v3.PeerInfo.TagsEntry")
 	golang_proto.RegisterMapType((map[string]string)(nil), "ttn.lorawan.v3.PeerInfo.TagsEntry")
+	proto.RegisterType((*Cluster)(nil), "ttn.lorawan.v3.Cluster")
+	golang_proto.RegisterType((*Cluster)(nil), "ttn.lorawan.v3.Cluster")
+	proto.RegisterMapType((map[string]string)(nil), "ttn.lorawan.v3.Cluster.AttributesEntry")
+	golang_proto.RegisterMapType((map[string]string)(nil), "ttn.lorawan.v3.Cluster.AttributesEntry")
+	proto.RegisterType((*Cluster_Endpoint)(nil), "ttn.lorawan.v3.Cluster.Endpoint")
+	golang_proto.RegisterType((*Cluster_Endpoint)(nil), "ttn.lorawan.v3.Cluster.Endpoint")
+	proto.RegisterType((*Cluster_Endpoint_GRPC)(nil), "ttn.lorawan.v3.Cluster.Endpoint.GRPC")
+	golang_proto.RegisterType((*Cluster_Endpoint_GRPC)(nil), "ttn.lorawan.v3.Cluster.Endpoint.GRPC")
+	proto.RegisterType((*Cluster_Endpoint_HTTP)(nil), "ttn.lorawan.v3.Cluster.Endpoint.HTTP")
+	golang_proto.RegisterType((*Cluster_Endpoint_HTTP)(nil), "ttn.lorawan.v3.Cluster.Endpoint.HTTP")
+	proto.RegisterType((*Cluster_Endpoint_MQTT)(nil), "ttn.lorawan.v3.Cluster.Endpoint.MQTT")
+	golang_proto.RegisterType((*Cluster_Endpoint_MQTT)(nil), "ttn.lorawan.v3.Cluster.Endpoint.MQTT")
+	proto.RegisterType((*Cluster_Endpoint_UDP)(nil), "ttn.lorawan.v3.Cluster.Endpoint.UDP")
+	golang_proto.RegisterType((*Cluster_Endpoint_UDP)(nil), "ttn.lorawan.v3.Cluster.Endpoint.UDP")
+	proto.RegisterType((*Clusters)(nil), "ttn.lorawan.v3.Clusters")
+	golang_proto.RegisterType((*Clusters)(nil), "ttn.lorawan.v3.Clusters")
+	proto.RegisterType((*GetClusterRequest)(nil), "ttn.lorawan.v3.GetClusterRequest")
+	golang_proto.RegisterType((*GetClusterRequest)(nil), "ttn.lorawan.v3.GetClusterRequest")
+	proto.RegisterType((*ListClustersRequest)(nil), "ttn.lorawan.v3.ListClustersRequest")
+	golang_proto.RegisterType((*ListClustersRequest)(nil), "ttn.lorawan.v3.ListClustersRequest")
 }
 
 func init() { proto.RegisterFile("lorawan-stack/api/cluster.proto", fileDescriptor_5716c3fcd711eefd) }
@@ -116,36 +999,85 @@ func init() {
 }
 
 var fileDescriptor_5716c3fcd711eefd = []byte{
-	// 460 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x64, 0x91, 0x31, 0x4c, 0x14, 0x41,
-	0x14, 0x86, 0xe7, 0xb1, 0xa0, 0x77, 0xa3, 0x12, 0xb3, 0xb1, 0x38, 0xcf, 0xf8, 0xee, 0x42, 0x75,
-	0x26, 0xde, 0x6c, 0x84, 0x44, 0x8d, 0x9d, 0x47, 0x8c, 0x31, 0xb1, 0xb8, 0xac, 0x54, 0x36, 0x66,
-	0xee, 0x1c, 0xe6, 0x2e, 0xb7, 0xcc, 0x6c, 0x66, 0x67, 0x0f, 0xaf, 0xa3, 0xa4, 0xb4, 0xb4, 0x34,
-	0x56, 0x94, 0x94, 0x94, 0x94, 0x94, 0x94, 0x54, 0x84, 0x9d, 0x69, 0x28, 0x29, 0x2c, 0x28, 0xcd,
-	0xed, 0xa2, 0x11, 0xe8, 0xfe, 0xff, 0xbd, 0xef, 0xbd, 0xfc, 0x79, 0x8f, 0xb6, 0x12, 0x6d, 0xf8,
-	0x36, 0x57, 0xdd, 0xcc, 0xf2, 0xe1, 0x24, 0xe2, 0xe9, 0x38, 0x1a, 0x26, 0x79, 0x66, 0x85, 0x61,
-	0xa9, 0xd1, 0x56, 0x87, 0xcb, 0xd6, 0x2a, 0x76, 0x05, 0xb1, 0xe9, 0x5a, 0xf3, 0xad, 0x1c, 0xdb,
-	0x51, 0x3e, 0x60, 0x43, 0xbd, 0x15, 0x09, 0x35, 0xd5, 0xb3, 0xd4, 0xe8, 0x6f, 0xb3, 0xa8, 0x84,
-	0x87, 0x5d, 0x29, 0x54, 0x77, 0xca, 0x93, 0xf1, 0x57, 0x6e, 0x45, 0x74, 0x4b, 0x54, 0x2b, 0x9b,
-	0xdd, 0xff, 0x56, 0x48, 0x2d, 0x75, 0x35, 0x3c, 0xc8, 0x37, 0x4b, 0x57, 0x9a, 0x52, 0x5d, 0xe1,
-	0x4f, 0x6f, 0x47, 0x14, 0x2a, 0xdf, 0xca, 0xaa, 0xf6, 0xca, 0x6f, 0xa0, 0xb5, 0xbe, 0x10, 0xe6,
-	0x83, 0xda, 0xd4, 0xe1, 0x33, 0x5a, 0x97, 0x26, 0x1d, 0x7e, 0x49, 0xb5, 0xb1, 0x0d, 0x68, 0x43,
-	0xe7, 0x41, 0xef, 0xbe, 0x3b, 0x6d, 0xd5, 0xde, 0xc7, 0xfd, 0xf5, 0xbe, 0x36, 0x36, 0xae, 0xcd,
-	0xdb, 0x73, 0x15, 0x3e, 0xa6, 0x81, 0x4d, 0xb2, 0xc6, 0x42, 0x1b, 0x3a, 0xb5, 0xde, 0x5d, 0x77,
-	0xda, 0x0a, 0x36, 0x3e, 0x7e, 0x8a, 0xe7, 0xb5, 0xf0, 0x05, 0x5d, 0x32, 0x3a, 0x11, 0x59, 0x23,
-	0x68, 0x07, 0x9d, 0xe5, 0xd5, 0x27, 0xec, 0xfa, 0x0d, 0xd8, 0x7a, 0x75, 0xa1, 0x58, 0x27, 0x22,
-	0xae, 0xc8, 0xf0, 0x25, 0x5d, 0xb4, 0x5c, 0x66, 0x8d, 0xc5, 0x76, 0xd0, 0xb9, 0xb7, 0xba, 0x72,
-	0x73, 0xe2, 0x6f, 0x40, 0xb6, 0xc1, 0x65, 0xf6, 0x4e, 0x59, 0x33, 0x8b, 0x4b, 0xbe, 0xf9, 0x8a,
-	0xd6, 0xff, 0x95, 0xc2, 0x87, 0x34, 0x98, 0x88, 0x59, 0x99, 0xbb, 0x1e, 0xcf, 0x65, 0xf8, 0x88,
-	0x2e, 0x4d, 0x79, 0x92, 0x8b, 0x32, 0x66, 0x3d, 0xae, 0xcc, 0x9b, 0x85, 0xd7, 0xd0, 0xfb, 0x05,
-	0x47, 0x05, 0xc2, 0x71, 0x81, 0x70, 0x52, 0x20, 0x39, 0x2b, 0x90, 0x9c, 0x17, 0x48, 0x2e, 0x0a,
-	0x24, 0x97, 0x05, 0xc2, 0x8e, 0x43, 0xd8, 0x75, 0x48, 0xf6, 0x1c, 0xc2, 0xbe, 0x43, 0x72, 0xe0,
-	0x90, 0x1c, 0x3a, 0x24, 0x47, 0x0e, 0xe1, 0xd8, 0x21, 0x9c, 0x38, 0x24, 0x67, 0x0e, 0xe1, 0xdc,
-	0x21, 0xb9, 0x70, 0x08, 0x97, 0x0e, 0xc9, 0x8e, 0x47, 0xb2, 0xeb, 0x11, 0xbe, 0x7b, 0x24, 0x3f,
-	0x3c, 0xc2, 0x4f, 0x8f, 0x64, 0xcf, 0x23, 0xd9, 0xf7, 0x08, 0x07, 0x1e, 0xe1, 0xd0, 0x23, 0x7c,
-	0x7e, 0x2e, 0x35, 0xb3, 0x23, 0x61, 0x47, 0x63, 0x25, 0x33, 0xa6, 0x84, 0xdd, 0xd6, 0x66, 0x12,
-	0x5d, 0xff, 0x50, 0x3a, 0x91, 0x91, 0xb5, 0x2a, 0x1d, 0x0c, 0xee, 0x94, 0x2f, 0x5a, 0xfb, 0x13,
-	0x00, 0x00, 0xff, 0xff, 0x06, 0x63, 0x70, 0x81, 0x66, 0x02, 0x00, 0x00,
+	// 1243 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x56, 0x4d, 0x6c, 0x13, 0xc7,
+	0x17, 0xdf, 0x89, 0x9d, 0x64, 0x3d, 0x4e, 0x20, 0xff, 0x81, 0x7f, 0xd9, 0x1a, 0x75, 0x6c, 0xb9,
+	0x69, 0x1b, 0x10, 0x5e, 0x17, 0x23, 0xf5, 0x83, 0xaa, 0xa4, 0x59, 0x02, 0x84, 0x0a, 0xa4, 0x74,
+	0x71, 0xa4, 0xaa, 0x88, 0x5a, 0xe3, 0xdd, 0xf1, 0x66, 0x65, 0x7b, 0x77, 0xd9, 0x19, 0x87, 0xa6,
+	0x55, 0x25, 0x8e, 0xa8, 0x27, 0x0e, 0x3d, 0x54, 0x3d, 0x55, 0x3d, 0x54, 0x48, 0xbd, 0x70, 0xe4,
+	0xc8, 0x91, 0x63, 0x8e, 0x9c, 0x52, 0xbc, 0xbe, 0x70, 0xe4, 0xd0, 0x4a, 0x28, 0xa7, 0x6a, 0x66,
+	0x77, 0x63, 0x93, 0x10, 0x91, 0x34, 0xb7, 0x37, 0x6f, 0x7e, 0xef, 0xf7, 0xde, 0xbe, 0xaf, 0x59,
+	0x58, 0xec, 0xf8, 0x21, 0xb9, 0x43, 0xbc, 0x0a, 0xe3, 0xc4, 0x6a, 0x57, 0x49, 0xe0, 0x56, 0xad,
+	0x4e, 0x8f, 0x71, 0x1a, 0xea, 0x41, 0xe8, 0x73, 0x1f, 0x1d, 0xe1, 0xdc, 0xd3, 0x13, 0x90, 0xbe,
+	0x76, 0xae, 0xb0, 0xe0, 0xb8, 0x7c, 0xb5, 0xd7, 0xd4, 0x2d, 0xbf, 0x5b, 0xa5, 0xde, 0x9a, 0xbf,
+	0x1e, 0x84, 0xfe, 0x77, 0xeb, 0x55, 0x09, 0xb6, 0x2a, 0x0e, 0xf5, 0x2a, 0x6b, 0xa4, 0xe3, 0xda,
+	0x84, 0xd3, 0xea, 0x2e, 0x21, 0xa6, 0x2c, 0x54, 0x46, 0x28, 0x1c, 0xdf, 0xf1, 0x63, 0xe3, 0x66,
+	0xaf, 0x25, 0x4f, 0xf2, 0x20, 0xa5, 0x04, 0x5e, 0x72, 0x7c, 0xdf, 0xe9, 0xd0, 0x21, 0xaa, 0xe5,
+	0xd2, 0x8e, 0xdd, 0xe8, 0x12, 0xd6, 0x4e, 0x10, 0xc5, 0x9d, 0x08, 0xee, 0x76, 0x29, 0xe3, 0xa4,
+	0x1b, 0x24, 0x80, 0xd9, 0xd7, 0x7c, 0xa5, 0xef, 0x71, 0x62, 0xf1, 0x86, 0xeb, 0xb5, 0x52, 0x47,
+	0xef, 0xec, 0x46, 0x51, 0xaf, 0xd7, 0x65, 0xc9, 0xf5, 0xbb, 0xbb, 0xaf, 0x5d, 0x9b, 0x7a, 0xdc,
+	0x6d, 0xb9, 0x34, 0x4c, 0x41, 0xa5, 0xdd, 0xa0, 0x2e, 0xe5, 0xc4, 0x26, 0x9c, 0xc4, 0x88, 0xf2,
+	0xdf, 0x00, 0xaa, 0xcb, 0x94, 0x86, 0x57, 0xbd, 0x96, 0x8f, 0x4e, 0xc1, 0x9c, 0x13, 0x06, 0x56,
+	0x23, 0xf0, 0x43, 0xae, 0x81, 0x12, 0x98, 0x9b, 0x36, 0xa6, 0xa2, 0xcd, 0xa2, 0x7a, 0xc5, 0x5c,
+	0xbe, 0xb8, 0xec, 0x87, 0xdc, 0x54, 0xc5, 0xb5, 0x90, 0xd0, 0xdb, 0x30, 0xc3, 0x3b, 0x4c, 0x1b,
+	0x2b, 0x81, 0x39, 0xd5, 0x98, 0x8c, 0x36, 0x8b, 0x99, 0xfa, 0xb5, 0x1b, 0xa6, 0xd0, 0xa1, 0xb3,
+	0x70, 0x3c, 0xf4, 0x3b, 0x94, 0x69, 0x99, 0x52, 0x66, 0xee, 0x48, 0xed, 0xa4, 0xfe, 0x6a, 0xcd,
+	0xf4, 0x8b, 0x71, 0x45, 0x4d, 0xbf, 0x43, 0xcd, 0x18, 0x89, 0x3e, 0x82, 0x59, 0x4e, 0x1c, 0xa6,
+	0x65, 0x4b, 0x99, 0xb9, 0x7c, 0xad, 0xbc, 0xd3, 0x22, 0x0d, 0x50, 0xaf, 0x13, 0x87, 0x5d, 0xf2,
+	0x78, 0xb8, 0x6e, 0x4a, 0x7c, 0xe1, 0x63, 0x98, 0xdb, 0x56, 0xa1, 0x19, 0x98, 0x69, 0xd3, 0x75,
+	0x19, 0x77, 0xce, 0x14, 0x22, 0x3a, 0x0e, 0xc7, 0xd7, 0x48, 0xa7, 0x47, 0x65, 0x98, 0x39, 0x33,
+	0x3e, 0x9c, 0x1f, 0xfb, 0x04, 0x94, 0x7f, 0x9e, 0x86, 0x93, 0x49, 0x1c, 0xe8, 0x32, 0xcc, 0xb8,
+	0x36, 0x93, 0x76, 0xaf, 0xf1, 0x9d, 0xa0, 0xae, 0x0e, 0x73, 0x6b, 0xcc, 0x6c, 0x19, 0xe3, 0x3f,
+	0x81, 0xb1, 0x19, 0xf0, 0x64, 0xb3, 0xa8, 0x6c, 0x6c, 0x16, 0x81, 0x29, 0x08, 0xd0, 0x45, 0x08,
+	0xad, 0x90, 0x12, 0x4e, 0xed, 0x06, 0xe1, 0xd2, 0x65, 0xbe, 0x56, 0xd0, 0xe3, 0x66, 0xd0, 0xd3,
+	0x66, 0xd0, 0xeb, 0x69, 0x33, 0x18, 0xaa, 0x30, 0xbf, 0xff, 0x57, 0x11, 0x98, 0xb9, 0xc4, 0x6e,
+	0x81, 0x0b, 0x92, 0x5e, 0x60, 0xa7, 0x24, 0x99, 0x83, 0x90, 0x24, 0x76, 0x0b, 0x1c, 0x9d, 0x84,
+	0x59, 0x8f, 0x74, 0xa9, 0x96, 0x15, 0x9f, 0x6d, 0x4c, 0x6e, 0x19, 0xd9, 0x70, 0x4c, 0xab, 0x99,
+	0x52, 0x89, 0x4e, 0xc3, 0xbc, 0x4d, 0x99, 0x15, 0xba, 0x01, 0x77, 0x7d, 0x4f, 0x1b, 0x97, 0x18,
+	0x75, 0xcb, 0x18, 0x0f, 0x33, 0xda, 0xc6, 0x51, 0x73, 0xf4, 0x12, 0xf5, 0x20, 0x24, 0x9c, 0x87,
+	0x6e, 0xb3, 0xc7, 0x29, 0xd3, 0x26, 0x64, 0x75, 0x3e, 0xd8, 0x23, 0x43, 0xfa, 0xc2, 0x36, 0x52,
+	0xd6, 0xc3, 0x38, 0xb3, 0x65, 0x9c, 0xfa, 0x15, 0xbc, 0x5f, 0x9e, 0x0d, 0xcb, 0xda, 0x6c, 0x0d,
+	0x7f, 0x7b, 0x93, 0x54, 0xbe, 0xff, 0xb0, 0xf2, 0xe9, 0xad, 0xb9, 0xf9, 0xf3, 0x37, 0x2b, 0xb7,
+	0xe6, 0xd3, 0xe3, 0xa9, 0x1f, 0x6a, 0x67, 0x7e, 0x9c, 0x35, 0x47, 0x1c, 0xa1, 0x0b, 0x70, 0x6a,
+	0x74, 0x20, 0xb4, 0x49, 0xe9, 0x78, 0x77, 0x23, 0xc5, 0x18, 0xd1, 0x19, 0x66, 0xde, 0x1a, 0x1e,
+	0xd0, 0x5b, 0x70, 0x82, 0x51, 0x2b, 0xa4, 0x5c, 0x53, 0x65, 0xe1, 0x93, 0x13, 0x32, 0xa0, 0xda,
+	0xf1, 0x2d, 0x22, 0xbf, 0x3b, 0x27, 0x53, 0xab, 0xed, 0xe4, 0xbc, 0x96, 0xdc, 0x1b, 0x53, 0xa3,
+	0x45, 0x36, 0xb7, 0xed, 0xd0, 0x59, 0x78, 0x3c, 0x95, 0x1b, 0xa3, 0x79, 0x84, 0xd2, 0xd3, 0xb1,
+	0xf4, 0x6e, 0x71, 0x24, 0x8b, 0xdb, 0x03, 0x91, 0xdf, 0xf7, 0x40, 0x5c, 0x80, 0x39, 0xea, 0xd9,
+	0x81, 0xef, 0x7a, 0x9c, 0x69, 0x53, 0xf2, 0xf3, 0x4b, 0x7b, 0xe5, 0xfd, 0x52, 0x02, 0x34, 0x87,
+	0x26, 0x85, 0x7f, 0x26, 0xa0, 0x9a, 0xea, 0x87, 0xfe, 0xc1, 0xbe, 0xfd, 0x7f, 0x06, 0xb3, 0x62,
+	0xd4, 0x93, 0x2e, 0x7e, 0xef, 0x4d, 0xae, 0x75, 0xb1, 0x21, 0x96, 0x14, 0x53, 0x1a, 0xa1, 0xc5,
+	0x64, 0x8d, 0xac, 0x72, 0x1e, 0x24, 0x2d, 0xfc, 0x66, 0x86, 0xa5, 0x7a, 0x7d, 0x79, 0x49, 0x89,
+	0x37, 0xcc, 0x12, 0xe7, 0x81, 0x08, 0x41, 0x12, 0x64, 0x0f, 0x46, 0x20, 0x8d, 0x84, 0x71, 0xf7,
+	0x36, 0xe7, 0xb2, 0xbb, 0xf7, 0x63, 0x7c, 0xfd, 0xab, 0x7a, 0x5d, 0x18, 0x0b, 0x23, 0xf4, 0x35,
+	0x3c, 0x1e, 0x10, 0xab, 0x4d, 0x79, 0xa3, 0xe5, 0x87, 0x77, 0x48, 0x68, 0xd3, 0xb0, 0xd1, 0xb3,
+	0x03, 0x6d, 0x42, 0x92, 0xcd, 0xbe, 0x91, 0x6c, 0x65, 0x51, 0x04, 0x82, 0x62, 0x8e, 0xcb, 0x29,
+	0xc5, 0x8a, 0x1d, 0xa0, 0x06, 0x3c, 0xd1, 0x14, 0x5a, 0xcf, 0x6e, 0xb8, 0x1e, 0xa7, 0x61, 0x8b,
+	0x58, 0x94, 0xc5, 0x79, 0x9a, 0x3c, 0xd8, 0x67, 0xfe, 0x3f, 0xe1, 0xb9, 0xba, 0x4d, 0x23, 0x93,
+	0xb6, 0x02, 0x51, 0x93, 0x30, 0xd7, 0x6a, 0x30, 0x1e, 0xb7, 0xa8, 0xe4, 0x56, 0x0f, 0xc6, 0x3d,
+	0x23, 0x29, 0x6e, 0xc4, 0x0c, 0x82, 0xb6, 0xf0, 0x05, 0xcc, 0x8a, 0x0a, 0x23, 0x04, 0xb3, 0xab,
+	0x3e, 0xe3, 0xc9, 0x8e, 0x95, 0xb2, 0xd0, 0xc9, 0xf7, 0x42, 0xb4, 0xca, 0xb4, 0x29, 0x65, 0xb1,
+	0x8a, 0xc5, 0xeb, 0x20, 0x6a, 0xaf, 0xca, 0x47, 0xa1, 0x50, 0x87, 0x59, 0xc1, 0xfe, 0xdf, 0x19,
+	0x24, 0x8a, 0xf0, 0xd5, 0x78, 0xa9, 0x99, 0x52, 0x16, 0x71, 0x89, 0xca, 0x1d, 0x22, 0xae, 0x05,
+	0x98, 0x59, 0x59, 0xdc, 0x7f, 0x58, 0x08, 0x66, 0xed, 0x21, 0x83, 0x94, 0x0d, 0x08, 0xd5, 0x74,
+	0xf0, 0x0a, 0x9f, 0xc3, 0xa3, 0x3b, 0xd6, 0xe0, 0x81, 0x9e, 0xa5, 0x79, 0xa8, 0x26, 0x45, 0x61,
+	0xe8, 0x1c, 0x54, 0x93, 0x7f, 0x9f, 0x78, 0x70, 0xf3, 0xb5, 0x13, 0x7b, 0x0d, 0xee, 0x36, 0xb0,
+	0xfc, 0x27, 0x80, 0xff, 0xbb, 0x42, 0x79, 0x7a, 0x41, 0x6f, 0xf7, 0x28, 0xe3, 0x68, 0x05, 0xe6,
+	0x13, 0x44, 0xe3, 0xb0, 0x2f, 0x1d, 0xb4, 0x52, 0x14, 0x43, 0xf3, 0x10, 0x0e, 0x7f, 0x7e, 0xf6,
+	0x7c, 0xf0, 0x2e, 0x0b, 0xc8, 0x75, 0xc2, 0xda, 0x46, 0x56, 0xae, 0xd2, 0x5c, 0x2b, 0x55, 0x94,
+	0xff, 0x00, 0xf0, 0xd8, 0x35, 0x97, 0xa5, 0xe1, 0xb2, 0x34, 0xde, 0xc3, 0x12, 0x8b, 0x0c, 0xfb,
+	0x62, 0xe6, 0x64, 0x9d, 0x72, 0x66, 0x7c, 0x40, 0x18, 0x8e, 0x77, 0xdc, 0xae, 0xcb, 0x65, 0x0b,
+	0x4d, 0xcb, 0x37, 0xef, 0x74, 0x46, 0x7b, 0x3e, 0x69, 0xc6, 0xea, 0xb8, 0xc3, 0x1c, 0x2a, 0x97,
+	0x86, 0x28, 0x38, 0x71, 0xe8, 0x97, 0x59, 0x15, 0xcc, 0x8c, 0x19, 0xbf, 0x83, 0x27, 0x7d, 0x0c,
+	0x36, 0xfa, 0x18, 0x3c, 0xed, 0x63, 0xe5, 0x59, 0x1f, 0x2b, 0xcf, 0xfb, 0x58, 0x79, 0xd1, 0xc7,
+	0xca, 0xcb, 0x3e, 0x06, 0x77, 0x23, 0x0c, 0xee, 0x45, 0x58, 0x79, 0x10, 0x61, 0xf0, 0x30, 0xc2,
+	0xca, 0xa3, 0x08, 0x2b, 0x8f, 0x23, 0xac, 0x3c, 0x89, 0x30, 0xd8, 0x88, 0x30, 0x78, 0x1a, 0x61,
+	0xe5, 0x59, 0x84, 0xc1, 0xf3, 0x08, 0x2b, 0x2f, 0x22, 0x0c, 0x5e, 0x46, 0x58, 0xb9, 0x3b, 0xc0,
+	0xca, 0xbd, 0x01, 0x06, 0xf7, 0x07, 0x58, 0xf9, 0x65, 0x80, 0xc1, 0x6f, 0x03, 0xac, 0x3c, 0x18,
+	0x60, 0xe5, 0xe1, 0x00, 0x83, 0x47, 0x03, 0x0c, 0x1e, 0x0f, 0x30, 0xf8, 0xe6, 0x8c, 0xe3, 0xeb,
+	0x7c, 0x95, 0xf2, 0x55, 0xd7, 0x73, 0x98, 0xee, 0x51, 0x7e, 0xc7, 0x0f, 0xdb, 0xd5, 0x57, 0xff,
+	0xe9, 0x82, 0xb6, 0x53, 0xe5, 0xdc, 0x0b, 0x9a, 0xcd, 0x09, 0x99, 0x99, 0x73, 0xff, 0x06, 0x00,
+	0x00, 0xff, 0xff, 0x8c, 0x06, 0xe2, 0xc2, 0x45, 0x0b, 0x00, 0x00,
 }
 
 func (this *PeerInfo) Equal(that interface{}) bool {
@@ -188,6 +1120,501 @@ func (this *PeerInfo) Equal(that interface{}) bool {
 		if this.Tags[i] != that1.Tags[i] {
 			return false
 		}
+	}
+	return true
+}
+func (this *Cluster) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster)
+	if !ok {
+		that2, ok := that.(Cluster)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.ClusterIdentifiers.Equal(&that1.ClusterIdentifiers) {
+		return false
+	}
+	if !this.CreatedAt.Equal(that1.CreatedAt) {
+		return false
+	}
+	if !this.UpdatedAt.Equal(that1.UpdatedAt) {
+		return false
+	}
+	if this.Name != that1.Name {
+		return false
+	}
+	if this.Description != that1.Description {
+		return false
+	}
+	if len(this.Attributes) != len(that1.Attributes) {
+		return false
+	}
+	for i := range this.Attributes {
+		if this.Attributes[i] != that1.Attributes[i] {
+			return false
+		}
+	}
+	if len(this.ContactInfo) != len(that1.ContactInfo) {
+		return false
+	}
+	for i := range this.ContactInfo {
+		if !this.ContactInfo[i].Equal(that1.ContactInfo[i]) {
+			return false
+		}
+	}
+	if this.Secret != that1.Secret {
+		return false
+	}
+	if !this.Location.Equal(&that1.Location) {
+		return false
+	}
+	if this.LocationDescription != that1.LocationDescription {
+		return false
+	}
+	if len(this.Roles) != len(that1.Roles) {
+		return false
+	}
+	for i := range this.Roles {
+		if this.Roles[i] != that1.Roles[i] {
+			return false
+		}
+	}
+	if len(this.Endpoints) != len(that1.Endpoints) {
+		return false
+	}
+	for i := range this.Endpoints {
+		if !this.Endpoints[i].Equal(that1.Endpoints[i]) {
+			return false
+		}
+	}
+	return true
+}
+func (this *Cluster_Endpoint) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if len(this.Roles) != len(that1.Roles) {
+		return false
+	}
+	for i := range this.Roles {
+		if this.Roles[i] != that1.Roles[i] {
+			return false
+		}
+	}
+	if that1.Endpoint == nil {
+		if this.Endpoint != nil {
+			return false
+		}
+	} else if this.Endpoint == nil {
+		return false
+	} else if !this.Endpoint.Equal(that1.Endpoint) {
+		return false
+	}
+	return true
+}
+func (this *Cluster_Endpoint_Grpc) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint_Grpc)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint_Grpc)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.Grpc.Equal(that1.Grpc) {
+		return false
+	}
+	return true
+}
+func (this *Cluster_Endpoint_GrpcHttp) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint_GrpcHttp)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint_GrpcHttp)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.GrpcHttp.Equal(that1.GrpcHttp) {
+		return false
+	}
+	return true
+}
+func (this *Cluster_Endpoint_Http) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint_Http)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint_Http)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.Http.Equal(that1.Http) {
+		return false
+	}
+	return true
+}
+func (this *Cluster_Endpoint_Mqtt) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint_Mqtt)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint_Mqtt)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.Mqtt.Equal(that1.Mqtt) {
+		return false
+	}
+	return true
+}
+func (this *Cluster_Endpoint_PacketForwarderUdp) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint_PacketForwarderUdp)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint_PacketForwarderUdp)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.PacketForwarderUdp.Equal(that1.PacketForwarderUdp) {
+		return false
+	}
+	return true
+}
+func (this *Cluster_Endpoint_BackendInterfacesHttp) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint_BackendInterfacesHttp)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint_BackendInterfacesHttp)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.BackendInterfacesHttp.Equal(that1.BackendInterfacesHttp) {
+		return false
+	}
+	return true
+}
+func (this *Cluster_Endpoint_BasicStationHttp) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint_BasicStationHttp)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint_BasicStationHttp)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.BasicStationHttp.Equal(that1.BasicStationHttp) {
+		return false
+	}
+	return true
+}
+func (this *Cluster_Endpoint_GRPC) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint_GRPC)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint_GRPC)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Host != that1.Host {
+		return false
+	}
+	if this.Port != that1.Port {
+		return false
+	}
+	if this.Tls != that1.Tls {
+		return false
+	}
+	return true
+}
+func (this *Cluster_Endpoint_HTTP) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint_HTTP)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint_HTTP)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Host != that1.Host {
+		return false
+	}
+	if this.Port != that1.Port {
+		return false
+	}
+	if this.Tls != that1.Tls {
+		return false
+	}
+	if this.Path != that1.Path {
+		return false
+	}
+	return true
+}
+func (this *Cluster_Endpoint_MQTT) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint_MQTT)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint_MQTT)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Host != that1.Host {
+		return false
+	}
+	if this.Port != that1.Port {
+		return false
+	}
+	if this.Tls != that1.Tls {
+		return false
+	}
+	return true
+}
+func (this *Cluster_Endpoint_UDP) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Cluster_Endpoint_UDP)
+	if !ok {
+		that2, ok := that.(Cluster_Endpoint_UDP)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Host != that1.Host {
+		return false
+	}
+	if this.Port != that1.Port {
+		return false
+	}
+	if this.Dtls != that1.Dtls {
+		return false
+	}
+	return true
+}
+func (this *Clusters) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Clusters)
+	if !ok {
+		that2, ok := that.(Clusters)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if len(this.Clusters) != len(that1.Clusters) {
+		return false
+	}
+	for i := range this.Clusters {
+		if !this.Clusters[i].Equal(that1.Clusters[i]) {
+			return false
+		}
+	}
+	return true
+}
+func (this *GetClusterRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*GetClusterRequest)
+	if !ok {
+		that2, ok := that.(GetClusterRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.ClusterIdentifiers.Equal(&that1.ClusterIdentifiers) {
+		return false
+	}
+	if !this.FieldMask.Equal(&that1.FieldMask) {
+		return false
+	}
+	return true
+}
+func (this *ListClustersRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*ListClustersRequest)
+	if !ok {
+		that2, ok := that.(ListClustersRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.FieldMask.Equal(&that1.FieldMask) {
+		return false
+	}
+	if this.Order != that1.Order {
+		return false
+	}
+	if this.Limit != that1.Limit {
+		return false
+	}
+	if this.Page != that1.Page {
+		return false
 	}
 	return true
 }
@@ -258,6 +1685,546 @@ func (m *PeerInfo) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+func (m *Cluster) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Cluster) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintCluster(dAtA, i, uint64(m.ClusterIdentifiers.Size()))
+	n3, err := m.ClusterIdentifiers.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n3
+	dAtA[i] = 0x12
+	i++
+	i = encodeVarintCluster(dAtA, i, uint64(github_com_gogo_protobuf_types.SizeOfStdTime(m.CreatedAt)))
+	n4, err := github_com_gogo_protobuf_types.StdTimeMarshalTo(m.CreatedAt, dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n4
+	dAtA[i] = 0x1a
+	i++
+	i = encodeVarintCluster(dAtA, i, uint64(github_com_gogo_protobuf_types.SizeOfStdTime(m.UpdatedAt)))
+	n5, err := github_com_gogo_protobuf_types.StdTimeMarshalTo(m.UpdatedAt, dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n5
+	if len(m.Name) > 0 {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(len(m.Name)))
+		i += copy(dAtA[i:], m.Name)
+	}
+	if len(m.Description) > 0 {
+		dAtA[i] = 0x2a
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(len(m.Description)))
+		i += copy(dAtA[i:], m.Description)
+	}
+	if len(m.Attributes) > 0 {
+		for k := range m.Attributes {
+			dAtA[i] = 0x32
+			i++
+			v := m.Attributes[k]
+			mapSize := 1 + len(k) + sovCluster(uint64(len(k))) + 1 + len(v) + sovCluster(uint64(len(v)))
+			i = encodeVarintCluster(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0xa
+			i++
+			i = encodeVarintCluster(dAtA, i, uint64(len(k)))
+			i += copy(dAtA[i:], k)
+			dAtA[i] = 0x12
+			i++
+			i = encodeVarintCluster(dAtA, i, uint64(len(v)))
+			i += copy(dAtA[i:], v)
+		}
+	}
+	if len(m.ContactInfo) > 0 {
+		for _, msg := range m.ContactInfo {
+			dAtA[i] = 0x3a
+			i++
+			i = encodeVarintCluster(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if len(m.Secret) > 0 {
+		dAtA[i] = 0x42
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(len(m.Secret)))
+		i += copy(dAtA[i:], m.Secret)
+	}
+	dAtA[i] = 0x4a
+	i++
+	i = encodeVarintCluster(dAtA, i, uint64(m.Location.Size()))
+	n6, err := m.Location.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n6
+	if len(m.LocationDescription) > 0 {
+		dAtA[i] = 0x52
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(len(m.LocationDescription)))
+		i += copy(dAtA[i:], m.LocationDescription)
+	}
+	if len(m.Roles) > 0 {
+		dAtA8 := make([]byte, len(m.Roles)*10)
+		var j7 int
+		for _, num := range m.Roles {
+			for num >= 1<<7 {
+				dAtA8[j7] = uint8(uint64(num)&0x7f | 0x80)
+				num >>= 7
+				j7++
+			}
+			dAtA8[j7] = uint8(num)
+			j7++
+		}
+		dAtA[i] = 0x5a
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(j7))
+		i += copy(dAtA[i:], dAtA8[:j7])
+	}
+	if len(m.Endpoints) > 0 {
+		for _, msg := range m.Endpoints {
+			dAtA[i] = 0x62
+			i++
+			i = encodeVarintCluster(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	return i, nil
+}
+
+func (m *Cluster_Endpoint) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Cluster_Endpoint) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Roles) > 0 {
+		dAtA10 := make([]byte, len(m.Roles)*10)
+		var j9 int
+		for _, num := range m.Roles {
+			for num >= 1<<7 {
+				dAtA10[j9] = uint8(uint64(num)&0x7f | 0x80)
+				num >>= 7
+				j9++
+			}
+			dAtA10[j9] = uint8(num)
+			j9++
+		}
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(j9))
+		i += copy(dAtA[i:], dAtA10[:j9])
+	}
+	if m.Endpoint != nil {
+		nn11, err := m.Endpoint.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn11
+	}
+	return i, nil
+}
+
+func (m *Cluster_Endpoint_Grpc) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.Grpc != nil {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.Grpc.Size()))
+		n12, err := m.Grpc.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n12
+	}
+	return i, nil
+}
+func (m *Cluster_Endpoint_GrpcHttp) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.GrpcHttp != nil {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.GrpcHttp.Size()))
+		n13, err := m.GrpcHttp.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n13
+	}
+	return i, nil
+}
+func (m *Cluster_Endpoint_Http) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.Http != nil {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.Http.Size()))
+		n14, err := m.Http.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n14
+	}
+	return i, nil
+}
+func (m *Cluster_Endpoint_Mqtt) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.Mqtt != nil {
+		dAtA[i] = 0x2a
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.Mqtt.Size()))
+		n15, err := m.Mqtt.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n15
+	}
+	return i, nil
+}
+func (m *Cluster_Endpoint_PacketForwarderUdp) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.PacketForwarderUdp != nil {
+		dAtA[i] = 0x32
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.PacketForwarderUdp.Size()))
+		n16, err := m.PacketForwarderUdp.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n16
+	}
+	return i, nil
+}
+func (m *Cluster_Endpoint_BackendInterfacesHttp) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.BackendInterfacesHttp != nil {
+		dAtA[i] = 0x3a
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.BackendInterfacesHttp.Size()))
+		n17, err := m.BackendInterfacesHttp.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n17
+	}
+	return i, nil
+}
+func (m *Cluster_Endpoint_BasicStationHttp) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.BasicStationHttp != nil {
+		dAtA[i] = 0x42
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.BasicStationHttp.Size()))
+		n18, err := m.BasicStationHttp.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n18
+	}
+	return i, nil
+}
+func (m *Cluster_Endpoint_GRPC) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Cluster_Endpoint_GRPC) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Host) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(len(m.Host)))
+		i += copy(dAtA[i:], m.Host)
+	}
+	if m.Port != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.Port))
+	}
+	if m.Tls {
+		dAtA[i] = 0x18
+		i++
+		if m.Tls {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i++
+	}
+	return i, nil
+}
+
+func (m *Cluster_Endpoint_HTTP) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Cluster_Endpoint_HTTP) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Host) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(len(m.Host)))
+		i += copy(dAtA[i:], m.Host)
+	}
+	if m.Port != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.Port))
+	}
+	if m.Tls {
+		dAtA[i] = 0x18
+		i++
+		if m.Tls {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i++
+	}
+	if len(m.Path) > 0 {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(len(m.Path)))
+		i += copy(dAtA[i:], m.Path)
+	}
+	return i, nil
+}
+
+func (m *Cluster_Endpoint_MQTT) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Cluster_Endpoint_MQTT) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Host) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(len(m.Host)))
+		i += copy(dAtA[i:], m.Host)
+	}
+	if m.Port != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.Port))
+	}
+	if m.Tls {
+		dAtA[i] = 0x18
+		i++
+		if m.Tls {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i++
+	}
+	return i, nil
+}
+
+func (m *Cluster_Endpoint_UDP) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Cluster_Endpoint_UDP) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Host) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(len(m.Host)))
+		i += copy(dAtA[i:], m.Host)
+	}
+	if m.Port != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.Port))
+	}
+	if m.Dtls {
+		dAtA[i] = 0x18
+		i++
+		if m.Dtls {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i++
+	}
+	return i, nil
+}
+
+func (m *Clusters) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Clusters) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Clusters) > 0 {
+		for _, msg := range m.Clusters {
+			dAtA[i] = 0xa
+			i++
+			i = encodeVarintCluster(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	return i, nil
+}
+
+func (m *GetClusterRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetClusterRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintCluster(dAtA, i, uint64(m.ClusterIdentifiers.Size()))
+	n19, err := m.ClusterIdentifiers.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n19
+	dAtA[i] = 0x12
+	i++
+	i = encodeVarintCluster(dAtA, i, uint64(m.FieldMask.Size()))
+	n20, err := m.FieldMask.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n20
+	return i, nil
+}
+
+func (m *ListClustersRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ListClustersRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	dAtA[i] = 0x12
+	i++
+	i = encodeVarintCluster(dAtA, i, uint64(m.FieldMask.Size()))
+	n21, err := m.FieldMask.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n21
+	if len(m.Order) > 0 {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(len(m.Order)))
+		i += copy(dAtA[i:], m.Order)
+	}
+	if m.Limit != 0 {
+		dAtA[i] = 0x20
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.Limit))
+	}
+	if m.Page != 0 {
+		dAtA[i] = 0x28
+		i++
+		i = encodeVarintCluster(dAtA, i, uint64(m.Page))
+	}
+	return i, nil
+}
+
 func encodeVarintCluster(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -288,6 +2255,193 @@ func NewPopulatedPeerInfo(r randyCluster, easy bool) *PeerInfo {
 	return this
 }
 
+func NewPopulatedCluster(r randyCluster, easy bool) *Cluster {
+	this := &Cluster{}
+	v3 := NewPopulatedClusterIdentifiers(r, easy)
+	this.ClusterIdentifiers = *v3
+	v4 := github_com_gogo_protobuf_types.NewPopulatedStdTime(r, easy)
+	this.CreatedAt = *v4
+	v5 := github_com_gogo_protobuf_types.NewPopulatedStdTime(r, easy)
+	this.UpdatedAt = *v5
+	this.Name = randStringCluster(r)
+	this.Description = randStringCluster(r)
+	if r.Intn(10) != 0 {
+		v6 := r.Intn(10)
+		this.Attributes = make(map[string]string)
+		for i := 0; i < v6; i++ {
+			this.Attributes[randStringCluster(r)] = randStringCluster(r)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v7 := r.Intn(5)
+		this.ContactInfo = make([]*ContactInfo, v7)
+		for i := 0; i < v7; i++ {
+			this.ContactInfo[i] = NewPopulatedContactInfo(r, easy)
+		}
+	}
+	this.Secret = randStringCluster(r)
+	v8 := NewPopulatedLocation(r, easy)
+	this.Location = *v8
+	this.LocationDescription = randStringCluster(r)
+	v9 := r.Intn(10)
+	this.Roles = make([]ClusterRole, v9)
+	for i := 0; i < v9; i++ {
+		this.Roles[i] = ClusterRole([]int32{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}[r.Intn(10)])
+	}
+	if r.Intn(10) != 0 {
+		v10 := r.Intn(5)
+		this.Endpoints = make([]*Cluster_Endpoint, v10)
+		for i := 0; i < v10; i++ {
+			this.Endpoints[i] = NewPopulatedCluster_Endpoint(r, easy)
+		}
+	}
+	if !easy && r.Intn(10) != 0 {
+	}
+	return this
+}
+
+func NewPopulatedCluster_Endpoint(r randyCluster, easy bool) *Cluster_Endpoint {
+	this := &Cluster_Endpoint{}
+	v11 := r.Intn(10)
+	this.Roles = make([]ClusterRole, v11)
+	for i := 0; i < v11; i++ {
+		this.Roles[i] = ClusterRole([]int32{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}[r.Intn(10)])
+	}
+	oneofNumber_Endpoint := []int32{2, 3, 4, 5, 6, 7, 8}[r.Intn(7)]
+	switch oneofNumber_Endpoint {
+	case 2:
+		this.Endpoint = NewPopulatedCluster_Endpoint_Grpc(r, easy)
+	case 3:
+		this.Endpoint = NewPopulatedCluster_Endpoint_GrpcHttp(r, easy)
+	case 4:
+		this.Endpoint = NewPopulatedCluster_Endpoint_Http(r, easy)
+	case 5:
+		this.Endpoint = NewPopulatedCluster_Endpoint_Mqtt(r, easy)
+	case 6:
+		this.Endpoint = NewPopulatedCluster_Endpoint_PacketForwarderUdp(r, easy)
+	case 7:
+		this.Endpoint = NewPopulatedCluster_Endpoint_BackendInterfacesHttp(r, easy)
+	case 8:
+		this.Endpoint = NewPopulatedCluster_Endpoint_BasicStationHttp(r, easy)
+	}
+	if !easy && r.Intn(10) != 0 {
+	}
+	return this
+}
+
+func NewPopulatedCluster_Endpoint_Grpc(r randyCluster, easy bool) *Cluster_Endpoint_Grpc {
+	this := &Cluster_Endpoint_Grpc{}
+	this.Grpc = NewPopulatedCluster_Endpoint_GRPC(r, easy)
+	return this
+}
+func NewPopulatedCluster_Endpoint_GrpcHttp(r randyCluster, easy bool) *Cluster_Endpoint_GrpcHttp {
+	this := &Cluster_Endpoint_GrpcHttp{}
+	this.GrpcHttp = NewPopulatedCluster_Endpoint_HTTP(r, easy)
+	return this
+}
+func NewPopulatedCluster_Endpoint_Http(r randyCluster, easy bool) *Cluster_Endpoint_Http {
+	this := &Cluster_Endpoint_Http{}
+	this.Http = NewPopulatedCluster_Endpoint_HTTP(r, easy)
+	return this
+}
+func NewPopulatedCluster_Endpoint_Mqtt(r randyCluster, easy bool) *Cluster_Endpoint_Mqtt {
+	this := &Cluster_Endpoint_Mqtt{}
+	this.Mqtt = NewPopulatedCluster_Endpoint_MQTT(r, easy)
+	return this
+}
+func NewPopulatedCluster_Endpoint_PacketForwarderUdp(r randyCluster, easy bool) *Cluster_Endpoint_PacketForwarderUdp {
+	this := &Cluster_Endpoint_PacketForwarderUdp{}
+	this.PacketForwarderUdp = NewPopulatedCluster_Endpoint_UDP(r, easy)
+	return this
+}
+func NewPopulatedCluster_Endpoint_BackendInterfacesHttp(r randyCluster, easy bool) *Cluster_Endpoint_BackendInterfacesHttp {
+	this := &Cluster_Endpoint_BackendInterfacesHttp{}
+	this.BackendInterfacesHttp = NewPopulatedCluster_Endpoint_HTTP(r, easy)
+	return this
+}
+func NewPopulatedCluster_Endpoint_BasicStationHttp(r randyCluster, easy bool) *Cluster_Endpoint_BasicStationHttp {
+	this := &Cluster_Endpoint_BasicStationHttp{}
+	this.BasicStationHttp = NewPopulatedCluster_Endpoint_HTTP(r, easy)
+	return this
+}
+func NewPopulatedCluster_Endpoint_GRPC(r randyCluster, easy bool) *Cluster_Endpoint_GRPC {
+	this := &Cluster_Endpoint_GRPC{}
+	this.Host = randStringCluster(r)
+	this.Port = r.Uint32()
+	this.Tls = bool(r.Intn(2) == 0)
+	if !easy && r.Intn(10) != 0 {
+	}
+	return this
+}
+
+func NewPopulatedCluster_Endpoint_HTTP(r randyCluster, easy bool) *Cluster_Endpoint_HTTP {
+	this := &Cluster_Endpoint_HTTP{}
+	this.Host = randStringCluster(r)
+	this.Port = r.Uint32()
+	this.Tls = bool(r.Intn(2) == 0)
+	this.Path = randStringCluster(r)
+	if !easy && r.Intn(10) != 0 {
+	}
+	return this
+}
+
+func NewPopulatedCluster_Endpoint_MQTT(r randyCluster, easy bool) *Cluster_Endpoint_MQTT {
+	this := &Cluster_Endpoint_MQTT{}
+	this.Host = randStringCluster(r)
+	this.Port = r.Uint32()
+	this.Tls = bool(r.Intn(2) == 0)
+	if !easy && r.Intn(10) != 0 {
+	}
+	return this
+}
+
+func NewPopulatedCluster_Endpoint_UDP(r randyCluster, easy bool) *Cluster_Endpoint_UDP {
+	this := &Cluster_Endpoint_UDP{}
+	this.Host = randStringCluster(r)
+	this.Port = r.Uint32()
+	this.Dtls = bool(r.Intn(2) == 0)
+	if !easy && r.Intn(10) != 0 {
+	}
+	return this
+}
+
+func NewPopulatedClusters(r randyCluster, easy bool) *Clusters {
+	this := &Clusters{}
+	if r.Intn(10) != 0 {
+		v12 := r.Intn(5)
+		this.Clusters = make([]*Cluster, v12)
+		for i := 0; i < v12; i++ {
+			this.Clusters[i] = NewPopulatedCluster(r, easy)
+		}
+	}
+	if !easy && r.Intn(10) != 0 {
+	}
+	return this
+}
+
+func NewPopulatedGetClusterRequest(r randyCluster, easy bool) *GetClusterRequest {
+	this := &GetClusterRequest{}
+	v13 := NewPopulatedClusterIdentifiers(r, easy)
+	this.ClusterIdentifiers = *v13
+	v14 := types.NewPopulatedFieldMask(r, easy)
+	this.FieldMask = *v14
+	if !easy && r.Intn(10) != 0 {
+	}
+	return this
+}
+
+func NewPopulatedListClustersRequest(r randyCluster, easy bool) *ListClustersRequest {
+	this := &ListClustersRequest{}
+	v15 := types.NewPopulatedFieldMask(r, easy)
+	this.FieldMask = *v15
+	this.Order = randStringCluster(r)
+	this.Limit = r.Uint32()
+	this.Page = r.Uint32()
+	if !easy && r.Intn(10) != 0 {
+	}
+	return this
+}
+
 type randyCluster interface {
 	Float32() float32
 	Float64() float64
@@ -307,9 +2461,9 @@ func randUTF8RuneCluster(r randyCluster) rune {
 	return rune(ru + 61)
 }
 func randStringCluster(r randyCluster) string {
-	v3 := r.Intn(100)
-	tmps := make([]rune, v3)
-	for i := 0; i < v3; i++ {
+	v16 := r.Intn(100)
+	tmps := make([]rune, v16)
+	for i := 0; i < v16; i++ {
 		tmps[i] = randUTF8RuneCluster(r)
 	}
 	return string(tmps)
@@ -331,11 +2485,11 @@ func randFieldCluster(dAtA []byte, r randyCluster, fieldNumber int, wire int) []
 	switch wire {
 	case 0:
 		dAtA = encodeVarintPopulateCluster(dAtA, uint64(key))
-		v4 := r.Int63()
+		v17 := r.Int63()
 		if r.Intn(2) == 0 {
-			v4 *= -1
+			v17 *= -1
 		}
-		dAtA = encodeVarintPopulateCluster(dAtA, uint64(v4))
+		dAtA = encodeVarintPopulateCluster(dAtA, uint64(v17))
 	case 1:
 		dAtA = encodeVarintPopulateCluster(dAtA, uint64(key))
 		dAtA = append(dAtA, byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)))
@@ -390,6 +2544,298 @@ func (m *PeerInfo) Size() (n int) {
 	return n
 }
 
+func (m *Cluster) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.ClusterIdentifiers.Size()
+	n += 1 + l + sovCluster(uint64(l))
+	l = github_com_gogo_protobuf_types.SizeOfStdTime(m.CreatedAt)
+	n += 1 + l + sovCluster(uint64(l))
+	l = github_com_gogo_protobuf_types.SizeOfStdTime(m.UpdatedAt)
+	n += 1 + l + sovCluster(uint64(l))
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	l = len(m.Description)
+	if l > 0 {
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	if len(m.Attributes) > 0 {
+		for k, v := range m.Attributes {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + len(k) + sovCluster(uint64(len(k))) + 1 + len(v) + sovCluster(uint64(len(v)))
+			n += mapEntrySize + 1 + sovCluster(uint64(mapEntrySize))
+		}
+	}
+	if len(m.ContactInfo) > 0 {
+		for _, e := range m.ContactInfo {
+			l = e.Size()
+			n += 1 + l + sovCluster(uint64(l))
+		}
+	}
+	l = len(m.Secret)
+	if l > 0 {
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	l = m.Location.Size()
+	n += 1 + l + sovCluster(uint64(l))
+	l = len(m.LocationDescription)
+	if l > 0 {
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	if len(m.Roles) > 0 {
+		l = 0
+		for _, e := range m.Roles {
+			l += sovCluster(uint64(e))
+		}
+		n += 1 + sovCluster(uint64(l)) + l
+	}
+	if len(m.Endpoints) > 0 {
+		for _, e := range m.Endpoints {
+			l = e.Size()
+			n += 1 + l + sovCluster(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *Cluster_Endpoint) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Roles) > 0 {
+		l = 0
+		for _, e := range m.Roles {
+			l += sovCluster(uint64(e))
+		}
+		n += 1 + sovCluster(uint64(l)) + l
+	}
+	if m.Endpoint != nil {
+		n += m.Endpoint.Size()
+	}
+	return n
+}
+
+func (m *Cluster_Endpoint_Grpc) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Grpc != nil {
+		l = m.Grpc.Size()
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	return n
+}
+func (m *Cluster_Endpoint_GrpcHttp) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.GrpcHttp != nil {
+		l = m.GrpcHttp.Size()
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	return n
+}
+func (m *Cluster_Endpoint_Http) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Http != nil {
+		l = m.Http.Size()
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	return n
+}
+func (m *Cluster_Endpoint_Mqtt) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Mqtt != nil {
+		l = m.Mqtt.Size()
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	return n
+}
+func (m *Cluster_Endpoint_PacketForwarderUdp) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.PacketForwarderUdp != nil {
+		l = m.PacketForwarderUdp.Size()
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	return n
+}
+func (m *Cluster_Endpoint_BackendInterfacesHttp) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.BackendInterfacesHttp != nil {
+		l = m.BackendInterfacesHttp.Size()
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	return n
+}
+func (m *Cluster_Endpoint_BasicStationHttp) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.BasicStationHttp != nil {
+		l = m.BasicStationHttp.Size()
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	return n
+}
+func (m *Cluster_Endpoint_GRPC) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Host)
+	if l > 0 {
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	if m.Port != 0 {
+		n += 1 + sovCluster(uint64(m.Port))
+	}
+	if m.Tls {
+		n += 2
+	}
+	return n
+}
+
+func (m *Cluster_Endpoint_HTTP) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Host)
+	if l > 0 {
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	if m.Port != 0 {
+		n += 1 + sovCluster(uint64(m.Port))
+	}
+	if m.Tls {
+		n += 2
+	}
+	l = len(m.Path)
+	if l > 0 {
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	return n
+}
+
+func (m *Cluster_Endpoint_MQTT) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Host)
+	if l > 0 {
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	if m.Port != 0 {
+		n += 1 + sovCluster(uint64(m.Port))
+	}
+	if m.Tls {
+		n += 2
+	}
+	return n
+}
+
+func (m *Cluster_Endpoint_UDP) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Host)
+	if l > 0 {
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	if m.Port != 0 {
+		n += 1 + sovCluster(uint64(m.Port))
+	}
+	if m.Dtls {
+		n += 2
+	}
+	return n
+}
+
+func (m *Clusters) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Clusters) > 0 {
+		for _, e := range m.Clusters {
+			l = e.Size()
+			n += 1 + l + sovCluster(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *GetClusterRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.ClusterIdentifiers.Size()
+	n += 1 + l + sovCluster(uint64(l))
+	l = m.FieldMask.Size()
+	n += 1 + l + sovCluster(uint64(l))
+	return n
+}
+
+func (m *ListClustersRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.FieldMask.Size()
+	n += 1 + l + sovCluster(uint64(l))
+	l = len(m.Order)
+	if l > 0 {
+		n += 1 + l + sovCluster(uint64(l))
+	}
+	if m.Limit != 0 {
+		n += 1 + sovCluster(uint64(m.Limit))
+	}
+	if m.Page != 0 {
+		n += 1 + sovCluster(uint64(m.Page))
+	}
+	return n
+}
+
 func sovCluster(x uint64) (n int) {
 	for {
 		n++
@@ -422,6 +2868,201 @@ func (this *PeerInfo) String() string {
 		`TLS:` + fmt.Sprintf("%v", this.TLS) + `,`,
 		`Roles:` + fmt.Sprintf("%v", this.Roles) + `,`,
 		`Tags:` + mapStringForTags + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster) String() string {
+	if this == nil {
+		return "nil"
+	}
+	keysForAttributes := make([]string, 0, len(this.Attributes))
+	for k := range this.Attributes {
+		keysForAttributes = append(keysForAttributes, k)
+	}
+	github_com_gogo_protobuf_sortkeys.Strings(keysForAttributes)
+	mapStringForAttributes := "map[string]string{"
+	for _, k := range keysForAttributes {
+		mapStringForAttributes += fmt.Sprintf("%v: %v,", k, this.Attributes[k])
+	}
+	mapStringForAttributes += "}"
+	s := strings.Join([]string{`&Cluster{`,
+		`ClusterIdentifiers:` + strings.Replace(strings.Replace(this.ClusterIdentifiers.String(), "ClusterIdentifiers", "ClusterIdentifiers", 1), `&`, ``, 1) + `,`,
+		`CreatedAt:` + strings.Replace(strings.Replace(this.CreatedAt.String(), "Timestamp", "types.Timestamp", 1), `&`, ``, 1) + `,`,
+		`UpdatedAt:` + strings.Replace(strings.Replace(this.UpdatedAt.String(), "Timestamp", "types.Timestamp", 1), `&`, ``, 1) + `,`,
+		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
+		`Description:` + fmt.Sprintf("%v", this.Description) + `,`,
+		`Attributes:` + mapStringForAttributes + `,`,
+		`ContactInfo:` + strings.Replace(fmt.Sprintf("%v", this.ContactInfo), "ContactInfo", "ContactInfo", 1) + `,`,
+		`Secret:` + fmt.Sprintf("%v", this.Secret) + `,`,
+		`Location:` + strings.Replace(strings.Replace(this.Location.String(), "Location", "Location", 1), `&`, ``, 1) + `,`,
+		`LocationDescription:` + fmt.Sprintf("%v", this.LocationDescription) + `,`,
+		`Roles:` + fmt.Sprintf("%v", this.Roles) + `,`,
+		`Endpoints:` + strings.Replace(fmt.Sprintf("%v", this.Endpoints), "Cluster_Endpoint", "Cluster_Endpoint", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint{`,
+		`Roles:` + fmt.Sprintf("%v", this.Roles) + `,`,
+		`Endpoint:` + fmt.Sprintf("%v", this.Endpoint) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint_Grpc) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint_Grpc{`,
+		`Grpc:` + strings.Replace(fmt.Sprintf("%v", this.Grpc), "Cluster_Endpoint_GRPC", "Cluster_Endpoint_GRPC", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint_GrpcHttp) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint_GrpcHttp{`,
+		`GrpcHttp:` + strings.Replace(fmt.Sprintf("%v", this.GrpcHttp), "Cluster_Endpoint_HTTP", "Cluster_Endpoint_HTTP", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint_Http) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint_Http{`,
+		`Http:` + strings.Replace(fmt.Sprintf("%v", this.Http), "Cluster_Endpoint_HTTP", "Cluster_Endpoint_HTTP", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint_Mqtt) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint_Mqtt{`,
+		`Mqtt:` + strings.Replace(fmt.Sprintf("%v", this.Mqtt), "Cluster_Endpoint_MQTT", "Cluster_Endpoint_MQTT", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint_PacketForwarderUdp) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint_PacketForwarderUdp{`,
+		`PacketForwarderUdp:` + strings.Replace(fmt.Sprintf("%v", this.PacketForwarderUdp), "Cluster_Endpoint_UDP", "Cluster_Endpoint_UDP", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint_BackendInterfacesHttp) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint_BackendInterfacesHttp{`,
+		`BackendInterfacesHttp:` + strings.Replace(fmt.Sprintf("%v", this.BackendInterfacesHttp), "Cluster_Endpoint_HTTP", "Cluster_Endpoint_HTTP", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint_BasicStationHttp) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint_BasicStationHttp{`,
+		`BasicStationHttp:` + strings.Replace(fmt.Sprintf("%v", this.BasicStationHttp), "Cluster_Endpoint_HTTP", "Cluster_Endpoint_HTTP", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint_GRPC) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint_GRPC{`,
+		`Host:` + fmt.Sprintf("%v", this.Host) + `,`,
+		`Port:` + fmt.Sprintf("%v", this.Port) + `,`,
+		`Tls:` + fmt.Sprintf("%v", this.Tls) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint_HTTP) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint_HTTP{`,
+		`Host:` + fmt.Sprintf("%v", this.Host) + `,`,
+		`Port:` + fmt.Sprintf("%v", this.Port) + `,`,
+		`Tls:` + fmt.Sprintf("%v", this.Tls) + `,`,
+		`Path:` + fmt.Sprintf("%v", this.Path) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint_MQTT) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint_MQTT{`,
+		`Host:` + fmt.Sprintf("%v", this.Host) + `,`,
+		`Port:` + fmt.Sprintf("%v", this.Port) + `,`,
+		`Tls:` + fmt.Sprintf("%v", this.Tls) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Cluster_Endpoint_UDP) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Cluster_Endpoint_UDP{`,
+		`Host:` + fmt.Sprintf("%v", this.Host) + `,`,
+		`Port:` + fmt.Sprintf("%v", this.Port) + `,`,
+		`Dtls:` + fmt.Sprintf("%v", this.Dtls) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Clusters) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Clusters{`,
+		`Clusters:` + strings.Replace(fmt.Sprintf("%v", this.Clusters), "Cluster", "Cluster", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *GetClusterRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&GetClusterRequest{`,
+		`ClusterIdentifiers:` + strings.Replace(strings.Replace(this.ClusterIdentifiers.String(), "ClusterIdentifiers", "ClusterIdentifiers", 1), `&`, ``, 1) + `,`,
+		`FieldMask:` + strings.Replace(strings.Replace(this.FieldMask.String(), "FieldMask", "types.FieldMask", 1), `&`, ``, 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ListClustersRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ListClustersRequest{`,
+		`FieldMask:` + strings.Replace(strings.Replace(this.FieldMask.String(), "FieldMask", "types.FieldMask", 1), `&`, ``, 1) + `,`,
+		`Order:` + fmt.Sprintf("%v", this.Order) + `,`,
+		`Limit:` + fmt.Sprintf("%v", this.Limit) + `,`,
+		`Page:` + fmt.Sprintf("%v", this.Page) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -698,6 +3339,1840 @@ func (m *PeerInfo) Unmarshal(dAtA []byte) error {
 			}
 			m.Tags[mapkey] = mapvalue
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCluster(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Cluster) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCluster
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Cluster: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Cluster: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClusterIdentifiers", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ClusterIdentifiers.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := github_com_gogo_protobuf_types.StdTimeUnmarshal(&m.CreatedAt, dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := github_com_gogo_protobuf_types.StdTimeUnmarshal(&m.UpdatedAt, dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Description", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Description = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Attributes", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Attributes == nil {
+				m.Attributes = make(map[string]string)
+			}
+			var mapkey string
+			var mapvalue string
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowCluster
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					var stringLenmapkey uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowCluster
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapkey |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					intStringLenmapkey := int(stringLenmapkey)
+					if intStringLenmapkey < 0 {
+						return ErrInvalidLengthCluster
+					}
+					postStringIndexmapkey := iNdEx + intStringLenmapkey
+					if postStringIndexmapkey < 0 {
+						return ErrInvalidLengthCluster
+					}
+					if postStringIndexmapkey > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
+					iNdEx = postStringIndexmapkey
+				} else if fieldNum == 2 {
+					var stringLenmapvalue uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowCluster
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapvalue |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					intStringLenmapvalue := int(stringLenmapvalue)
+					if intStringLenmapvalue < 0 {
+						return ErrInvalidLengthCluster
+					}
+					postStringIndexmapvalue := iNdEx + intStringLenmapvalue
+					if postStringIndexmapvalue < 0 {
+						return ErrInvalidLengthCluster
+					}
+					if postStringIndexmapvalue > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = string(dAtA[iNdEx:postStringIndexmapvalue])
+					iNdEx = postStringIndexmapvalue
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipCluster(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthCluster
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
+			}
+			m.Attributes[mapkey] = mapvalue
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ContactInfo", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ContactInfo = append(m.ContactInfo, &ContactInfo{})
+			if err := m.ContactInfo[len(m.ContactInfo)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Secret", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Secret = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Location.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LocationDescription", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.LocationDescription = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 11:
+			if wireType == 0 {
+				var v ClusterRole
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowCluster
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= ClusterRole(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.Roles = append(m.Roles, v)
+			} else if wireType == 2 {
+				var packedLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowCluster
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					packedLen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if packedLen < 0 {
+					return ErrInvalidLengthCluster
+				}
+				postIndex := iNdEx + packedLen
+				if postIndex < 0 {
+					return ErrInvalidLengthCluster
+				}
+				if postIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				var elementCount int
+				if elementCount != 0 && len(m.Roles) == 0 {
+					m.Roles = make([]ClusterRole, 0, elementCount)
+				}
+				for iNdEx < postIndex {
+					var v ClusterRole
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowCluster
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= ClusterRole(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					m.Roles = append(m.Roles, v)
+				}
+			} else {
+				return fmt.Errorf("proto: wrong wireType = %d for field Roles", wireType)
+			}
+		case 12:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Endpoints", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Endpoints = append(m.Endpoints, &Cluster_Endpoint{})
+			if err := m.Endpoints[len(m.Endpoints)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCluster(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Cluster_Endpoint) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCluster
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Endpoint: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Endpoint: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType == 0 {
+				var v ClusterRole
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowCluster
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= ClusterRole(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.Roles = append(m.Roles, v)
+			} else if wireType == 2 {
+				var packedLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowCluster
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					packedLen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if packedLen < 0 {
+					return ErrInvalidLengthCluster
+				}
+				postIndex := iNdEx + packedLen
+				if postIndex < 0 {
+					return ErrInvalidLengthCluster
+				}
+				if postIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				var elementCount int
+				if elementCount != 0 && len(m.Roles) == 0 {
+					m.Roles = make([]ClusterRole, 0, elementCount)
+				}
+				for iNdEx < postIndex {
+					var v ClusterRole
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowCluster
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= ClusterRole(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					m.Roles = append(m.Roles, v)
+				}
+			} else {
+				return fmt.Errorf("proto: wrong wireType = %d for field Roles", wireType)
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Grpc", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &Cluster_Endpoint_GRPC{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Endpoint = &Cluster_Endpoint_Grpc{v}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GrpcHttp", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &Cluster_Endpoint_HTTP{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Endpoint = &Cluster_Endpoint_GrpcHttp{v}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Http", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &Cluster_Endpoint_HTTP{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Endpoint = &Cluster_Endpoint_Http{v}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Mqtt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &Cluster_Endpoint_MQTT{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Endpoint = &Cluster_Endpoint_Mqtt{v}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PacketForwarderUdp", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &Cluster_Endpoint_UDP{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Endpoint = &Cluster_Endpoint_PacketForwarderUdp{v}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BackendInterfacesHttp", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &Cluster_Endpoint_HTTP{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Endpoint = &Cluster_Endpoint_BackendInterfacesHttp{v}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BasicStationHttp", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &Cluster_Endpoint_HTTP{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Endpoint = &Cluster_Endpoint_BasicStationHttp{v}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCluster(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Cluster_Endpoint_GRPC) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCluster
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GRPC: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GRPC: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Host", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Host = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Port", wireType)
+			}
+			m.Port = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Port |= uint32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Tls", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Tls = bool(v != 0)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCluster(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Cluster_Endpoint_HTTP) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCluster
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: HTTP: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: HTTP: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Host", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Host = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Port", wireType)
+			}
+			m.Port = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Port |= uint32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Tls", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Tls = bool(v != 0)
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Path", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Path = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCluster(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Cluster_Endpoint_MQTT) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCluster
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MQTT: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MQTT: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Host", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Host = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Port", wireType)
+			}
+			m.Port = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Port |= uint32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Tls", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Tls = bool(v != 0)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCluster(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Cluster_Endpoint_UDP) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCluster
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UDP: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UDP: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Host", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Host = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Port", wireType)
+			}
+			m.Port = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Port |= uint32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Dtls", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Dtls = bool(v != 0)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCluster(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Clusters) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCluster
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Clusters: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Clusters: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Clusters", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Clusters = append(m.Clusters, &Cluster{})
+			if err := m.Clusters[len(m.Clusters)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCluster(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetClusterRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCluster
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetClusterRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetClusterRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClusterIdentifiers", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ClusterIdentifiers.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.FieldMask.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCluster(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ListClustersRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCluster
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ListClustersRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ListClustersRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.FieldMask.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Order", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCluster
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCluster
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Order = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Limit", wireType)
+			}
+			m.Limit = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Limit |= uint32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Page", wireType)
+			}
+			m.Page = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCluster
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Page |= uint32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipCluster(dAtA[iNdEx:])

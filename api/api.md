@@ -80,8 +80,20 @@
   - [Service `ClientAccess`](#ttn.lorawan.v3.ClientAccess)
   - [Service `ClientRegistry`](#ttn.lorawan.v3.ClientRegistry)
 - [File `lorawan-stack/api/cluster.proto`](#lorawan-stack/api/cluster.proto)
+  - [Message `Cluster`](#ttn.lorawan.v3.Cluster)
+  - [Message `Cluster.AttributesEntry`](#ttn.lorawan.v3.Cluster.AttributesEntry)
+  - [Message `Cluster.Endpoint`](#ttn.lorawan.v3.Cluster.Endpoint)
+  - [Message `Cluster.Endpoint.GRPC`](#ttn.lorawan.v3.Cluster.Endpoint.GRPC)
+  - [Message `Cluster.Endpoint.HTTP`](#ttn.lorawan.v3.Cluster.Endpoint.HTTP)
+  - [Message `Cluster.Endpoint.MQTT`](#ttn.lorawan.v3.Cluster.Endpoint.MQTT)
+  - [Message `Cluster.Endpoint.UDP`](#ttn.lorawan.v3.Cluster.Endpoint.UDP)
+  - [Message `Clusters`](#ttn.lorawan.v3.Clusters)
+  - [Message `GetClusterRequest`](#ttn.lorawan.v3.GetClusterRequest)
+  - [Message `ListClustersRequest`](#ttn.lorawan.v3.ListClustersRequest)
   - [Message `PeerInfo`](#ttn.lorawan.v3.PeerInfo)
   - [Message `PeerInfo.TagsEntry`](#ttn.lorawan.v3.PeerInfo.TagsEntry)
+- [File `lorawan-stack/api/cluster_services.proto`](#lorawan-stack/api/cluster_services.proto)
+  - [Service `ClusterRegistry`](#ttn.lorawan.v3.ClusterRegistry)
 - [File `lorawan-stack/api/configuration_services.proto`](#lorawan-stack/api/configuration_services.proto)
   - [Message `FrequencyPlanDescription`](#ttn.lorawan.v3.FrequencyPlanDescription)
   - [Message `ListFrequencyPlansRequest`](#ttn.lorawan.v3.ListFrequencyPlansRequest)
@@ -188,6 +200,7 @@
 - [File `lorawan-stack/api/identifiers.proto`](#lorawan-stack/api/identifiers.proto)
   - [Message `ApplicationIdentifiers`](#ttn.lorawan.v3.ApplicationIdentifiers)
   - [Message `ClientIdentifiers`](#ttn.lorawan.v3.ClientIdentifiers)
+  - [Message `ClusterIdentifiers`](#ttn.lorawan.v3.ClusterIdentifiers)
   - [Message `CombinedIdentifiers`](#ttn.lorawan.v3.CombinedIdentifiers)
   - [Message `EndDeviceIdentifiers`](#ttn.lorawan.v3.EndDeviceIdentifiers)
   - [Message `EntityIdentifiers`](#ttn.lorawan.v3.EntityIdentifiers)
@@ -1405,6 +1418,122 @@ The OAuth2 flows an OAuth client can use to get an access token.
 
 ## <a name="lorawan-stack/api/cluster.proto">File `lorawan-stack/api/cluster.proto`</a>
 
+### <a name="ttn.lorawan.v3.Cluster">Message `Cluster`</a>
+
+Cluster is the message that defines a Cluster in the network.
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `ids` | [`ClusterIdentifiers`](#ttn.lorawan.v3.ClusterIdentifiers) |  |  |
+| `created_at` | [`google.protobuf.Timestamp`](#google.protobuf.Timestamp) |  |  |
+| `updated_at` | [`google.protobuf.Timestamp`](#google.protobuf.Timestamp) |  |  |
+| `name` | [`string`](#string) |  |  |
+| `description` | [`string`](#string) |  |  |
+| `attributes` | [`Cluster.AttributesEntry`](#ttn.lorawan.v3.Cluster.AttributesEntry) | repeated |  |
+| `contact_info` | [`ContactInfo`](#ttn.lorawan.v3.ContactInfo) | repeated |  |
+| `secret` | [`string`](#string) |  |  |
+| `location` | [`Location`](#ttn.lorawan.v3.Location) |  |  |
+| `location_description` | [`string`](#string) |  |  |
+| `roles` | [`ClusterRole`](#ttn.lorawan.v3.ClusterRole) | repeated |  |
+| `endpoints` | [`Cluster.Endpoint`](#ttn.lorawan.v3.Cluster.Endpoint) | repeated |  |
+
+#### Field Rules
+
+| Field | Validations |
+| ----- | ----------- |
+| `ids` | <p>`message.required`: `true`</p> |
+| `name` | <p>`string.max_len`: `50`</p> |
+| `description` | <p>`string.max_len`: `2000`</p> |
+| `attributes` | <p>`map.keys.string.max_len`: `36`</p><p>`map.keys.string.pattern`: `^[a-z0-9](?:[-]?[a-z0-9]){2,}$`</p> |
+| `location` | <p>`message.required`: `true`</p> |
+
+### <a name="ttn.lorawan.v3.Cluster.AttributesEntry">Message `Cluster.AttributesEntry`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `key` | [`string`](#string) |  |  |
+| `value` | [`string`](#string) |  |  |
+
+### <a name="ttn.lorawan.v3.Cluster.Endpoint">Message `Cluster.Endpoint`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `roles` | [`ClusterRole`](#ttn.lorawan.v3.ClusterRole) | repeated |  |
+| `grpc` | [`Cluster.Endpoint.GRPC`](#ttn.lorawan.v3.Cluster.Endpoint.GRPC) |  | gRPC API endpoint. |
+| `grpc_http` | [`Cluster.Endpoint.HTTP`](#ttn.lorawan.v3.Cluster.Endpoint.HTTP) |  | gRPC-gateway API endpoint. Prefix is inserted before endpoints specified in other protos. Usually the path should be "/api/v3". |
+| `http` | [`Cluster.Endpoint.HTTP`](#ttn.lorawan.v3.Cluster.Endpoint.HTTP) |  | HTTP endpoint for User Interface. |
+| `mqtt` | [`Cluster.Endpoint.MQTT`](#ttn.lorawan.v3.Cluster.Endpoint.MQTT) |  | MQTT Endpoint (only GATEWAY_SERVER, APPLICATION_SERVER). |
+| `packet_forwarder_udp` | [`Cluster.Endpoint.UDP`](#ttn.lorawan.v3.Cluster.Endpoint.UDP) |  | Packet Forwarder UDP API endpoint (only GATEWAY_SERVER). |
+| `backend_interfaces_http` | [`Cluster.Endpoint.HTTP`](#ttn.lorawan.v3.Cluster.Endpoint.HTTP) |  | Backend Interfaces HTTP API endpoint (only NETWORK_SERVER, APPLICATION_SERVER, JOIN_SERVER). |
+| `basic_station_http` | [`Cluster.Endpoint.HTTP`](#ttn.lorawan.v3.Cluster.Endpoint.HTTP) |  | Basic Station HTTP API endpoint (only GATEWAY_SERVER). |
+
+### <a name="ttn.lorawan.v3.Cluster.Endpoint.GRPC">Message `Cluster.Endpoint.GRPC`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `host` | [`string`](#string) |  |  |
+| `port` | [`uint32`](#uint32) |  |  |
+| `tls` | [`bool`](#bool) |  |  |
+
+### <a name="ttn.lorawan.v3.Cluster.Endpoint.HTTP">Message `Cluster.Endpoint.HTTP`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `host` | [`string`](#string) |  |  |
+| `port` | [`uint32`](#uint32) |  |  |
+| `tls` | [`bool`](#bool) |  |  |
+| `path` | [`string`](#string) |  | URL path (prefix) to use. |
+
+### <a name="ttn.lorawan.v3.Cluster.Endpoint.MQTT">Message `Cluster.Endpoint.MQTT`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `host` | [`string`](#string) |  |  |
+| `port` | [`uint32`](#uint32) |  |  |
+| `tls` | [`bool`](#bool) |  |  |
+
+### <a name="ttn.lorawan.v3.Cluster.Endpoint.UDP">Message `Cluster.Endpoint.UDP`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `host` | [`string`](#string) |  |  |
+| `port` | [`uint32`](#uint32) |  |  |
+| `dtls` | [`bool`](#bool) |  |  |
+
+### <a name="ttn.lorawan.v3.Clusters">Message `Clusters`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `clusters` | [`Cluster`](#ttn.lorawan.v3.Cluster) | repeated |  |
+
+### <a name="ttn.lorawan.v3.GetClusterRequest">Message `GetClusterRequest`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `cluster_ids` | [`ClusterIdentifiers`](#ttn.lorawan.v3.ClusterIdentifiers) |  |  |
+| `field_mask` | [`google.protobuf.FieldMask`](#google.protobuf.FieldMask) |  |  |
+
+#### Field Rules
+
+| Field | Validations |
+| ----- | ----------- |
+| `cluster_ids` | <p>`message.required`: `true`</p> |
+
+### <a name="ttn.lorawan.v3.ListClustersRequest">Message `ListClustersRequest`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `field_mask` | [`google.protobuf.FieldMask`](#google.protobuf.FieldMask) |  |  |
+| `order` | [`string`](#string) |  | Order the results by this field path (must be present in the field mask). Default ordering is by ID. Prepend with a minus (-) to reverse the order. |
+| `limit` | [`uint32`](#uint32) |  | Limit the number of results per page. |
+| `page` | [`uint32`](#uint32) |  | Page number for pagination. 0 is interpreted as 1. |
+
+#### Field Rules
+
+| Field | Validations |
+| ----- | ----------- |
+| `limit` | <p>`uint32.lte`: `1000`</p> |
+
 ### <a name="ttn.lorawan.v3.PeerInfo">Message `PeerInfo`</a>
 
 PeerInfo
@@ -1422,6 +1551,22 @@ PeerInfo
 | ----- | ---- | ----- | ----------- |
 | `key` | [`string`](#string) |  |  |
 | `value` | [`string`](#string) |  |  |
+
+## <a name="lorawan-stack/api/cluster_services.proto">File `lorawan-stack/api/cluster_services.proto`</a>
+
+### <a name="ttn.lorawan.v3.ClusterRegistry">Service `ClusterRegistry`</a>
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| `Get` | [`GetClusterRequest`](#ttn.lorawan.v3.GetClusterRequest) | [`Cluster`](#ttn.lorawan.v3.Cluster) | Get the cluster with the given identifiers, selecting the fields given by the field mask. |
+| `List` | [`ListClustersRequest`](#ttn.lorawan.v3.ListClustersRequest) | [`Clusters`](#ttn.lorawan.v3.Clusters) | List clusters, selecting the fields given by the field mask. |
+
+#### HTTP bindings
+
+| Method Name | Method | Pattern | Body |
+| ----------- | ------ | ------- | ---- |
+| `Get` | `GET` | `/api/v3/clusters/{cluster_ids.cluster_id}` |  |
+| `List` | `GET` | `/api/v3/clusters` |  |
 
 ## <a name="lorawan-stack/api/configuration_services.proto">File `lorawan-stack/api/configuration_services.proto`</a>
 
@@ -2802,6 +2947,18 @@ The NsGs service connects a Network Server to a Gateway Server.
 | ----- | ----------- |
 | `client_id` | <p>`string.max_len`: `36`</p><p>`string.pattern`: `^[a-z0-9](?:[-]?[a-z0-9]){2,}$`</p> |
 
+### <a name="ttn.lorawan.v3.ClusterIdentifiers">Message `ClusterIdentifiers`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `cluster_id` | [`string`](#string) |  |  |
+
+#### Field Rules
+
+| Field | Validations |
+| ----- | ----------- |
+| `cluster_id` | <p>`string.max_len`: `36`</p><p>`string.pattern`: `^[a-z0-9](?:[-]?[a-z0-9]){2,}$`</p> |
+
 ### <a name="ttn.lorawan.v3.CombinedIdentifiers">Message `CombinedIdentifiers`</a>
 
 Combine the identifiers of multiple entities.
@@ -2840,6 +2997,7 @@ EntityIdentifiers contains one of the possible entity identifiers.
 | `gateway_ids` | [`GatewayIdentifiers`](#ttn.lorawan.v3.GatewayIdentifiers) |  |  |
 | `organization_ids` | [`OrganizationIdentifiers`](#ttn.lorawan.v3.OrganizationIdentifiers) |  |  |
 | `user_ids` | [`UserIdentifiers`](#ttn.lorawan.v3.UserIdentifiers) |  |  |
+| `cluster_ids` | [`ClusterIdentifiers`](#ttn.lorawan.v3.ClusterIdentifiers) |  |  |
 
 ### <a name="ttn.lorawan.v3.GatewayIdentifiers">Message `GatewayIdentifiers`</a>
 
