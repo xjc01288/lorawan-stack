@@ -95,14 +95,20 @@ message Cluster {
   map<string,string> attributes = 6 [(validate.rules).map.keys.string = {pattern: "^[a-z0-9](?:[-]?[a-z0-9]){2,}$" , max_len: 36}];
   repeated ContactInfo contact_info = 7;
 
-  string secret = 8;
+  // The list of addresses this cluster has or used to have.
+  // Addresses can not be removed from this list after they have been added.
+  repeated string addresses = 8;
 
-  Location location = 9 [(gogoproto.nullable) = false, (validate.rules).message.required = true];
-  string location_description = 10;
+  string secret = 9;
 
-  repeated ClusterRole roles = 11;
+  Location location = 10 [(gogoproto.nullable) = false, (validate.rules).message.required = true];
+  string location_description = 11;
 
-  repeated Endpoint endpoints = 12;
+  repeated ClusterRole roles = 12;
+
+  // Endpoints that the cluster exposses. If the `host` of the address does not
+  // end with `domain_name`, then `domain_name` is appended to it.
+  repeated Endpoint endpoints = 13;
 }
 
 message Clusters {
@@ -112,6 +118,10 @@ message Clusters {
 message GetClusterRequest {
   ClusterIdentifiers cluster_ids = 1 [(gogoproto.embed) = true, (gogoproto.nullable) = false, (validate.rules).message.required = true];
   google.protobuf.FieldMask field_mask = 2 [(gogoproto.nullable) = false];
+}
+
+message GetClusterIdentifiersForAddressRequest {
+  string address = 1;
 }
 
 message ListClustersRequest {

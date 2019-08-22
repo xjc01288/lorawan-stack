@@ -2110,6 +2110,30 @@
         ]
       }
     },
+    "/cluster-id/address/{address}": {
+      "get": {
+        "operationId": "GetIdentifiersForAddress",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3ClusterIdentifiers"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ClusterRegistry"
+        ]
+      }
+    },
     "/clusters": {
       "get": {
         "summary": "List clusters, selecting the fields given by the field mask.",
@@ -7595,6 +7619,13 @@
             "$ref": "#/definitions/v3ContactInfo"
           }
         },
+        "addresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The list of addresses this cluster has or used to have.\nAddresses can not be removed from this list after they have been added."
+        },
         "secret": {
           "type": "string"
         },
@@ -7614,7 +7645,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/ClusterEndpoint"
-          }
+          },
+          "description": "Endpoints that the cluster exposses. If the `host` of the address does not\nend with `domain_name`, then `domain_name` is appended to it."
         }
       },
       "description": "Cluster is the message that defines a Cluster in the network."

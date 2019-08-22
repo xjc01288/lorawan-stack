@@ -1080,6 +1080,18 @@
         }
       ]
     },
+    "GetIdentifiersForAddress": {
+      "file": "lorawan-stack/api/cluster_services.proto",
+      "http": [
+        {
+          "method": "get",
+          "pattern": "/cluster-id/address/{address}",
+          "parameters": [
+            "address"
+          ]
+        }
+      ]
+    },
     "List": {
       "file": "lorawan-stack/api/cluster_services.proto",
       "http": [

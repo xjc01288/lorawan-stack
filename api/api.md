@@ -88,6 +88,7 @@
   - [Message `Cluster.Endpoint.MQTT`](#ttn.lorawan.v3.Cluster.Endpoint.MQTT)
   - [Message `Cluster.Endpoint.UDP`](#ttn.lorawan.v3.Cluster.Endpoint.UDP)
   - [Message `Clusters`](#ttn.lorawan.v3.Clusters)
+  - [Message `GetClusterIdentifiersForAddressRequest`](#ttn.lorawan.v3.GetClusterIdentifiersForAddressRequest)
   - [Message `GetClusterRequest`](#ttn.lorawan.v3.GetClusterRequest)
   - [Message `ListClustersRequest`](#ttn.lorawan.v3.ListClustersRequest)
   - [Message `PeerInfo`](#ttn.lorawan.v3.PeerInfo)
@@ -1431,11 +1432,12 @@ Cluster is the message that defines a Cluster in the network.
 | `description` | [`string`](#string) |  |  |
 | `attributes` | [`Cluster.AttributesEntry`](#ttn.lorawan.v3.Cluster.AttributesEntry) | repeated |  |
 | `contact_info` | [`ContactInfo`](#ttn.lorawan.v3.ContactInfo) | repeated |  |
+| `addresses` | [`string`](#string) | repeated | The list of addresses this cluster has or used to have. Addresses can not be removed from this list after they have been added. |
 | `secret` | [`string`](#string) |  |  |
 | `location` | [`Location`](#ttn.lorawan.v3.Location) |  |  |
 | `location_description` | [`string`](#string) |  |  |
 | `roles` | [`ClusterRole`](#ttn.lorawan.v3.ClusterRole) | repeated |  |
-| `endpoints` | [`Cluster.Endpoint`](#ttn.lorawan.v3.Cluster.Endpoint) | repeated |  |
+| `endpoints` | [`Cluster.Endpoint`](#ttn.lorawan.v3.Cluster.Endpoint) | repeated | Endpoints that the cluster exposses. If the `host` of the address does not end with `domain_name`, then `domain_name` is appended to it. |
 
 #### Field Rules
 
@@ -1506,6 +1508,12 @@ Cluster is the message that defines a Cluster in the network.
 | ----- | ---- | ----- | ----------- |
 | `clusters` | [`Cluster`](#ttn.lorawan.v3.Cluster) | repeated |  |
 
+### <a name="ttn.lorawan.v3.GetClusterIdentifiersForAddressRequest">Message `GetClusterIdentifiersForAddressRequest`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [`string`](#string) |  |  |
+
 ### <a name="ttn.lorawan.v3.GetClusterRequest">Message `GetClusterRequest`</a>
 
 | Field | Type | Label | Description |
@@ -1559,6 +1567,7 @@ PeerInfo
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | `Get` | [`GetClusterRequest`](#ttn.lorawan.v3.GetClusterRequest) | [`Cluster`](#ttn.lorawan.v3.Cluster) | Get the cluster with the given identifiers, selecting the fields given by the field mask. |
+| `GetIdentifiersForAddress` | [`GetClusterIdentifiersForAddressRequest`](#ttn.lorawan.v3.GetClusterIdentifiersForAddressRequest) | [`ClusterIdentifiers`](#ttn.lorawan.v3.ClusterIdentifiers) |  |
 | `List` | [`ListClustersRequest`](#ttn.lorawan.v3.ListClustersRequest) | [`Clusters`](#ttn.lorawan.v3.Clusters) | List clusters, selecting the fields given by the field mask. |
 
 #### HTTP bindings
@@ -1566,6 +1575,7 @@ PeerInfo
 | Method Name | Method | Pattern | Body |
 | ----------- | ------ | ------- | ---- |
 | `Get` | `GET` | `/api/v3/clusters/{cluster_ids.cluster_id}` |  |
+| `GetIdentifiersForAddress` | `GET` | `/api/v3/cluster-id/address/{address}` |  |
 | `List` | `GET` | `/api/v3/clusters` |  |
 
 ## <a name="lorawan-stack/api/configuration_services.proto">File `lorawan-stack/api/configuration_services.proto`</a>

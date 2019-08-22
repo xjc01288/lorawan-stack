@@ -137,6 +137,15 @@ func (dst *Cluster) SetFields(src *Cluster, paths ...string) error {
 			} else {
 				dst.ContactInfo = nil
 			}
+		case "addresses":
+			if len(subs) > 0 {
+				return fmt.Errorf("'addresses' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.Addresses = src.Addresses
+			} else {
+				dst.Addresses = nil
+			}
 		case "secret":
 			if len(subs) > 0 {
 				return fmt.Errorf("'secret' has no subfields, but %s were specified", subs)
@@ -251,6 +260,27 @@ func (dst *GetClusterRequest) SetFields(src *GetClusterRequest, paths ...string)
 			} else {
 				var zero types.FieldMask
 				dst.FieldMask = zero
+			}
+
+		default:
+			return fmt.Errorf("invalid field: '%s'", name)
+		}
+	}
+	return nil
+}
+
+func (dst *GetClusterIdentifiersForAddressRequest) SetFields(src *GetClusterIdentifiersForAddressRequest, paths ...string) error {
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		switch name {
+		case "address":
+			if len(subs) > 0 {
+				return fmt.Errorf("'address' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.Address = src.Address
+			} else {
+				var zero string
+				dst.Address = zero
 			}
 
 		default:

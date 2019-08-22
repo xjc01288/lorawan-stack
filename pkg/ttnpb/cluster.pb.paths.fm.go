@@ -16,6 +16,7 @@ var PeerInfoFieldPathsTopLevel = []string{
 	"tls",
 }
 var ClusterFieldPathsNested = []string{
+	"addresses",
 	"attributes",
 	"contact_info",
 	"created_at",
@@ -37,6 +38,7 @@ var ClusterFieldPathsNested = []string{
 }
 
 var ClusterFieldPathsTopLevel = []string{
+	"addresses",
 	"attributes",
 	"contact_info",
 	"created_at",
@@ -66,6 +68,13 @@ var GetClusterRequestFieldPathsNested = []string{
 var GetClusterRequestFieldPathsTopLevel = []string{
 	"cluster_ids",
 	"field_mask",
+}
+var GetClusterIdentifiersForAddressRequestFieldPathsNested = []string{
+	"address",
+}
+
+var GetClusterIdentifiersForAddressRequestFieldPathsTopLevel = []string{
+	"address",
 }
 var ListClustersRequestFieldPathsNested = []string{
 	"field_mask",

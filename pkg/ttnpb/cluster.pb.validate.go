@@ -230,6 +230,8 @@ func (m *Cluster) ValidateFields(paths ...string) error {
 
 			}
 
+		case "addresses":
+
 		case "secret":
 			// no validation rules for Secret
 		case "location":
@@ -531,6 +533,90 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetClusterRequestValidationError{}
+
+// ValidateFields checks the field values on
+// GetClusterIdentifiersForAddressRequest with the rules defined in the proto
+// definition for this message. If any rules are violated, an error is returned.
+func (m *GetClusterIdentifiersForAddressRequest) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = GetClusterIdentifiersForAddressRequestFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "address":
+			// no validation rules for Address
+		default:
+			return GetClusterIdentifiersForAddressRequestValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// GetClusterIdentifiersForAddressRequestValidationError is the validation
+// error returned by GetClusterIdentifiersForAddressRequest.ValidateFields if
+// the designated constraints aren't met.
+type GetClusterIdentifiersForAddressRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetClusterIdentifiersForAddressRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetClusterIdentifiersForAddressRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetClusterIdentifiersForAddressRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetClusterIdentifiersForAddressRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetClusterIdentifiersForAddressRequestValidationError) ErrorName() string {
+	return "GetClusterIdentifiersForAddressRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetClusterIdentifiersForAddressRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetClusterIdentifiersForAddressRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetClusterIdentifiersForAddressRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetClusterIdentifiersForAddressRequestValidationError{}
 
 // ValidateFields checks the field values on ListClustersRequest with the rules
 // defined in the proto definition for this message. If any rules are
