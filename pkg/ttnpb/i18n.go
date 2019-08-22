@@ -130,6 +130,8 @@ func init() {
 
 	defineEnum(RIGHT_CLIENT_ALL, "all OAuth client rights")
 
+	defineEnum(RIGHT_CLUSTER_ALL, "all cluster rights")
+
 	defineEnum(RIGHT_GATEWAY_INFO, "view gateway information")
 	defineEnum(RIGHT_GATEWAY_SETTINGS_BASIC, "edit basic gateway settings")
 	defineEnum(RIGHT_GATEWAY_SETTINGS_API_KEYS, "view and edit gateway API keys")

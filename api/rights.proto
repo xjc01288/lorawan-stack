@@ -50,6 +50,10 @@ enum Right {
   RIGHT_USER_CLIENTS_LIST = 10;
   // The right to create an OAuth client under the account of the user.
   RIGHT_USER_CLIENTS_CREATE = 11;
+  // The right to list clusters the user is a collaborator of.
+  RIGHT_USER_CLUSTERS_LIST = 56;
+  // The right to create as cluster under the account of the user.
+  RIGHT_USER_CLUSTERS_CREATE = 57;
   // The right to list organizations the user is a member of.
   RIGHT_USER_ORGANIZATIONS_LIST = 12;
   // The right to create an organization under the user account.
@@ -93,6 +97,9 @@ enum Right {
 
   // The pseudo-right for all (current and future) OAuth client rights.
   RIGHT_CLIENT_ALL = 29;
+
+  // The pseudo-right for all (current and future) cluster rights.
+  RIGHT_CLUSTER_ALL = 58;
 
   // The right to view gateway information.
   RIGHT_GATEWAY_INFO = 30;
@@ -142,6 +149,10 @@ enum Right {
   RIGHT_ORGANIZATION_CLIENTS_LIST = 50;
   // The right to create an OAuth client under the organization.
   RIGHT_ORGANIZATION_CLIENTS_CREATE = 51;
+  // The right to list the clusters the organization is a collaborator of.
+  RIGHT_ORGANIZATION_CLUSTERS_LIST = 59;
+  // The right to create a cluster under the organization.
+  RIGHT_ORGANIZATION_CLUSTERS_CREATE = 60;
   // The right to add the organization as a collaborator on an existing entity.
   RIGHT_ORGANIZATION_ADD_AS_COLLABORATOR = 52;
   // The pseudo-right for all (current and future) organization rights.
@@ -153,6 +164,8 @@ enum Right {
 
   // The pseudo-right for all (current and future) possible rights.
   RIGHT_ALL = 55;
+
+  // next: 57;
 }
 
 message Rights {

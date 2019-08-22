@@ -5412,6 +5412,8 @@ Right is the enum that defines all the different rights to do something in the n
 | `RIGHT_USER_GATEWAYS_CREATE` | 9 | The right to create a gateway under the account of the user. |
 | `RIGHT_USER_CLIENTS_LIST` | 10 | The right to list OAuth clients the user is a collaborator of. |
 | `RIGHT_USER_CLIENTS_CREATE` | 11 | The right to create an OAuth client under the account of the user. |
+| `RIGHT_USER_CLUSTERS_LIST` | 56 | The right to list clusters the user is a collaborator of. |
+| `RIGHT_USER_CLUSTERS_CREATE` | 57 | The right to create as cluster under the account of the user. |
 | `RIGHT_USER_ORGANIZATIONS_LIST` | 12 | The right to list organizations the user is a member of. |
 | `RIGHT_USER_ORGANIZATIONS_CREATE` | 13 | The right to create an organization under the user account. |
 | `RIGHT_USER_ALL` | 14 | The pseudo-right for all (current and future) user rights. |
@@ -5430,6 +5432,7 @@ Right is the enum that defines all the different rights to do something in the n
 | `RIGHT_APPLICATION_LINK` | 27 | The right to link as Application to a Network Server for traffic exchange, i.e. read uplink and write downlink (API keys only). This right is typically only given to an Application Server. This right implies RIGHT_APPLICATION_INFO. |
 | `RIGHT_APPLICATION_ALL` | 28 | The pseudo-right for all (current and future) application rights. |
 | `RIGHT_CLIENT_ALL` | 29 | The pseudo-right for all (current and future) OAuth client rights. |
+| `RIGHT_CLUSTER_ALL` | 58 | The pseudo-right for all (current and future) cluster rights. |
 | `RIGHT_GATEWAY_INFO` | 30 | The right to view gateway information. |
 | `RIGHT_GATEWAY_SETTINGS_BASIC` | 31 | The right to edit basic gateway settings. |
 | `RIGHT_GATEWAY_SETTINGS_API_KEYS` | 32 | The right to view and edit gateway API keys. |
@@ -5452,6 +5455,8 @@ Right is the enum that defines all the different rights to do something in the n
 | `RIGHT_ORGANIZATION_GATEWAYS_CREATE` | 49 | The right to create a gateway under the organization. |
 | `RIGHT_ORGANIZATION_CLIENTS_LIST` | 50 | The right to list the OAuth clients the organization is a collaborator of. |
 | `RIGHT_ORGANIZATION_CLIENTS_CREATE` | 51 | The right to create an OAuth client under the organization. |
+| `RIGHT_ORGANIZATION_CLUSTERS_LIST` | 59 | The right to list the clusters the organization is a collaborator of. |
+| `RIGHT_ORGANIZATION_CLUSTERS_CREATE` | 60 | The right to create a cluster under the organization. |
 | `RIGHT_ORGANIZATION_ADD_AS_COLLABORATOR` | 52 | The right to add the organization as a collaborator on an existing entity. |
 | `RIGHT_ORGANIZATION_ALL` | 53 | The pseudo-right for all (current and future) organization rights. |
 | `RIGHT_SEND_INVITES` | 54 | The right to send invites to new users. Note that this is not prefixed with "USER_"; it is not a right on the user entity. |

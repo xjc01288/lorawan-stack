@@ -557,6 +557,15 @@
       "file": "i18n.go"
     }
   },
+  "enum:RIGHT_CLUSTER_ALL": {
+    "translations": {
+      "en": "all cluster rights"
+    },
+    "description": {
+      "package": "pkg/ttnpb",
+      "file": "i18n.go"
+    }
+  },
   "enum:RIGHT_GATEWAY_ALL": {
     "translations": {
       "en": "all gateway rights"

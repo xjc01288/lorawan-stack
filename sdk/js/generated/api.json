@@ -21746,6 +21746,16 @@
               "description": "The right to create an OAuth client under the account of the user."
             },
             {
+              "name": "RIGHT_USER_CLUSTERS_LIST",
+              "number": "56",
+              "description": "The right to list clusters the user is a collaborator of."
+            },
+            {
+              "name": "RIGHT_USER_CLUSTERS_CREATE",
+              "number": "57",
+              "description": "The right to create as cluster under the account of the user."
+            },
+            {
               "name": "RIGHT_USER_ORGANIZATIONS_LIST",
               "number": "12",
               "description": "The right to list organizations the user is a member of."
@@ -21834,6 +21844,11 @@
               "name": "RIGHT_CLIENT_ALL",
               "number": "29",
               "description": "The pseudo-right for all (current and future) OAuth client rights."
+            },
+            {
+              "name": "RIGHT_CLUSTER_ALL",
+              "number": "58",
+              "description": "The pseudo-right for all (current and future) cluster rights."
             },
             {
               "name": "RIGHT_GATEWAY_INFO",
@@ -21944,6 +21959,16 @@
               "name": "RIGHT_ORGANIZATION_CLIENTS_CREATE",
               "number": "51",
               "description": "The right to create an OAuth client under the organization."
+            },
+            {
+              "name": "RIGHT_ORGANIZATION_CLUSTERS_LIST",
+              "number": "59",
+              "description": "The right to list the clusters the organization is a collaborator of."
+            },
+            {
+              "name": "RIGHT_ORGANIZATION_CLUSTERS_CREATE",
+              "number": "60",
+              "description": "The right to create a cluster under the organization."
             },
             {
               "name": "RIGHT_ORGANIZATION_ADD_AS_COLLABORATOR",
