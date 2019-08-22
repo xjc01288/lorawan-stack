@@ -261,7 +261,7 @@ func (p *Populator) populateClients(ctx context.Context, db *gorm.DB) (err error
 func (p *Populator) populateClusters(ctx context.Context, db *gorm.DB) (err error) {
 	for i, cluster := range p.Clusters {
 		secret := cluster.Secret
-		hashedSecret, _ := auth.Hash(cluster.Secret)
+		hashedSecret, _ := auth.Hash(ctx, cluster.Secret)
 		cluster.Secret = string(hashedSecret)
 		p.Clusters[i], err = GetClusterStore(db).CreateCluster(ctx, cluster)
 		if err != nil {
