@@ -1,7 +1,8 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-
+labels: bug
+milestone: Next Up
 ---
 <!--
 Thanks for submitting a bug report. Please fill the template below,

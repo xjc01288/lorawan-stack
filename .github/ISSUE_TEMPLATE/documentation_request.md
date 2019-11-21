@@ -1,7 +1,8 @@
 ---
 name: Documentation request
 about: Missing documentation or suggest an improvement
-
+labels: doc
+milestone: Backlog
 ---
 
 <!--

@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-
+milestone: Backlog
 ---
 <!--
 Thanks for submitting a feature request. Please fill the template below,
