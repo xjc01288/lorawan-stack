@@ -362,7 +362,7 @@ func (gs *GatewayServer) Connect(ctx context.Context, frontend io.Frontend, ids 
 		GatewayIdentifiers: ids,
 		FieldMask: pbtypes.FieldMask{
 			Paths: []string{
-				"frequency_plan_id",
+				"frequency_plan_ids",
 				"schedule_downlink_late",
 				"enforce_duty_cycle",
 				"downlink_path_constraint",
@@ -381,18 +381,24 @@ func (gs *GatewayServer) Connect(ctx context.Context, frontend io.Frontend, ids 
 		gtw = &ttnpb.Gateway{
 			GatewayIdentifiers:     ids,
 			FrequencyPlanID:        fpID,
+			FrequencyPlanIDs:       []string{fpID},
 			EnforceDutyCycle:       true,
 			DownlinkPathConstraint: ttnpb.DOWNLINK_PATH_CONSTRAINT_NONE,
 		}
 	} else if err != nil {
 		return nil, err
 	}
-	fp, err := gs.FrequencyPlans.GetByID(gtw.FrequencyPlanID)
-	if err != nil {
-		return nil, err
+
+	var fps []*frequencyplans.FrequencyPlan
+	for _, fpID := range gtw.FrequencyPlanIDs {
+		fp, err := gs.FrequencyPlans.GetByID(fpID)
+		if err != nil {
+			return nil, err
+		}
+		fps = append(fps, fp)
 	}
 
-	conn, err := io.NewConnection(ctx, frontend, gtw, fp, gtw.EnforceDutyCycle)
+	conn, err := io.NewConnection(ctx, frontend, gtw, fps, gtw.EnforceDutyCycle)
 	if err != nil {
 		return nil, err
 	}
@@ -596,8 +602,8 @@ func (gs *GatewayServer) handleUpstream(conn *io.Connection) {
 	}
 }
 
-// GetFrequencyPlan gets the specified frequency plan by the gateway identifiers.
-func (gs *GatewayServer) GetFrequencyPlan(ctx context.Context, ids ttnpb.GatewayIdentifiers) (*frequencyplans.FrequencyPlan, error) {
+// GetFrequencyPlan gets the frequency plans by the gateway identifiers.
+func (gs *GatewayServer) GetFrequencyPlans(ctx context.Context, ids ttnpb.GatewayIdentifiers) ([]*frequencyplans.FrequencyPlan, error) {
 	var err error
 	var callOpt grpc.CallOption
 	callOpt, err = rpcmetadata.WithForwardedAuth(ctx, gs.AllowInsecureForCredentials())
@@ -612,21 +618,29 @@ func (gs *GatewayServer) GetFrequencyPlan(ctx context.Context, ids ttnpb.Gateway
 	}
 	gtw, err := registry.Get(ctx, &ttnpb.GetGatewayRequest{
 		GatewayIdentifiers: ids,
-		FieldMask:          pbtypes.FieldMask{Paths: []string{"frequency_plan_id"}},
+		FieldMask:          pbtypes.FieldMask{Paths: []string{"frequency_plan_ids"}},
 	}, callOpt)
-	var fpID string
+	var fpIDs []string
 	if err == nil {
-		fpID = gtw.FrequencyPlanID
+		fpIDs = gtw.FrequencyPlanIDs
 	} else if errors.IsNotFound(err) {
-		var ok bool
-		fpID, ok = frequencyplans.FallbackIDFromContext(ctx)
+		fpID, ok := frequencyplans.FallbackIDFromContext(ctx)
 		if !ok {
 			return nil, err
 		}
+		fpIDs = append(fpIDs, fpID)
 	} else {
 		return nil, err
 	}
-	return gs.FrequencyPlans.GetByID(fpID)
+	var fps []*frequencyplans.FrequencyPlan
+	for _, fpID := range fpIDs {
+		fp, err := gs.FrequencyPlans.GetByID(fpID)
+		if err != nil {
+			return nil, err
+		}
+		fps = append(fps, fp)
+	}
+	return fps, nil
 }
 
 // ClaimDownlink claims the downlink path for the given gateway.
