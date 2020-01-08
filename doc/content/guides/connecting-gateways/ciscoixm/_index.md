@@ -333,6 +333,4 @@ To enable it immediately, execute
 $  /etc/init.d/S60pkt_forwarder start
 ```
 
-Now exit the container: enter **ctrl A** then **q** (the characters won't be displayed on the screen).
-
-Finally save `copy running-config startup-config` and reboot the gateway ```reload```.
+You can now reboot the gateway.
