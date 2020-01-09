@@ -2492,6 +2492,7 @@ Gateway is the message that defines a gateway on the network.
 | `schedule_downlink_late` | [`bool`](#bool) |  | Enable server-side buffering of downlink messages. This is recommended for gateways using the Semtech UDP Packet Forwarder v2.x or older, as it does not feature a just-in-time queue. If enabled, the Gateway Server schedules the downlink message late to the gateway so that it does not overwrite previously scheduled downlink messages that have not been transmitted yet. |
 | `enforce_duty_cycle` | [`bool`](#bool) |  | Enforcing gateway duty cycle is recommended for all gateways to respect spectrum regulations. Disable enforcing the duty cycle only in controlled research and development environments. |
 | `downlink_path_constraint` | [`DownlinkPathConstraint`](#ttn.lorawan.v3.DownlinkPathConstraint) |  |  |
+| `concentrator_reference_v2` | [`bool`](#bool) |  | Specifies if this gateway uses the v2 concentrator reference design. |
 
 #### Field Rules
 

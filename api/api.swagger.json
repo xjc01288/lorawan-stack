@@ -9351,6 +9351,11 @@
         },
         "downlink_path_constraint": {
           "$ref": "#/definitions/v3DownlinkPathConstraint"
+        },
+        "concentrator_reference_v2": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "Specifies if this gateway uses the v2 concentrator reference design."
         }
       },
       "description": "Gateway is the message that defines a gateway on the network."

@@ -124,7 +124,10 @@ message Gateway {
   bool enforce_duty_cycle = 17;
   DownlinkPathConstraint downlink_path_constraint = 18 [(validate.rules).enum.defined_only = true];
 
-  // next: 20
+  // Specifies if this gateway uses the v2 concentrator reference design.
+  bool concentrator_reference_v2 = 20;
+
+  // next: 21
 }
 
 message Gateways {

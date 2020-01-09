@@ -762,6 +762,8 @@ func (m *Gateway) ValidateFields(paths ...string) error {
 				}
 			}
 
+		case "concentrator_reference_v2":
+			// no validation rules for ConcentratorReferenceV2
 		default:
 			return GatewayValidationError{
 				field:  name,

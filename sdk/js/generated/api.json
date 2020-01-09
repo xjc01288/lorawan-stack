@@ -9852,6 +9852,16 @@
                   }
                 ]
               }
+            },
+            {
+              "name": "concentrator_reference_v2",
+              "description": "Specifies if this gateway uses the v2 concentrator reference design.",
+              "label": "",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "defaultValue": ""
             }
           ]
         },

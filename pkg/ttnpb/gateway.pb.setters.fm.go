@@ -490,6 +490,16 @@ func (dst *Gateway) SetFields(src *Gateway, paths ...string) error {
 				var zero DownlinkPathConstraint
 				dst.DownlinkPathConstraint = zero
 			}
+		case "concentrator_reference_v2":
+			if len(subs) > 0 {
+				return fmt.Errorf("'concentrator_reference_v2' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.ConcentratorReferenceV2 = src.ConcentratorReferenceV2
+			} else {
+				var zero bool
+				dst.ConcentratorReferenceV2 = zero
+			}
 
 		default:
 			return fmt.Errorf("invalid field: '%s'", name)
