@@ -9,19 +9,20 @@ The Cisco LoRaWAN Gateway is a LoRaWAN gateway, whose technical specifications c
 ## Prerequisites
 
 1. User account on {{% tts %}} with rights to create Gateways.
-2. Cisco LoRaWAN gateway with latest firmware version `2.0.32`.
+2. Cisco LoRaWAN Gateway with latest firmware version `2.0.32`.
+3. A console cable from USB to RJ45.
 
 ## Registration
 
 Create a gateway by following the instructions for the [Console]({{< ref "/guides/getting-started/console#create-gateway" >}}) or the [CLI]({{< ref "/guides/getting-started/cli#create-gateway" >}}).  
-the **EUI** is derivated from the **MAC_ADDRESS** that can be found on the back panel of the gateway. To get the **EUI** from the **MAC_ADDRESS** insert FFFE after the first 6 characters to make it a 64bit EUI.
+The **EUI** is derived from the **MAC_ADDRESS** that can be found on the back panel of the gateway. To get the **EUI** from the **MAC_ADDRESS** insert FFFE after the first 6 characters to make it a 64bit EUI.
 
 If you followed the [Getting Started guide]({{< ref "/guides/getting-started" >}}) the **Gateway Server Address** is the same as what you use instead of `thethings.example.com`.
-## Configuration
 
-To access the Cisco console, **you’ll need a console cable from USB to RJ45**.  
-Plug the RJ45 end in the Console port of the gateway, and the USB port to your computer.  
-Then if you are using MacOS or Linux, connect to the Gateway by openning a terminal and a executing the following commands.  
+## Configuration
+  
+Plug the RJ45 end of the cable in the Console port of the gateway, and the USB port to your computer.  
+Then, if you are using MacOS or Linux, connect to the Gateway by opening a terminal and a executing the following commands.  
 Use PuTTy if you are using Windows.
 
 ```bash
@@ -35,11 +36,11 @@ Once you’ve found the once matching the Cisco console, connect using the follo
 ```bash
 $ screen <device> 115200 # exemple: screen /dev/tty.usbserial-AO001X6M 115200
 ```
-You are now in the gateway's shell, called **standalone mode**.
+You are now in the gateway's shell, called `standalone mode`.
 
 ### System setup
 
-First you need to enable the privileged mode
+First you need to enable the privileged mode.
 
 ```
 Gateway> enable
@@ -81,9 +82,9 @@ You can test your Internet configuration with the `ping` command, for example pi
 Gateway# ping ip 8.8.8.8
 ```
 
-To see more information about the gateway's IP and the network, you can use `show interfaces FastEthernet 0/1`, `show ip interfaces FastEthernet 0/1` or `show ip route`.
+> Note: To see more information about the gateway's IP and the network, you can use `show interfaces FastEthernet 0/1`, `show ip interfaces FastEthernet 0/1` or `show ip route`.
 
-#### Date and time
+#### Date and Time
 
 To configure your system's date and time, you can use **ntp**:
 
@@ -120,7 +121,7 @@ Gateway(config)# exit
 
 > Note: This command may return the message `packet-forwarder firmware is not installed`, this message can be ignored.
 
-#### Enable radio
+#### Enable Radio
 
 As a final step before setting up the packet forwarder software, we're going to **enable the radio**. You can see radio information with the `show radio` command:
 
@@ -148,7 +149,7 @@ Gateway(config)# exit
 ```
 > Note: The `show radio` command also shows you more information about the LoRa concentrator powering the gateway. For example, **LORA_SKU** indicates the base frequency of the concentrator.
 
-#### Enable authentication
+#### Enable Authentication
 
 To prevent unauthorized access to the gateway, you'll want to set up user authentication. The Cisco gateway has a **secret** system, that requires users to enter a secret to access privileged commands.
 
@@ -162,9 +163,9 @@ To enable this secret system, you can use the following commands:
 + `exit` to exit global configuration mode.
 + `copy running-config startup-config` to save the configuration.
 
-#### Verifications
+#### Verification
 
-Before we install the packet forwarder, let's run verifications to ensure that the gateway is ready.
+Before we install the packet forwarder, let's run verification to ensure that the gateway is ready.
 
 + Type `show radio` to verify that the **radio is enabled**. The result should indicate **radio status: on**.
 + Type `show inventory` to verify that the **FPGAStatus is Ready**.
@@ -179,7 +180,7 @@ Then save the configuration by executing
 Gateway# copy running-config startup-config
 ```
 
-### Packet forwarder configuration
+### Packet Forwarder Configuration
 
 > ⚠️ Keep in mind that the pre-installed packet forwarder is not supported by Cisco for production purposes.
 
@@ -193,18 +194,18 @@ You will be requested to enter the System Password. By default this is **admin**
 Create the directory to store the Packet Forwarder configuration:
 
 ```bash
-$  mkdir /etc/pktfwd
+bash-3.2# mkdir /etc/pktfwd
 ```
 Copy the packet forwarder to **/etc/pktfwd**:
 
 ```bash
-$  cp /tools/pkt_forwarder /etc/pktfwd/pkt_forwarder
+bash-3.2# cp /tools/pkt_forwarder /etc/pktfwd/pkt_forwarder
 ```
 
 Cisco provides a list of configuration templates. To list the available templates:
 
 ```bash
-$  ls -l /tools/templates
+bash-3.2# ls -l /tools/templates
   total 136
   -rwxr-xr-x    1 65534    65534        11323 Oct  8 13:30 config_loc_dual_antenna_8ch_full_diversity_EU868.json
   -rwxr-xr-x    1 65534    65534        11248 Oct  8 13:30 config_loc_dual_antenna_8ch_full_diversity_JP920.json
@@ -221,15 +222,15 @@ $  ls -l /tools/templates
 Copy the configuration template **config_loc_single_antenna_16ch_EU868.json** as **config.json** to **/etc/pktfwd** 
 
 ```bash
-$  cp /tools/templates/config_loc_single_antenna_16ch_EU868.json /etc/pktfwd/config.json
+bash-3.2# cp /tools/templates/config_loc_single_antenna_16ch_EU868.json /etc/pktfwd/config.json
 ```
 
-> Note: choose the US version if you are based in the US.
+> Note: choose the Choose the file applicable to your region.
 
 Edit the configuration using a text editor, such as **vi**:
 
 ```bash
-$  vi /etc/pktfwd/config.json
+bash-3.2# vi /etc/pktfwd/config.json
 ```
 
 >Note: Press the `i` key on your keyboard to start insert mode. Once finished editing, press `ESC` and enter `:wq` to write the file and quit.
@@ -246,22 +247,22 @@ Save the configuration.
 You can now test the packet forwarder by executing:
 
 ```bash
-$  /etc/pktfwd/pkt_forwarder -c /etc/pktfwd/config.json -g/dev/ttyS1
+bash-3.2# /etc/pktfwd/pkt_forwarder -c /etc/pktfwd/config.json -g/dev/ttyS1
 ```
 
 Your gateway will connect to {{% tts %}} after a couple of seconds.
 
 
-Now that we know the packet forwarder is running, let's make it run permanently, use the command
+Now that we know the packet forwarder is running, let's make it run automatically, use the command
 
 ```bash
-$ vi /etc/init.d/S60pkt_forwarder
+bash-3.2# vi /etc/init.d/S60pkt_forwarder
 ```
 >Note: Press the `i` key on your keyboard to start insert mode. Once finished editing, press `ESC` and enter `:wq` to write the file and quit.
 
-Then copy paste the **code bellow**.
+Then copy paste the **code below**.
 
-> Note: If you are using another network than `tti.eu1.cloud.thethings.industries` replace it with the name of your network after `nslookup`.
+> Note: Replace `things.example.com` with the name of your network after `nslookup`.
 
 ```bash
 #!/bin/sh
@@ -273,7 +274,7 @@ CONFIG=$SCRIPT_DIR/config.json
 PIDFILE=/var/run/pkt_forwarder.pid
 LOGFILE=/var/log/pkt_forwarder.log
 
-export NETWORKIP=$(nslookup tti.eu1.cloud.thethings.industries | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | tail -1)
+export NETWORKIP=$(nslookup things.example.com | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | tail -1)
 sed -i 's/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/'$NETWORKIP'/g' "$CONFIG"
 
 start() {
@@ -324,13 +325,24 @@ exit $?
 Then make the init script executable:
 
 ```bash
-$  chmod +x /etc/init.d/S60pkt_forwarder
+bash-3.2# chmod +x /etc/init.d/S60pkt_forwarder
 ```
 
 To enable it immediately, execute 
 
 ```bash
-$  /etc/init.d/S60pkt_forwarder start
+bash-3.2# /etc/init.d/S60pkt_forwarder start
 ```
 
-You can now reboot the gateway.
+You can now reboot the gateway, it can take up to 4 minutes.
+
+## Troubleshooting
+
+If the gateway does not connect to the {{% tts %}} after a few minutes, you can check the **log file** to see if the packet forwarder started properly.
+
+```bash
+bash-3.2# tail -100 var/log/pkt_forwarder.log
+```
+> Note: GPS warnings may appear, this means the packet forwarder started.
+
+If the radio failed to start, disconnect and reconnect the power supply to power-cycle the gateway.
