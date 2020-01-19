@@ -46,7 +46,11 @@ const getCollaboratorsLogic = createRequestLogic({
   async process({ getState, action }) {
     const { parentType, parentId, params } = action.payload
     const res = await api[parentType].collaborators.list(parentId, params)
-    return { entities: res.collaborators, totalCount: res.totalCount }
+    return {
+      entities: res.collaborators,
+      totalCount: res.totalCount,
+      currentUser: getState().user.user.ids.user_id,
+    }
   },
 })
 

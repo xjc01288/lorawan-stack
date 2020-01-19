@@ -25,6 +25,7 @@ import style from './collaborators-table.styl'
 
 const m = defineMessages({
   id: 'User / Organization ID',
+  currentUser: '(This is you)',
 })
 
 const headers = [
@@ -46,6 +47,14 @@ const headers = [
           <Message content={isUser ? sharedMessages.user : sharedMessages.organization} />
         </span>
       )
+    },
+  },
+  {
+    name: 'isCurrentUser',
+    render(isCurrentUser) {
+      if (isCurrentUser) {
+        return <Message content={m.currentUser} />
+      }
     },
   },
   {

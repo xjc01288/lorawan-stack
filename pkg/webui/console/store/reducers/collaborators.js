@@ -52,6 +52,7 @@ const collaborators = function(state = defaultState, { type, payload }) {
           ...payload.entities.reduce(
             (acc, col) => {
               const id = getCollaboratorId(col)
+              col.isCurrentUser = id === payload.currentUser
               acc[id] = collaborator(state.entities[id], col)
               return acc
             },

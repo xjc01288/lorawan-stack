@@ -165,7 +165,7 @@ Tabular.propTypes = {
   /** A list of head entries to display within the table head */
   headers: PropTypes.arrayOf(
     PropTypes.shape({
-      displayName: PropTypes.message.isRequired,
+      displayName: PropTypes.message,
       getValue: PropTypes.func,
       name: PropTypes.string,
       render: PropTypes.func,
