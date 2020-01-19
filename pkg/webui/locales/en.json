@@ -173,6 +173,7 @@
   "console.containers.application-payload-formatters.downlink.infoText": "These payload formatters are executed on downlink messages to all devices in this application. If payload formatters are also set for a specific device, only those will be executed for downlinks to that device.",
   "console.containers.application-payload-formatters.uplink.infoText": "These payload formatters are executed on uplink messages from all devices in this application. If payload formatters are also set for a specific device, only those will be executed for uplinks from that device.",
   "console.containers.collaborators-table.index.id": "User / Organization ID",
+  "console.containers.collaborators-table.index.currentUser": "(This is you)",
   "console.containers.dev-addr-input.dev-addr-input.generate": "Generate Device Address",
   "console.containers.dev-addr-input.index.devAddrFetchingFailure": "Could not generate device address",
   "console.containers.device-importer.index.proceed": "Proceed",

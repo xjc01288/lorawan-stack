@@ -173,6 +173,7 @@
   "console.containers.application-payload-formatters.downlink.infoText": "Xxxxx xxxxxxx xxxxxxxxxx xxx xxxxxxxx xx xxxxxxxx xxxxxxxx xx xxx xxxxxxx xx xxxx xxxxxxxxxxx. Xx xxxxxxx xxxxxxxxxx xxx xxxx xxx xxx x xxxxxxxx xxxxxx, xxxx xxxxx xxxx xx xxxxxxxx xxx xxxxxxxxx xx xxxx xxxxxx.",
   "console.containers.application-payload-formatters.uplink.infoText": "Xxxxx xxxxxxx xxxxxxxxxx xxx xxxxxxxx xx xxxxxx xxxxxxxx xxxx xxx xxxxxxx xx xxxx xxxxxxxxxxx. Xx xxxxxxx xxxxxxxxxx xxx xxxx xxx xxx x xxxxxxxx xxxxxx, xxxx xxxxx xxxx xx xxxxxxxx xxx xxxxxxx xxxx xxxx xxxxxx.",
   "console.containers.collaborators-table.index.id": "Xxxx / Xxxxxxxxxxxx XX",
+  "console.containers.collaborators-table.index.currentUser": "(Xxxx xx xxx)",
   "console.containers.dev-addr-input.dev-addr-input.generate": "Xxxxxxxx Xxxxxx Xxxxxxx",
   "console.containers.dev-addr-input.index.devAddrFetchingFailure": "Xxxxx xxx xxxxxxxx xxxxxx xxxxxxx",
   "console.containers.device-importer.index.proceed": "Xxxxxxx",
