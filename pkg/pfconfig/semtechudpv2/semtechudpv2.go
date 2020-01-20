@@ -1,0 +1,88 @@
+// Copyright © 2019 The Things Network Foundation, The Things Industries B.V.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// Package semtechudpv2 implements the JSON configuration for the Semtech UDP Packet Forwarder with Concentrator Design V2.
+package semtechudpv2
+
+import (
+	"go.thethings.network/lorawan-stack/pkg/frequencyplans"
+	"go.thethings.network/lorawan-stack/pkg/pfconfig/shared"
+	"go.thethings.network/lorawan-stack/pkg/ttnpb"
+)
+
+// Config represents the full configuration for Semtech's UDP Packet Forwarder with Concentrator Design V2.
+type Config struct {
+	Board       Board
+	SX1301Conf  []shared.SX1301Config `json:"SX1301_conf"`
+	GatewayConf GatewayConf           `json:"gateway_conf"`
+}
+
+// Board contains the configuration for the gateway's board.
+type Board struct {
+	BoardType                         string `json:"board_type"`
+	BoardRXFreq                       uint32 `json:"board_rx_freq"`
+	BoardRXBW                         uint32 `json:"board_rx_bw"`
+	FullDuplex                        bool   `json:"full_duplex"`
+	FSKSync                           string `json:"FSK_sync"`
+	LoRaMACPublic                     bool   `json:"loramac_public"`
+	ClockSource                       uint32 `json:"clksrc"`
+	NBDSP                             uint32 `json:"nb_dsp"`
+	DSPStatInterval                   uint32 `json:"dsp_stat_interval"`
+	AESKey                            string `json:"aes_key"`
+	CalibrationTemperatureCelsiusRoom uint32 `json:"calibration_temperature_celsius_room"`
+	CalibrationTemperatureCodeAD9361  uint32 `json:"calibration_temperature_code_ad9361"`
+	FTSVersion                        uint32 `json:"fts_version"`
+	FTSMatchCRCError                  bool   `json:"fts_match_crc_error"`
+}
+
+// GatewayConf contains the configuration for the gateway's server connection.
+type GatewayConf struct {
+	GatewayID      string        `json:"gateway_ID,omitempty"`
+	ServerAddress  string        `json:"server_address"`
+	ServerPortUp   uint32        `json:"serv_port_up"`
+	ServerPortDown uint32        `json:"serv_port_down"`
+	Enabled        bool          `json:"serv_enabled,omitempty"` // only used inside servers
+	Servers        []GatewayConf `json:"servers,omitempty"`
+}
+
+// Build builds a packet forwarder configuration for the given gateway, using the given frequency plan store.
+func Build(gateway *ttnpb.Gateway, store *frequencyplans.Store) (*Config, error) {
+	var c Config
+
+	host, port, err := shared.ParseGatewayServerAddress(gateway.GatewayServerAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	if gateway.EUI != nil {
+		c.GatewayConf.GatewayID = gateway.EUI.String()
+	}
+	c.GatewayConf.ServerAddress, c.GatewayConf.ServerPortUp, c.GatewayConf.ServerPortDown = host, uint32(port), uint32(port)
+	server := c.GatewayConf
+	server.Enabled = true
+	c.GatewayConf.Servers = append(c.GatewayConf.Servers, server)
+
+	frequencyPlan, err := store.GetByID(gateway.FrequencyPlanID)
+	if err != nil {
+		return nil, err
+	}
+	sx1301Config, err := shared.BuildSX1301Config(frequencyPlan)
+	if err != nil {
+		return nil, err
+	}
+
+	c.SX1301Conf = *sx1301Config
+
+	return &c, nil
+}
