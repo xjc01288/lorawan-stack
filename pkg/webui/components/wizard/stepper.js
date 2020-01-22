@@ -12,11 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import Wizard from './wizard'
-import Step from './step'
-import Stepper from './stepper'
+import React from 'react'
 
-Wizard.Step = Step
-Wizard.Stepper = Stepper
+import PropTypes from '../../lib/prop-types'
 
-export default Wizard
+import Stepper from '../stepper'
+
+import WizardContext from './context'
+
+const WizardStepper = props => {
+  const { step } = React.useContext(WizardContext)
+  const { children, ...rest } = props
+
+  return (
+    <Stepper {...rest} currentStep={step}>
+      {children}
+    </Stepper>
+  )
+}
+
+WizardStepper.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
+}
+
+WizardStepper.defaultProps = {
+  children: [],
+}
+
+WizardStepper.Step = Stepper.Step
+WizardStepper.displayName = 'Wizard.Stepper'
+
+export default WizardStepper
