@@ -14,26 +14,36 @@
 
 import { createLogic } from 'redux-logic'
 
-import api from '../../api'
-import * as user from '../actions/user'
+import api from '../../../api'
+import * as init from '../../actions/init'
+import * as user from '../../actions/user'
 
-const userLogic = createLogic({
-  type: user.LOGOUT,
+const accountInitLogic = createLogic({
+  type: init.INITIALIZE,
   async process({ getState, action }, dispatch, done) {
+    dispatch(user.getUserMe())
+
     try {
       try {
-        await api.oauth.me()
+        const result = await api.account.me()
+
+        dispatch(user.getUserMeSuccess(result.data.user))
       } catch (error) {
-        dispatch(user.getUserMeFailure())
+        const userError = error.data ? error.data : error
+        dispatch(user.getUserMeFailure(userError))
       }
-      await api.oauth.logout()
-      dispatch(user.logoutSuccess())
+
+      dispatch(init.initializeSuccess())
+
+      // eslint-disable-next-line no-console
+      console.log('Account App initialization successful!')
     } catch (error) {
-      dispatch(user.logoutFailure(error))
+      const initError = error.data ? error.data : error
+      dispatch(init.initializeFailure(initError))
     }
 
     done()
   },
 })
 
-export default userLogic
+export default accountInitLogic

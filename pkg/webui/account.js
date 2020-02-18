@@ -23,7 +23,7 @@ import { selectApplicationRootPath } from './lib/selectors/env'
 import { EnvProvider } from './lib/components/env'
 import Init from './lib/components/init'
 
-import createStore from './oauth/store'
+import createStore from './account/store'
 
 const appRoot = selectApplicationRootPath()
 const history = createBrowserHistory({ basename: `${appRoot}/` })
@@ -32,7 +32,7 @@ const store = createStore(history)
 const rootElement = document.getElementById('app')
 
 const render = () => {
-  const App = require('./oauth/views/app').default
+  const App = require('./account/views/app').default
 
   DOM.render(
     <EnvProvider env={env}>
@@ -49,7 +49,7 @@ const render = () => {
 }
 
 if (module.hot) {
-  module.hot.accept('./oauth/views/app', () => {
+  module.hot.accept('./account/views/app', () => {
     setTimeout(render)
   })
 }

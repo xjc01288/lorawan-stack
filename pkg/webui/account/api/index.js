@@ -41,7 +41,7 @@ export default {
       return axios.patch(`${isBaseUrl}/contact_info/validation`, validationData)
     },
   },
-  oauth: {
+  account: {
     login(credentials) {
       return instance.post(`${appRoot}/api/auth/login`, credentials)
     },

@@ -27,7 +27,7 @@ import sharedMessages from '../../../lib/shared-messages'
   user: state.user.user,
 }))
 @bind
-export default class OAuth extends React.PureComponent {
+export default class Account extends React.PureComponent {
   async handleLogout() {
     const { dispatch } = this.props
 

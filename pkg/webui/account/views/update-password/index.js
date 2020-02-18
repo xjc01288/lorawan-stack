@@ -113,7 +113,7 @@ export default class UpdatePassword extends React.PureComponent {
     try {
       if (Boolean(user)) {
         try {
-          await api.oauth.me()
+          await api.account.me()
         } catch (error) {
           handleSessionRevoked()
           return

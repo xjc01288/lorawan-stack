@@ -17,7 +17,7 @@ import api from '../../../api'
 
 import { selectNsFrequencyPlans, selectGsFrequencyPlans } from '../../selectors/configuration'
 
-import createRequestLogic from './lib'
+import createRequestLogic from '../lib/create-request-logic'
 
 const getNsFrequencyPlansLogic = createRequestLogic({
   type: configuration.GET_NS_FREQUENCY_PLANS,

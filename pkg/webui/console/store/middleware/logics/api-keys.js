@@ -15,7 +15,7 @@
 import * as apiKeys from '../../actions/api-keys'
 
 import api from '../../../api'
-import createRequestLogic from './lib'
+import createRequestLogic from '../lib/create-request-logic'
 
 const validParentTypes = ['application', 'gateway', 'organization']
 

@@ -118,7 +118,7 @@ export default {
     publicPath: `${ASSETS_ROOT}/`,
     proxy: [
       {
-        context: ['/console', '/oauth', '/api'],
+        context: ['/console', '/account', '/api'],
         target: 'http://localhost:1885',
         changeOrigin: true,
       },
@@ -127,7 +127,7 @@ export default {
   },
   entry: {
     console: ['./config/root.js', './pkg/webui/console.js'],
-    oauth: ['./config/root.js', './pkg/webui/oauth.js'],
+    account: ['./config/root.js', './pkg/webui/account.js'],
   },
   output: {
     filename: production ? '[name].[chunkhash].js' : '[name].js',

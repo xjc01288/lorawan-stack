@@ -15,7 +15,7 @@
 import * as users from '../../actions/users'
 
 import api from '../../../api'
-import createRequestLogic from './lib'
+import createRequestLogic from '../lib/create-request-logic'
 
 const getUserLogic = createRequestLogic({
   type: users.GET_USER,

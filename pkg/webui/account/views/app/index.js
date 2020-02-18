@@ -35,7 +35,7 @@ import Validate from '../validate'
 const GenericNotFound = () => <FullViewError error={{ statusCode: 404 }} />
 
 @withEnv
-class OAuthApp extends React.PureComponent {
+class AccountApp extends React.PureComponent {
   render() {
     const {
       env: { siteTitle, pageData, siteName },
@@ -76,6 +76,6 @@ class OAuthApp extends React.PureComponent {
   }
 }
 
-const ExportedApp = dev ? hot(OAuthApp) : OAuthApp
+const ExportedApp = dev ? hot(AccountApp) : AccountApp
 
 export default ExportedApp

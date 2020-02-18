@@ -15,7 +15,7 @@
 import * as pubsubs from '../../actions/pubsubs'
 
 import api from '../../../api'
-import createRequestLogic from './lib'
+import createRequestLogic from '../lib/create-request-logic'
 
 const getPubsubLogic = createRequestLogic({
   type: pubsubs.GET_PUBSUB,

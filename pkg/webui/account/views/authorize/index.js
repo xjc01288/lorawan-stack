@@ -51,7 +51,7 @@ const m = defineMessages({
 export default class Authorize extends PureComponent {
   async handleLogout() {
     const { redirectToLogin } = this.props
-    await api.oauth.logout()
+    await api.account.logout()
     redirectToLogin()
   }
 

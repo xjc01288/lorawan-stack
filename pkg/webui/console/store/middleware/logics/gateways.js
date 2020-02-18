@@ -20,8 +20,8 @@ import * as gateways from '../../actions/gateways'
 import { selectGsConfig } from '../../../../lib/selectors/env'
 import { selectGatewayById, selectGatewayStatisticsIsFetching } from '../../selectors/gateways'
 import { getGatewayId } from '../../../../lib/selectors/id'
+import createRequestLogic from '../lib/create-request-logic'
 import createEventsConnectLogics from './events'
-import createRequestLogic from './lib'
 
 const getGatewayLogic = createRequestLogic({
   type: gateways.GET_GTW,

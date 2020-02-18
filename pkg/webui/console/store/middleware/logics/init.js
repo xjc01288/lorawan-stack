@@ -17,7 +17,7 @@ import { defineMessages } from 'react-intl'
 import * as user from '../../actions/user'
 import * as init from '../../actions/init'
 import api from '../../../api'
-import createRequestLogic from './lib'
+import createRequestLogic from '../lib/create-request-logic'
 
 const m = defineMessages({
   errTooFewRights: 'Your account does not possess sufficient rights to use the console.',

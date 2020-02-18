@@ -15,7 +15,7 @@
 import * as collaborators from '../../actions/collaborators'
 
 import api from '../../../api'
-import createRequestLogic from './lib'
+import createRequestLogic from '../lib/create-request-logic'
 
 const validParentTypes = ['application', 'gateway', 'organization']
 

@@ -19,7 +19,7 @@ import * as pubsubFormats from '../../actions/pubsub-formats'
 
 import api from '../../../api'
 import { isNotFoundError } from '../../../../lib/errors/utils'
-import createRequestLogic from './lib'
+import createRequestLogic from '../lib/create-request-logic'
 import createEventsConnectLogics from './events'
 
 const getApplicationLogic = createRequestLogic({

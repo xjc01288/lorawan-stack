@@ -16,7 +16,7 @@ import * as user from '../../actions/user'
 import api from '../../../api'
 import * as accessToken from '../../../lib/access-token'
 import { isUnauthenticatedError } from '../../../../lib/errors/utils'
-import createRequestLogic from './lib'
+import createRequestLogic from '../lib/create-request-logic'
 
 export default [
   createRequestLogic({

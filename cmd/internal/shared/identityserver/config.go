@@ -34,9 +34,9 @@ var DefaultIdentityServerConfig = identityserver.Config{
 				Language:      "en",
 				CanonicalURL:  shared.DefaultOAuthPublicURL,
 				AssetsBaseURL: shared.DefaultAssetsBaseURL,
-				IconPrefix:    "oauth-",
-				CSSFiles:      []string{"oauth.css"},
-				JSFiles:       []string{"oauth.js"},
+				IconPrefix:    "account-",
+				CSSFiles:      []string{"account.css"},
+				JSFiles:       []string{"account.js"},
 			},
 			FrontendConfig: oauth.FrontendConfig{
 				StackConfig: oauth.StackConfig{

@@ -62,7 +62,7 @@ const validationSchema = Yup.object().shape({
   },
 )
 @bind
-export default class OAuth extends React.PureComponent {
+export default class Account extends React.PureComponent {
   static propTypes = {
     location: PropTypes.location.isRequired,
     replace: PropTypes.func.isRequired,
@@ -78,7 +78,7 @@ export default class OAuth extends React.PureComponent {
 
   async handleSubmit(values, { setSubmitting, setErrors }) {
     try {
-      await api.oauth.login(values)
+      await api.account.login(values)
 
       window.location = url(this.props.location)
     } catch (error) {

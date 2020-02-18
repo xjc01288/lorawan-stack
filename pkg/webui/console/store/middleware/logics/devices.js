@@ -15,8 +15,8 @@
 import api from '../../../api'
 import * as devices from '../../actions/devices'
 import * as deviceTemplateFormats from '../../actions/device-template-formats'
+import createRequestLogic from '../lib/create-request-logic'
 import createEventsConnectLogics from './events'
-import createRequestLogic from './lib'
 
 const getDeviceLogic = createRequestLogic({
   type: devices.GET_DEV,

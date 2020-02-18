@@ -15,7 +15,7 @@
 import api from '../../../api'
 import * as organizations from '../../actions/organizations'
 import { selectUserId } from '../../selectors/user'
-import createRequestLogic from './lib'
+import createRequestLogic from '../lib/create-request-logic'
 import createEventsConnectLogics from './events'
 
 const getOrganizationLogic = createRequestLogic({

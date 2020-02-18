@@ -19,7 +19,7 @@ import { routerMiddleware } from 'connected-react-router'
 import dev from '../../lib/dev'
 
 import createRootReducer from './reducers'
-import logic from './middleware'
+import logic from './middleware/logics'
 
 const composeEnhancers = (dev && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 

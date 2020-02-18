@@ -15,7 +15,7 @@
 import * as webhooks from '../../actions/webhooks'
 
 import api from '../../../api'
-import createRequestLogic from './lib'
+import createRequestLogic from '../lib/create-request-logic'
 
 const getWebhookLogic = createRequestLogic({
   type: webhooks.GET_WEBHOOK,
