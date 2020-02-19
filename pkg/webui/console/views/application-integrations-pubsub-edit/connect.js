@@ -24,7 +24,7 @@ import {
 } from '../../store/selectors/pubsubs'
 import { selectSelectedApplicationId } from '../../store/selectors/applications'
 import { getPubsub, updatePubsub } from '../../store/actions/pubsubs'
-import { attachPromise } from '../../store/actions/lib'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 
 const pubsubEntitySelector = [
   'base_topic',

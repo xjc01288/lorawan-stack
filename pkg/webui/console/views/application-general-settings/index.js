@@ -42,7 +42,7 @@ import {
   selectSelectedApplicationId,
 } from '../../store/selectors/applications'
 import { updateApplication, deleteApplication } from '../../store/actions/applications'
-import { attachPromise } from '../../store/actions/lib'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 import PropTypes from '../../../lib/prop-types'
 
 const m = defineMessages({

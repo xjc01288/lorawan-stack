@@ -24,7 +24,7 @@ import {
 } from '../../store/selectors/webhooks'
 import { selectSelectedApplicationId } from '../../store/selectors/applications'
 import { getWebhook, updateWebhook } from '../../store/actions/webhooks'
-import { attachPromise } from '../../store/actions/lib'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 
 const webhookEntitySelector = [
   'base_url',

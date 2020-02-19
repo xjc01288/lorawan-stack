@@ -35,7 +35,7 @@ import Require from '../../lib/components/require'
 import diff from '../../../lib/diff'
 
 import { updateGateway, deleteGateway } from '../../store/actions/gateways'
-import { attachPromise } from '../../store/actions/lib'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 import { selectSelectedGateway, selectSelectedGatewayId } from '../../store/selectors/gateways'
 import { mayEditBasicGatewayInformation, mayDeleteGateway } from '../../lib/feature-checks'
 

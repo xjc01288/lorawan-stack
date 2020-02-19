@@ -29,7 +29,7 @@ import api from '../../api'
 import toast from '../../../components/toast'
 
 import { updateDevice } from '../../store/actions/devices'
-import { attachPromise } from '../../store/actions/lib'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 import { selectSelectedApplicationId } from '../../store/selectors/applications'
 import { selectSelectedDevice, selectSelectedDeviceId } from '../../store/selectors/devices'
 import {

@@ -26,7 +26,7 @@ import withFeatureRequirement from '../../lib/components/with-feature-requiremen
 import sharedMessages from '../../../lib/shared-messages'
 
 import { updateGateway } from '../../store/actions/gateways'
-import { attachPromise } from '../../store/actions/lib'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 import { selectSelectedGateway, selectSelectedGatewayId } from '../../store/selectors/gateways'
 import { mayViewOrEditGatewayLocation } from '../../lib/feature-checks'
 

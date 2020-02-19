@@ -16,7 +16,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { replace } from 'connected-react-router'
 
-import { attachPromise } from '../../store/actions/lib'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 import {
   selectSelectedOrganization,
   selectSelectedOrganizationId,

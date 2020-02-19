@@ -25,7 +25,7 @@ import {
   createClearEventsActionType,
 } from './events'
 
-import { createRequestActions } from './lib'
+import createRequestActions from '../../../lib/store/actions/create-request-actions'
 
 import { createPaginationByIdRequestActions, createPaginationBaseActionType } from './pagination'
 

@@ -31,7 +31,7 @@ import Breadcrumb from '../../../components/breadcrumbs/breadcrumb'
 import diff from '../../../lib/diff'
 import { selectSelectedUser } from '../../store/selectors/users'
 import { getUser, updateUser, deleteUser } from '../../store/actions/users'
-import { attachPromise } from '../../store/actions/lib'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 
 const m = defineMessages({
   updateSuccess: 'User updated successfully',

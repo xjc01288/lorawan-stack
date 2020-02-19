@@ -26,7 +26,7 @@ import PAYLOAD_FORMATTER_TYPES from '../../constants/formatter-types'
 import toast from '../../../components/toast'
 
 import { updateDevice } from '../../store/actions/devices'
-import { attachPromise } from '../../store/actions/lib'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 import { selectSelectedApplicationId } from '../../store/selectors/applications'
 import {
   selectSelectedDeviceId,

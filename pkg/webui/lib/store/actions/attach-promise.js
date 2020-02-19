@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import createRequestActions from '../../../lib/store/actions/create-request-actions'
-
-export const GET_USER_ME_BASE = 'GET_USER_ME'
-export const [
-  { request: GET_USER_ME, success: GET_USER_ME_SUCCESS, failure: GET_USER_ME_FAILURE },
-  { request: getUserMe, success: getUserMeSuccess, failure: getUserMeFailure },
-] = createRequestActions(GET_USER_ME_BASE)
-
-export const LOGOUT_BASE = 'LOGOUT'
-export const [
-  { request: LOGOUT, success: LOGOUT_SUCCESS, failure: LOGOUT_FAILURE },
-  { request: logout, success: logoutSuccess, failure: logoutFailure },
-] = createRequestActions(LOGOUT_BASE)
+/**
+ * attachPromise is a function which extends an action creator to include a flag
+ * which results in a promise being attached to the action by the promise
+ * middleware.
+ * @param {Function} actionCreator - The original action creator
+ * @returns {Function} - The modified action creator
+ */
+export default actionCreator =>
+  function(...args) {
+    const action = actionCreator(...args)
+    return {
+      ...action,
+      meta: {
+        ...action.meta,
+        _attachPromise: true,
+      },
+    }
+  }

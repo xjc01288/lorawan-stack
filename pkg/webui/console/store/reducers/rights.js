@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { createGetRightsListActionType } from '../actions/rights'
-import { createRequestActions } from '../actions/lib'
+import createRequestActions from '../../../lib/store/actions/create-request-actions'
 
 const defaultState = {
   rights: [],

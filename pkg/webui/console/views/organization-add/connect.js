@@ -17,7 +17,7 @@ import { connect } from 'react-redux'
 import { push } from 'connected-react-router'
 
 import { createOrganization } from '../../store/actions/organizations'
-import { attachPromise } from '../../store/actions/lib'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(
