@@ -24,10 +24,11 @@ import HeaderComponent from '../../../components/header'
 import NavigationBar from '../../../components/navigation/bar'
 import Dropdown from '../../../components/dropdown'
 import toast from '../../../components/toast'
+import Logo from '../logo'
 
 import { logout } from '../../store/actions/user'
 import { selectUser } from '../../store/selectors/user'
-import { attachPromise } from '../../store/actions/lib'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 import {
   checkFromState,
   mayViewApplications,
@@ -192,6 +193,7 @@ class Header extends Component {
         searchable={searchable}
         onSearchRequest={handleSearchRequest}
         onLogout={this.handleLogout}
+        logo={<Logo />}
       />
     )
   }

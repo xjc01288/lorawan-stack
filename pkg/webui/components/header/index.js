@@ -15,7 +15,6 @@
 import React, { useState, useCallback } from 'react'
 import classnames from 'classnames'
 
-import Logo from '../../containers/logo'
 import NavigationBar from '../navigation/bar'
 import ProfileDropdown from '../profile-dropdown'
 import MobileMenu from '../mobile-menu'
@@ -92,7 +91,7 @@ Header.propTypes = {
   className: PropTypes.string,
   /** The child node of the dropdown component */
   dropdownItems: ProfileDropdown.propTypes.children,
-  logo: PropTypes.node,
+  logo: PropTypes.node.isRequired,
   /** The child node of the mobile dropdown */
   mobileDropdownItems: PropTypes.node.isRequired,
   /** The Child node of the navigation bar */
@@ -115,7 +114,6 @@ Header.defaultProps = {
   dropdownItems: undefined,
   navigationEntries: undefined,
   onSearchRequest: () => null,
-  logo: <Logo />,
   searchable: false,
   user: undefined,
 }

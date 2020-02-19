@@ -24,17 +24,11 @@ import HeaderComponent from '../../../components/header'
 import NavigationBar from '../../../components/navigation/bar'
 import Dropdown from '../../../components/dropdown'
 import toast from '../../../components/toast'
+import Logo from '../logo'
 
 import { logout } from '../../store/actions/user'
 import { selectUser } from '../../store/selectors/user'
-import { attachPromise } from '../../store/actions/lib'
-import {
-  checkFromState,
-  mayViewApplications,
-  mayViewGateways,
-  mayViewOrganizationsOfUser,
-  mayManageUsers,
-} from '../../lib/feature-checks'
+import attachPromise from '../../../lib/store/actions/attach-promise'
 
 const m = defineMessages({
   logoutUnsuccessful:
@@ -45,15 +39,6 @@ const m = defineMessages({
 @connect(
   function(state) {
     const user = selectUser(state)
-    if (Boolean(user)) {
-      return {
-        user,
-        mayViewApplications: checkFromState(mayViewApplications, state),
-        mayViewGateways: checkFromState(mayViewGateways, state),
-        mayViewOrganizations: checkFromState(mayViewOrganizationsOfUser, state),
-        mayManageUsers: checkFromState(mayManageUsers, state),
-      }
-    }
     return { user }
   },
   { handleLogout: attachPromise(logout) },
@@ -192,6 +177,7 @@ class Header extends Component {
         searchable={searchable}
         onSearchRequest={handleSearchRequest}
         onLogout={this.handleLogout}
+        logo={<Logo />}
       />
     )
   }

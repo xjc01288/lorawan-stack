@@ -14,22 +14,22 @@
 
 import React from 'react'
 
-import LogoComponent from '../../components/logo'
+import LogoComponent from '../../../components/logo'
 
 import {
   selectAssetsRootPath,
   selectBrandingRootPath,
   selectApplicationSiteName,
-} from '../../lib/selectors/env'
+} from '../../../lib/selectors/env'
 
 const logo = {
-  src: `${selectAssetsRootPath()}/logo.svg`,
+  src: `${selectAssetsRootPath()}/account.svg`,
   alt: `${selectApplicationSiteName()} Logo`,
 }
 const hasCustomBranding = selectBrandingRootPath() !== selectAssetsRootPath()
 const secondaryLogo = hasCustomBranding
   ? {
-      src: `${selectBrandingRootPath()}/logo.svg`,
+      src: `${selectBrandingRootPath()}/account.svg`,
       alt: 'Logo',
     }
   : undefined
