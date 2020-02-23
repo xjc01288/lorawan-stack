@@ -87,6 +87,8 @@ type Connection struct {
 	downCh   chan *ttnpb.DownlinkMessage
 	statusCh chan *ttnpb.GatewayStatus
 	txAckCh  chan *ttnpb.TxAcknowledgment
+
+	statsChangedCh chan struct{}
 }
 
 var (
@@ -148,6 +150,8 @@ func NewConnection(ctx context.Context, frontend Frontend, gateway *ttnpb.Gatewa
 		statusCh:    make(chan *ttnpb.GatewayStatus, bufferSize),
 		txAckCh:     make(chan *ttnpb.TxAcknowledgment, bufferSize),
 		connectTime: time.Now().UnixNano(),
+
+		statsChangedCh: make(chan struct{}, 1),
 	}, nil
 }
 
@@ -219,6 +223,7 @@ func (c *Connection) HandleUp(up *ttnpb.UplinkMessage) error {
 	case c.upCh <- msg:
 		atomic.AddUint64(&c.uplinks, 1)
 		atomic.StoreInt64(&c.lastUplinkTime, up.ReceivedAt.UnixNano())
+		c.notifyStatsChanged()
 	default:
 		return errBufferFull
 	}
@@ -233,6 +238,7 @@ func (c *Connection) HandleStatus(status *ttnpb.GatewayStatus) error {
 	case c.statusCh <- status:
 		c.lastStatus.Store(status)
 		atomic.StoreInt64(&c.lastStatusTime, time.Now().UnixNano())
+		c.notifyStatsChanged()
 	default:
 		return errBufferFull
 	}
@@ -245,6 +251,7 @@ func (c *Connection) HandleTxAck(ack *ttnpb.TxAcknowledgment) error {
 	case <-c.ctx.Done():
 		return c.ctx.Err()
 	case c.txAckCh <- ack:
+		c.notifyStatsChanged()
 	default:
 		return errBufferFull
 	}
@@ -252,7 +259,10 @@ func (c *Connection) HandleTxAck(ack *ttnpb.TxAcknowledgment) error {
 }
 
 // RecordRTT records the given round-trip time.
-func (c *Connection) RecordRTT(d time.Duration) { c.rtts.Record(d) }
+func (c *Connection) RecordRTT(d time.Duration) {
+	c.rtts.Record(d)
+	c.notifyStatsChanged()
+}
 
 var (
 	errNotAllowed       = errors.DefineFailedPrecondition("not_allowed", "downlink not allowed")
@@ -508,6 +518,11 @@ func (c *Connection) TxAck() <-chan *ttnpb.TxAcknowledgment {
 	return c.txAckCh
 }
 
+// StatsChanged returns the stats changed channel.
+func (c *Connection) StatsChanged() <-chan struct{} {
+	return c.statsChangedCh
+}
+
 // ConnectTime returns the time the gateway connected.
 func (c *Connection) ConnectTime() time.Time { return time.Unix(0, c.connectTime) }
 
@@ -559,4 +574,11 @@ func (c *Connection) SyncWithGatewayConcentrator(timestamp uint32, server time.T
 // This method returns false if the clock is not synced with the server.
 func (c *Connection) TimeFromTimestampTime(timestamp uint32) (scheduling.ConcentratorTime, bool) {
 	return c.scheduler.TimeFromTimestampTime(timestamp)
+}
+
+func (c *Connection) notifyStatsChanged() {
+	select {
+	case c.statsChangedCh <- struct{}{}:
+	default:
+	}
 }

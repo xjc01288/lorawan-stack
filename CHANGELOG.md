@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Network Server will never attempt RX1 for devices with `Rx1Delay` of `1` second.
 - Improved efficiency of ADR MAC commands.
 - Gateway Configuration Server will use the default WebSocket TLS port if none is set.
+- Gateway connection stats are stored in Redis (see `--gs.update-connections-stats-debounce-time` option) in TTS.
 
 ### Deprecated
 
@@ -26,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- End device events subscription release in the Console. 
+- End device events subscription release in the Console.
 - Blocking UDP packet handling while the gateway was still connecting. Traffic is now dropped while the connection is in progress, so that traffic from already connected gateways keep flowing.
 - Join-request transmission parameters.
 - ADR in 72-channel regions.
