@@ -644,7 +644,7 @@ func (gs *GatewayServer) handleUpstream(conn connectionEntry) {
 	}
 }
 
-// UpdateConnectionStats updates the stats for a single gateway connection
+// UpdateConnectionStats updates the stats for a single gateway connection.
 func (gs *GatewayServer) UpdateConnectionStats(ctx context.Context, conn *io.Connection) error {
 	uid := unique.ID(ctx, conn.Gateway())
 
