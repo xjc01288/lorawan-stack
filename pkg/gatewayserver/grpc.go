@@ -29,8 +29,7 @@ func (gs *GatewayServer) GetGatewayConnectionStats(ctx context.Context, ids *ttn
 	}
 
 	if gs.statsRegistry != nil {
-		uid := unique.ID(ctx, ids)
-		stats, err := gs.statsRegistry.Get(ctx, uid)
+		stats, err := gs.statsRegistry.Get(ctx, *ids)
 		if err != nil || stats == nil {
 			return nil, err
 		}

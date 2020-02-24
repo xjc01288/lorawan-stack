@@ -19,6 +19,7 @@ import (
 
 	ttnredis "go.thethings.network/lorawan-stack/pkg/redis"
 	"go.thethings.network/lorawan-stack/pkg/ttnpb"
+	"go.thethings.network/lorawan-stack/pkg/unique"
 )
 
 // GatewayConnectionStatsRegistry implements the GatewayConnectionStatsRegistry interface.
@@ -31,7 +32,8 @@ func (r *GatewayConnectionStatsRegistry) key(uid string) string {
 }
 
 // Set sets or clears the connection stats for a gateway.
-func (r *GatewayConnectionStatsRegistry) Set(ctx context.Context, uid string, stats *ttnpb.GatewayConnectionStats) error {
+func (r *GatewayConnectionStatsRegistry) Set(ctx context.Context, ids ttnpb.GatewayIdentifiers, stats *ttnpb.GatewayConnectionStats) error {
+	uid := unique.ID(ctx, ids)
 	if stats == nil {
 		return r.Redis.Del(r.key(uid)).Err()
 	}
@@ -41,7 +43,8 @@ func (r *GatewayConnectionStatsRegistry) Set(ctx context.Context, uid string, st
 }
 
 // Get returns the connection stats for a gateway.
-func (r *GatewayConnectionStatsRegistry) Get(ctx context.Context, uid string) (*ttnpb.GatewayConnectionStats, error) {
+func (r *GatewayConnectionStatsRegistry) Get(ctx context.Context, ids ttnpb.GatewayIdentifiers) (*ttnpb.GatewayConnectionStats, error) {
+	uid := unique.ID(ctx, ids)
 	stats := &ttnpb.GatewayConnectionStats{}
 	err := ttnredis.GetProto(r.Redis, r.key(uid)).ScanProto(stats)
 	if err != nil {
