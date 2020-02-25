@@ -40,6 +40,7 @@ import {
   selectDeviceError,
 } from '../../store/selectors/devices'
 
+import { mayReadApplicationDeviceKeys } from '../../lib/feature-checks'
 import PropTypes from '../../../lib/prop-types'
 import style from './device.styl'
 
@@ -53,6 +54,9 @@ import style from './device.styl'
       devId,
       appId,
       device,
+      mayReadKeys: mayReadApplicationDeviceKeys.check(
+        mayReadApplicationDeviceKeys.rightsSelector(state),
+      ),
       fetching: selectDeviceFetching(state),
       error: selectDeviceError(state),
     }
@@ -64,36 +68,37 @@ import style from './device.styl'
   }),
 )
 @withRequest(
-  ({ appId, devId, getDevice }) =>
-    getDevice(
-      appId,
-      devId,
-      [
-        'name',
-        'description',
-        'session',
-        'version_ids',
-        'root_keys',
-        'frequency_plan_id',
-        'mac_settings.resets_f_cnt',
-        'resets_join_nonces',
-        'supports_class_c',
-        'supports_join',
-        'lorawan_version',
-        'lorawan_phy_version',
-        'network_server_address',
-        'application_server_address',
-        'join_server_address',
-        'locations',
-        'formatters',
-        'multicast',
-        'net_id',
-        'application_server_id',
-        'application_server_kek_label',
-        'network_server_kek_label',
-      ],
-      { ignoreNotFound: true },
-    ),
+  ({ appId, devId, getDevice, mayReadKeys }) => {
+    const selector = [
+      'name',
+      'description',
+      'version_ids',
+      'frequency_plan_id',
+      'mac_settings.resets_f_cnt',
+      'resets_join_nonces',
+      'supports_class_c',
+      'supports_join',
+      'lorawan_version',
+      'lorawan_phy_version',
+      'network_server_address',
+      'application_server_address',
+      'join_server_address',
+      'locations',
+      'formatters',
+      'multicast',
+      'net_id',
+      'application_server_id',
+      'application_server_kek_label',
+      'network_server_kek_label',
+    ]
+
+    if (mayReadKeys) {
+      selector.push('session')
+      selector.push('root_keys')
+    }
+
+    return getDevice(appId, devId, selector, { ignoreNotFound: true })
+  },
   ({ fetching, device }) => fetching || !Boolean(device),
 )
 @withBreadcrumb('device.single', function(props) {
