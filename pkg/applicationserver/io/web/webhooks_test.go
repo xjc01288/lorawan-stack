@@ -56,7 +56,7 @@ func TestWebhooks(t *testing.T) {
 	_, err := registry.Set(ctx, ids, nil, func(_ *ttnpb.ApplicationWebhook) (*ttnpb.ApplicationWebhook, []string, error) {
 		return &ttnpb.ApplicationWebhook{
 				ApplicationWebhookIdentifiers: ids,
-				BaseURL:                       "https://myapp.com/api/ttn/v3{/appID,devID}",
+				BaseURL:                       "https://myapp.com/api/ttn/v3{/appID,devID}/",
 				Headers: map[string]string{
 					"Authorization": "key secret",
 				},

@@ -22,7 +22,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"path"
 	"strings"
 	"sync"
 
@@ -377,15 +376,17 @@ func (w *webhooks) newRequest(ctx context.Context, msg *ttnpb.ApplicationUp, hoo
 	if cfg == nil {
 		return nil, nil
 	}
-	url, err := url.Parse(hook.BaseURL)
+	baseURL, err := url.Parse(hook.BaseURL)
 	if err != nil {
 		return nil, err
 	}
-	url.Path = path.Join(url.Path, cfg.Path)
-	expandVariables(url, msg)
+	expandVariables(baseURL, msg)
+	pathURL, err := url.Parse(cfg.Path)
 	if err != nil {
 		return nil, err
 	}
+	expandVariables(pathURL, msg)
+	finalURL := baseURL.ResolveReference(pathURL)
 	format, ok := formats[hook.Format]
 	if !ok {
 		return nil, errFormatNotFound.WithAttributes("format", hook.Format)
@@ -394,7 +395,7 @@ func (w *webhooks) newRequest(ctx context.Context, msg *ttnpb.ApplicationUp, hoo
 	if err != nil {
 		return nil, err
 	}
-	req, err := http.NewRequest(http.MethodPost, url.String(), bytes.NewReader(buf))
+	req, err := http.NewRequest(http.MethodPost, finalURL.String(), bytes.NewReader(buf))
 	if err != nil {
 		return nil, err
 	}
