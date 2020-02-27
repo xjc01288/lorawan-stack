@@ -14,6 +14,7 @@
 
 import React from 'react'
 import bind from 'autobind-decorator'
+import classnames from 'classnames'
 
 import Event from '../..'
 import Message from '../../../../lib/components/message'
@@ -22,7 +23,7 @@ import PropTypes from '../../../../lib/prop-types'
 import { getEntityId } from '../../../../lib/selectors/id'
 import style from './message.styl'
 
-import { formatMessageData } from '..'
+import { formatMessageData, getErrorEvent } from '..'
 
 @bind
 class MessageEvent extends React.PureComponent {
@@ -44,13 +45,24 @@ class MessageEvent extends React.PureComponent {
 
   render() {
     const { className, event, type, widget, overviewClassName, expandedClassName } = this.props
-
     const entityId = getEntityId(event.identifiers[0])
-    const icon = type === 'downlink' ? 'downlink' : 'uplink'
     const data = formatMessageData(event.data)
-
-    const eventContent = <Message content={{ id: `event:${event.name}` }} />
-    const eventIcon = <Icon icon={icon} className={style.messageIcon} />
+    const isError = getErrorEvent(event.data)
+    const eventContent = (
+      <Message
+        className={classnames({ [style.error]: isError })}
+        content={{ id: `event:${event.name}` }}
+      />
+    )
+    let icon
+    if (isError) {
+      icon = 'error'
+    } else {
+      icon = type === 'downlink' ? 'downlink' : 'uplink'
+    }
+    const eventIcon = (
+      <Icon icon={icon} className={classnames(style.messageIcon, { [style.error]: isError })} />
+    )
 
     return (
       <Event

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import React from 'react'
+import classnames from 'classnames'
 
 import Event from '../..'
 import Message from '../../../../lib/components/message'
@@ -21,7 +22,7 @@ import PropTypes from '../../../../lib/prop-types'
 import { getEntityId } from '../../../../lib/selectors/id'
 import { warn } from '../../../../lib/log'
 import style from './crud.styl'
-import { formatMessageData, getEventActionByName } from '..'
+import { formatMessageData, getEventActionByName, getErrorEvent } from '..'
 
 class CRUDEvent extends React.PureComponent {
   static propTypes = {
@@ -45,10 +46,12 @@ class CRUDEvent extends React.PureComponent {
     const entityId = getEntityId(event.identifiers[0])
     const eventAction = getEventActionByName(event.name)
     const data = formatMessageData(event.data)
-
+    const isError = getErrorEvent(event.data)
     let icon = null
 
-    if (eventAction === 'create') {
+    if (isError) {
+      icon = <Icon icon="error" className={style.error} />
+    } else if (eventAction === 'create') {
       icon = <Icon icon="event_create" className={style.create} />
     } else if (eventAction === 'delete') {
       icon = <Icon icon="event_delete" className={style.delete} />
@@ -59,7 +62,12 @@ class CRUDEvent extends React.PureComponent {
       icon = <Icon icon="event" />
     }
 
-    const content = <Message content={{ id: `event:${event.name}` }} />
+    const content = (
+      <Message
+        className={classnames({ [style.error]: isError })}
+        content={{ id: `event:${event.name}` }}
+      />
+    )
 
     return (
       <Event

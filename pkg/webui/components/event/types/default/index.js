@@ -13,12 +13,15 @@
 // limitations under the License.
 
 import React from 'react'
+import classnames from 'classnames'
 
 import Message from '../../../../lib/components/message'
 import Event from '../..'
 import PropTypes from '../../../../lib/prop-types'
 import { getEntityId } from '../../../../lib/selectors/id'
-import { formatMessageData } from '..'
+import Icon from '../../../icon'
+import style from './default.styl'
+import { formatMessageData, getErrorEvent } from '..'
 
 class DefaultEvent extends React.PureComponent {
   static propTypes = {
@@ -41,7 +44,14 @@ class DefaultEvent extends React.PureComponent {
 
     const entityId = getEntityId(event.identifiers[0])
     const data = formatMessageData(event.data)
-    const content = <Message content={{ id: `event:${event.name}` }} />
+    const isError = getErrorEvent(event.data)
+    const content = (
+      <Message
+        className={classnames({ [style.error]: isError })}
+        content={{ id: `event:${event.name}` }}
+      />
+    )
+    const eventIcon = isError ? <Icon icon="error" className={style.error} /> : undefined
 
     return (
       <Event
@@ -53,6 +63,7 @@ class DefaultEvent extends React.PureComponent {
         emitter={entityId}
         widget={widget}
         data={data}
+        icon={eventIcon}
       />
     )
   }
