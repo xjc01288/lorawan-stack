@@ -49,6 +49,16 @@ const getEventComponentByName = function(name) {
   return { component, type }
 }
 
+const getErrorEvent = function(data) {
+  if (!data) {
+    return false
+  }
+
+  const { '@type': t } = data
+
+  return getEventDataType(t) === 'ErrorDetails'
+}
+
 const formatMessageData = function(data) {
   if (!data) {
     return null
@@ -73,4 +83,5 @@ export {
   getEventActionByName,
   getEventDataType,
   formatMessageData,
+  getErrorEvent,
 }
