@@ -43,12 +43,13 @@ const m = defineMessages({
   deleteFailure: 'There was a problem deleting the authentication code',
   deleteSuccess: 'The authentication code has been deleted successfully',
   updateSuccess: 'The authentication code has been updated successfully',
+  validateCode: 'Only uppercase letters and numbers are allowed',
 })
 
 const validationSchema = Yup.object({
   claim_authentication_code: Yup.object({
     value: Yup.string()
-      .matches(/^[A-Z0-9]{1,32}$/, sharedMessages.validateFormat)
+      .matches(/^[A-Z0-9]{1,32}$/, m.validateCode)
       .required(sharedMessages.validateRequired),
     valid_from: Yup.date().required(sharedMessages.validateRequired),
     valid_to: Yup.date()
