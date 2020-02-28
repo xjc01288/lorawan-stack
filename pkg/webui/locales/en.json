@@ -268,6 +268,7 @@
   "console.views.device-authentication-code.index.deleteFailure": "There was a problem deleting the authentication code",
   "console.views.device-authentication-code.index.deleteSuccess": "The authentication code has been deleted successfully",
   "console.views.device-authentication-code.index.updateSuccess": "The authentication code has been updated successfully",
+  "console.views.device-authentication-code.index.validateCode": "Only uppercase letters and numbers are allowed",
   "console.views.device-general-settings.collapse.index.collapse": "Collapse",
   "console.views.device-general-settings.collapse.index.expand": "Expand",
   "console.views.device-general-settings.identity-server-form.index.deleteDevice": "Delete End Device",
